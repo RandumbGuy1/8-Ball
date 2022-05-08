@@ -1,0 +1,131 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    [Header("Move Settings")]
+    [SerializeField] private float acceleration;
+    [SerializeField] private float maxSpeed;
+    [SerializeField] private float jumpForce;
+
+    private Vector2 input = Vector2.zero;
+    private bool jumping = false;
+
+    public float Magnitude { get; private set; }
+    public Vector3 RelativeVel { get; private set; }
+    public Vector3 Velocity { get; private set; }
+
+    [Header("Hover Settings")]
+    [SerializeField] private LayerMask environment;
+    [SerializeField] private float rideRayExtension;
+    [SerializeField] private float rideHeight;
+    [SerializeField] private float rideSpringStrength;
+    [SerializeField] private float rideSpringDamper;
+    public bool Grounded { get; private set; }
+
+    [Header("Friction Settings")]
+    [SerializeField] private float friction;
+    [SerializeField] private float frictionMultiplier;
+    [SerializeField] private int counterThresold;
+    private Vector2Int readyToCounter = Vector2Int.zero;
+
+    [Header("Refrences")]
+    [SerializeField] private PlayerRef player;
+    [SerializeField] private Rigidbody rb;
+    public Rigidbody Rb => rb;
+
+    void Awake()
+    {
+        player.PlayerInput.OnMoveInput += ReceiveMoveInput;
+        player.PlayerInput.OnJumpInput += ReceiveJumpInput;
+    }
+
+    void FixedUpdate()
+    {
+        MovePlayer();
+    }
+
+    private void MovePlayer()
+    {
+        RelativeVel = player.Orientation.InverseTransformDirection(rb.velocity);
+
+        Friction();
+        HoverOffGround();
+
+        float movementMultiplier = 3.5f * Time.fixedDeltaTime;
+        ClampSpeed(movementMultiplier);
+
+        Vector3 moveDir = player.Orientation.forward * input.y + player.Orientation.right * input.x;
+        rb.AddForce(moveDir.normalized * acceleration * movementMultiplier, ForceMode.Impulse);
+
+        Magnitude = rb.velocity.magnitude;
+        Velocity = rb.velocity;
+    }
+
+    private void HoverOffGround()
+    {
+        Grounded = Physics.SphereCast(transform.position, 0.3f, Vector3.down, out var hit, rideHeight + rideRayExtension, environment);
+
+        if (!Grounded) return;
+
+        Vector3 vel = rb.velocity;
+        Vector3 otherVel = Vector3.zero;
+        Rigidbody hitBody = hit.rigidbody;
+
+        if (hitBody != null) otherVel = hitBody.velocity;
+
+        float relVel = Vector3.Dot(Vector3.down, vel) - Vector3.Dot(Vector3.down, otherVel);
+        float x = hit.distance - rideHeight;
+        float springForce = (x * rideSpringStrength) - (relVel * rideSpringDamper);
+
+        rb.AddForce(Vector3.down * springForce);
+
+        if (hitBody != null) hitBody.AddForceAtPosition(Vector3.down * -springForce, hit.point);
+    }
+
+    private void Jump()
+    {
+        if (!Grounded) return;
+
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+
+    private void Friction()
+    {
+        if (jumping || !Grounded) return;
+
+        Vector3 frictionForce = Vector3.zero;
+
+        if (Mathf.Abs(RelativeVel.x) > 0.05f && input.x == 0f && readyToCounter.x > counterThresold) frictionForce -= player.Orientation.right * RelativeVel.x;
+        if (Mathf.Abs(RelativeVel.z) > 0.05f && input.y == 0f && readyToCounter.y > counterThresold) frictionForce -= player.Orientation.forward * RelativeVel.z;
+
+        if (CounterMomentum(input.x, RelativeVel.x)) frictionForce -= player.Orientation.right * RelativeVel.x;
+        if (CounterMomentum(input.y, RelativeVel.z)) frictionForce -= player.Orientation.forward * RelativeVel.z;
+
+        frictionForce = Vector3.ProjectOnPlane(frictionForce, Vector3.up);
+        if (frictionForce != Vector3.zero) rb.AddForce(0.2f * friction * acceleration * frictionForce);
+
+        readyToCounter.x = input.x == 0f ? readyToCounter.x + 1 : 0;
+        readyToCounter.y = input.y == 0f ? readyToCounter.y + 1 : 0;
+    }
+
+    bool CounterMomentum(float input, float mag, float threshold = 0.05f)
+        => input > 0 && mag < -threshold || input < 0 && mag > threshold;
+
+    private void ClampSpeed(float movementMultiplier)
+    {
+        Vector3 vel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        float coefficientOfFriction = acceleration / maxSpeed;
+
+        if (vel.sqrMagnitude > maxSpeed * maxSpeed) rb.AddForce(coefficientOfFriction * movementMultiplier * -vel, ForceMode.Impulse);
+    }
+
+    private void ReceiveMoveInput(Vector2 input) => this.input = input;
+    private void ReceiveJumpInput(bool jumping)
+    {
+        this.jumping = jumping;
+        if (jumping) Jump();
+    }
+}
