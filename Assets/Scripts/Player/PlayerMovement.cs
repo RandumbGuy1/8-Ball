@@ -24,6 +24,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rideSpringDamper;
     public bool Grounded { get; private set; }
 
+    [Header("Standing Settings")]
+    [SerializeField] private float uprightSpringStrength;
+    [SerializeField] private float uprightSpringStrengthDamper;
+
     [Header("Friction Settings")]
     [SerializeField] private float friction;
     [SerializeField] private float frictionMultiplier;
@@ -52,12 +56,13 @@ public class PlayerMovement : MonoBehaviour
 
         Friction();
         HoverOffGround();
+        UpdateUprightForce();
 
-        float movementMultiplier = 3.5f * Time.fixedDeltaTime;
+        float movementMultiplier = 3.5f * Time.fixedDeltaTime * (Grounded ? 1f : 0.6f);
         ClampSpeed(movementMultiplier);
 
         Vector3 moveDir = player.Orientation.forward * input.y + player.Orientation.right * input.x;
-        rb.AddForce(moveDir.normalized * acceleration * movementMultiplier, ForceMode.Impulse);
+        rb.AddForce(acceleration * movementMultiplier * moveDir.normalized, ForceMode.Impulse);
 
         Magnitude = rb.velocity.magnitude;
         Velocity = rb.velocity;
@@ -65,9 +70,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void HoverOffGround()
     {
-        Grounded = Physics.SphereCast(transform.position, 0.3f, Vector3.down, out var hit, rideHeight + rideRayExtension, environment);
+        Grounded = Physics.SphereCast(transform.position, 0.3f, Vector3.down, out _, rideHeight + rideRayExtension, environment);
+        bool buffer = Physics.Raycast(transform.position, Vector3.down, out var hit, rideHeight + rideRayExtension * 1.35f, environment);
 
-        if (!Grounded) return;
+        if (!buffer) return;
 
         Vector3 vel = rb.velocity;
         Vector3 otherVel = Vector3.zero;
@@ -82,6 +88,12 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(Vector3.down * springForce);
 
         if (hitBody != null) hitBody.AddForceAtPosition(Vector3.down * -springForce, hit.point);
+    }
+
+    public void UpdateUprightForce()
+    {
+        Quaternion fromTo = Quaternion.FromToRotation(transform.up, Vector3.up);
+        rb.AddTorque((new Vector3(fromTo.x, fromTo.y, fromTo.z) * uprightSpringStrength) - (rb.angularVelocity * uprightSpringStrengthDamper), ForceMode.Impulse);
     }
 
     private void Jump()
