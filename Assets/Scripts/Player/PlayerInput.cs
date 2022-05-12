@@ -10,11 +10,14 @@ public class PlayerInput : MonoBehaviour
     public delegate void ReceiveMouseInput(Vector2 input);
     public event ReceiveMouseInput OnMouseInput;
 
-    public delegate void ReceiveJump(bool jump);
+    public delegate void ReceiveJump(bool jumping);
     public event ReceiveJump OnJumpInput;
 
     public delegate void ReceiveToggle(bool toggle);
     public event ReceiveToggle OnPerspectiveToggle;
+
+    public delegate void ReceieveMouseButton(int button);
+    public event ReceieveMouseButton OnMouseButtonInput;
 
     [Header("Keybinds")]
     [SerializeField] private KeyCode jumpKey;
@@ -26,5 +29,14 @@ public class PlayerInput : MonoBehaviour
         OnMouseInput?.Invoke(new Vector2(Input.GetAxisRaw("Mouse Y"), Input.GetAxisRaw("Mouse X")));
         OnJumpInput?.Invoke(Input.GetKeyDown(jumpKey));
         OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
+        OnMouseButtonInput?.Invoke(MouseButton());
+    }
+
+    int MouseButton()
+    {
+        if (Input.GetMouseButtonDown(0)) return 0;
+        if (Input.GetMouseButtonDown(1)) return 1;
+        if (Input.GetMouseButtonDown(2)) return 2;
+        return -1;
     }
 }
