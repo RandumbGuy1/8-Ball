@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class ObjectPooler : MonoBehaviour
 {
@@ -23,17 +22,16 @@ public class ObjectPooler : MonoBehaviour
     [SerializeField] private Dictionary<GameObject, Queue<GameObject>> poolDictionary = new Dictionary<GameObject, Queue<GameObject>>();
 
     void Awake()
-    {
-        /*
+    {    
         if (Instance == this)
         {
             Destroy(gameObject);
             return;
         }
-        */
+        
 
         Instance = this;
-        //DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
