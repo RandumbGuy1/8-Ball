@@ -16,4 +16,9 @@ public class PlayerRef : MonoBehaviour
     public CameraBody CameraBody => cameraBody;
     public Camera PlayerCam => playerCam;
     public Transform Orientation => orientation;
+
+    void Awake()
+    {
+        Application.targetFrameRate = 85;
+    }
 }

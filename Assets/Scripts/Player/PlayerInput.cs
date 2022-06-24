@@ -17,6 +17,7 @@ public class PlayerInput : MonoBehaviour
     public event ReceiveToggle OnPerspectiveToggle;
 
     public delegate void ReceieveMouseButton(int button);
+    public event ReceieveMouseButton OnMouseButtonDownInput;
     public event ReceieveMouseButton OnMouseButtonInput;
 
     [Header("Keybinds")]
@@ -28,11 +29,22 @@ public class PlayerInput : MonoBehaviour
         OnMoveInput?.Invoke(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")));
         OnMouseInput?.Invoke(new Vector2(Input.GetAxisRaw("Mouse Y"), Input.GetAxisRaw("Mouse X")));
         OnJumpInput?.Invoke(Input.GetKeyDown(jumpKey));
+
         OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
+
+        OnMouseButtonDownInput?.Invoke(MouseButtonDown());
         OnMouseButtonInput?.Invoke(MouseButton());
     }
 
     int MouseButton()
+    {
+        if (Input.GetMouseButton(0)) return 0;
+        if (Input.GetMouseButton(1)) return 1;
+        if (Input.GetMouseButton(2)) return 2;
+        return -1;
+    }
+
+    int MouseButtonDown()
     {
         if (Input.GetMouseButtonDown(0)) return 0;
         if (Input.GetMouseButtonDown(1)) return 1;
