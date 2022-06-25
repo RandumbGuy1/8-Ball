@@ -8,11 +8,8 @@ public class Projecton : MonoBehaviour
     private Scene simulationScene;
     private PhysicsScene physicsScene;
 
-    public static Projecton Instance { get; private set; }
-
     [SerializeField] private GameObject[] obstacles = new GameObject[0];
 
-    void Awake() => Instance = this;
     void Start() => CreatePhysicsScene(obstacles);
 
     public void CreatePhysicsScene(GameObject[] obstacles)
@@ -28,7 +25,7 @@ public class Projecton : MonoBehaviour
         }
     }
 
-    public Vector3[] SimulateTrajectory(GameObject prefab, Vector3 pos, Quaternion rotation, Action<Rigidbody> AddForce, int maxPhysicsFrameIterations)
+    public Vector3[] SimulateTrajectory(GameObject prefab, Vector3 pos, Quaternion rotation, Action<Rigidbody> AddForce, int maxPhysicsFrameIterations, float simulationMulti)
     {
         GameObject ghostobj = ObjectPooler.Instance.Spawn(prefab, true, pos, rotation);
 
@@ -44,11 +41,11 @@ public class Projecton : MonoBehaviour
 
         for (int i = 0; i < positions.Length; i++)
         {
-            physicsScene.Simulate(Time.fixedDeltaTime);
-            positions[i] = ghostRb.transform.position;
+            if (simulationMulti <= 0) break;
 
-            if (ghostRb.velocity.sqrMagnitude < 0.01f) break;
-         }
+            physicsScene.Simulate(Time.fixedDeltaTime * simulationMulti * 4f);
+            positions[i] = ghostRb.transform.position;
+        }
 
         ghostobj.SetActive(false);
         SceneManager.MoveGameObjectToScene(ghostobj, SceneManager.GetActiveScene());

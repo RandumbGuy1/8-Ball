@@ -7,6 +7,7 @@ public class ClubShot : MonoBehaviour
     [Header("GFX Settings")]
     [SerializeField] private LineRenderer lr;
     [SerializeField] private ParticleSystem wind;
+    [SerializeField] private Projecton projecton;
     [SerializeField] private GameObject ballGhostPrefb;
 
     [Header("Shoot Settings")]
@@ -102,9 +103,6 @@ public class ClubShot : MonoBehaviour
         Vector3 shotTrajectory = chargePower * clubPower * (toBall.normalized + 1.15f * smoothUpwardModifier * Vector3.up);
         shotTrajectory = Vector3.ClampMagnitude(shotTrajectory, chargePower * clubPower);
 
-        Vector3[] points = Projecton.Instance.SimulateTrajectory(ballGhostPrefb, currentBall.transform.position, currentBall.transform.rotation, (Rigidbody rb) => rb.AddForce(shotTrajectory, ForceMode.VelocityChange), predictionCount);
-        for (int i = 0; i < predictionCount; i++) lr.SetPosition(i + 2, points[i]);
-
         upwardModifier = Mathf.Clamp(upwardModifier + Input.mouseScrollDelta.y * 0.1f, -upwardClamp, upwardClamp);
         smoothUpwardModifier = Mathf.Lerp(smoothUpwardModifier, upwardModifier, 10f * Time.deltaTime);
 
@@ -118,6 +116,9 @@ public class ClubShot : MonoBehaviour
             float target = button != -1 ? maxClubCharge : 0f;
             chargePower = Mathf.SmoothDamp(chargePower, target, ref vel, clubChargeTime);
         }
+
+        Vector3[] points = projecton.SimulateTrajectory(ballGhostPrefb, currentBall.transform.position, currentBall.transform.rotation, (Rigidbody rb) => rb.AddForce(shotTrajectory, ForceMode.VelocityChange), predictionCount, chargeRatio);
+        for (int i = 0; i < predictionCount; i++) lr.SetPosition(i + 2, points[i]);
     }
 
     private void AddSpring()

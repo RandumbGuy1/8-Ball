@@ -9,8 +9,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float maxSpeed;
     [SerializeField] private float jumpForce;
 
-    private Vector2 input = Vector2.zero;
-    private bool jumping = false;
+    public Vector2 Input { get; private set; } = Vector2.zero;
+
+    public bool Jumping { get; private set; } = false;
+    public bool Moving { get; private set; } = false;
 
     public float Magnitude { get; private set; }
     public Vector3 RelativeVel { get; private set; }
@@ -61,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
         float movementMultiplier = 3.5f * Time.fixedDeltaTime * (Grounded ? 1f : 0.6f);
         ClampSpeed(movementMultiplier);
 
-        Vector3 moveDir = player.Orientation.forward * input.y + player.Orientation.right * input.x;
+        Vector3 moveDir = player.Orientation.forward * Input.y + player.Orientation.right * Input.x;
         rb.AddForce(acceleration * movementMultiplier * moveDir.normalized, ForceMode.Impulse);
 
         Magnitude = rb.velocity.magnitude;
@@ -102,25 +104,27 @@ public class PlayerMovement : MonoBehaviour
 
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+        player.CameraBody.CamHeadBob.BobOnce(5f);
     }
 
     private void Friction()
     {
-        if (jumping || !Grounded) return;
+        if (Jumping || !Grounded) return;
 
         Vector3 frictionForce = Vector3.zero;
 
-        if (Mathf.Abs(RelativeVel.x) > 0.05f && input.x == 0f && readyToCounter.x > counterThresold) frictionForce -= player.Orientation.right * RelativeVel.x;
-        if (Mathf.Abs(RelativeVel.z) > 0.05f && input.y == 0f && readyToCounter.y > counterThresold) frictionForce -= player.Orientation.forward * RelativeVel.z;
+        if (Mathf.Abs(RelativeVel.x) > 0f && Input.x == 0f && readyToCounter.x > counterThresold) frictionForce -= player.Orientation.right * RelativeVel.x;
+        if (Mathf.Abs(RelativeVel.z) > 0f && Input.y == 0f && readyToCounter.y > counterThresold) frictionForce -= player.Orientation.forward * RelativeVel.z;
 
-        if (CounterMomentum(input.x, RelativeVel.x)) frictionForce -= player.Orientation.right * RelativeVel.x;
-        if (CounterMomentum(input.y, RelativeVel.z)) frictionForce -= player.Orientation.forward * RelativeVel.z;
+        if (CounterMomentum(Input.x, RelativeVel.x)) frictionForce -= player.Orientation.right * RelativeVel.x;
+        if (CounterMomentum(Input.y, RelativeVel.z)) frictionForce -= player.Orientation.forward * RelativeVel.z;
 
         frictionForce = Vector3.ProjectOnPlane(frictionForce, Vector3.up);
         if (frictionForce != Vector3.zero) rb.AddForce(0.2f * friction * acceleration * frictionForce);
 
-        readyToCounter.x = input.x == 0f ? readyToCounter.x + 1 : 0;
-        readyToCounter.y = input.y == 0f ? readyToCounter.y + 1 : 0;
+        readyToCounter.x = Input.x == 0f ? readyToCounter.x + 1 : 0;
+        readyToCounter.y = Input.y == 0f ? readyToCounter.y + 1 : 0;
     }
 
     bool CounterMomentum(float input, float mag, float threshold = 0.05f)
@@ -134,10 +138,15 @@ public class PlayerMovement : MonoBehaviour
         if (vel.sqrMagnitude > maxSpeed * maxSpeed) rb.AddForce(coefficientOfFriction * movementMultiplier * -vel, ForceMode.Impulse);
     }
 
-    private void ReceiveMoveInput(Vector2 input) => this.input = input;
+    private void ReceiveMoveInput(Vector2 input)
+    {
+        this.Input = input;
+        Moving = input != Vector2.zero;
+    }
+
     private void ReceiveJumpInput(bool jumping)
     {
-        this.jumping = jumping;
+        Jumping = jumping;
         if (jumping) Jump();
     }
 }

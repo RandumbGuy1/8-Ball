@@ -10,7 +10,9 @@ public class PlayerRef : MonoBehaviour
     [SerializeField] private CameraBody cameraBody;
     [SerializeField] private Camera playerCam;
     [SerializeField] private Transform orientation;
+    [SerializeField] private MeshRenderer rendering;
 
+    public MeshRenderer Rendering => rendering;
     public PlayerMovement PlayerMovement => playerMovement;
     public PlayerInput PlayerInput => playerInput;
     public CameraBody CameraBody => cameraBody;

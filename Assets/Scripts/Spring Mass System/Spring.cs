@@ -1,18 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Spring : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private MassPoint a = new MassPoint();
+    [SerializeField] private MassPoint b = new MassPoint();
+    public MassPoint A => a;
+    public MassPoint B => b;
 
-    // Update is called once per frame
-    void Update()
+    [Header("Spring Settings")]
+    [SerializeField] private float dampening;
+    [SerializeField] private float restLength;
+    [SerializeField] private float stiffness;
+
+    void FixedUpdate()
     {
-        
+        a.PhysicsUpdate();
+        b.PhysicsUpdate();
+
+        float forceSustained = ((b.Position - a.Position).magnitude - restLength) * stiffness;
+        float forceDampening = Vector3.Dot((b.Position - a.Position).normalized, b.Velocity - a.Velocity) * dampening;
+
+        float totalForce = forceSustained + forceDampening;
+
+        a.Force = (b.Position - a.Position).normalized * totalForce;
+        b.Force = (a.Position - b.Position).normalized * totalForce;
     }
 }
