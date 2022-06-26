@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rideHeight;
     [SerializeField] private float rideSpringStrength;
     [SerializeField] private float rideSpringDamper;
+    public bool InWater { get; set; }
     public bool Grounded { get; private set; }
 
     [Header("Standing Settings")]
@@ -64,7 +65,8 @@ public class PlayerMovement : MonoBehaviour
         ClampSpeed(movementMultiplier);
 
         Vector3 moveDir = player.Orientation.forward * Input.y + player.Orientation.right * Input.x;
-        rb.AddForce(acceleration * movementMultiplier * moveDir.normalized, ForceMode.Impulse);
+        if (InWater) rb.AddForceAtPosition(acceleration * movementMultiplier * moveDir.normalized, transform.position + transform.up, ForceMode.Impulse); 
+        else rb.AddForce(acceleration * movementMultiplier * moveDir.normalized, ForceMode.Impulse);
 
         Magnitude = rb.velocity.magnitude;
         Velocity = rb.velocity;
@@ -72,10 +74,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void HoverOffGround()
     {
-        Grounded = Physics.SphereCast(transform.position, 0.3f, Vector3.down, out _, rideHeight + rideRayExtension, environment);
+        Grounded = Physics.SphereCast(transform.position, 0.3f, Vector3.down, out _, rideHeight + rideRayExtension, environment) || InWater;
         bool buffer = Physics.Raycast(transform.position, Vector3.down, out var hit, rideHeight + rideRayExtension * 1.35f, environment);
 
-        if (!buffer) return;
+        if (!buffer || InWater) return;
 
         Vector3 vel = rb.velocity;
         Vector3 otherVel = Vector3.zero;

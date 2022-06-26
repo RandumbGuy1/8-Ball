@@ -31,7 +31,8 @@ public class CameraHeadBob
 
         float scroller = viewBobTimer * viewBobSpeed;
 
-        Vector3 headBob = (viewBobMultiplier.x * Mathf.Cos(scroller) * player.Orientation.right + viewBobMultiplier.y * Mathf.Abs(Mathf.Sin(scroller)) * Vector3.up) 
+        float swimMultiplier = player.PlayerMovement.InWater ? 0.25f : 1f;
+        Vector3 headBob = swimMultiplier * (viewBobMultiplier.x * Mathf.Cos(scroller) * player.Orientation.right + viewBobMultiplier.y * Mathf.Abs(Mathf.Sin(scroller)) * Vector3.up) 
             + Vector3.down * landBobOffset;
         springMotion = Vector3.Lerp(springMotion, (headBob - ViewBobOffset) * 0.5f, viewBobSmoothTime * Time.deltaTime);
 
