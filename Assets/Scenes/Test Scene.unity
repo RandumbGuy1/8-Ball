@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 266.2448, g: 232.0114, b: 176.51257, a: 1}
+  m_IndirectSpecularColor: {r: 266.2343, g: 231.99577, b: 176.50671, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -625,7 +625,7 @@ MonoBehaviour:
     render: 1
   - prefab: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
       type: 3}
-    size: 15
+    size: 100
     render: 1
 --- !u!4 &336912172
 Transform:
@@ -1748,6 +1748,8 @@ MonoBehaviour:
   acceleration: 40
   maxSpeed: 18
   jumpForce: 50
+  swimAcceleration: 4.5
+  swimJumpBoost: 1.1
   environment:
     serializedVersion: 2
     m_Bits: 1536
@@ -1803,6 +1805,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jumpKey: 32
+  sinkSwimKey: 304
   togglePerspectKey: 9
 --- !u!114 &1008010272
 MonoBehaviour:

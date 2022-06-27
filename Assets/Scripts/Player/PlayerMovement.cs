@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Move Settings")]
+    [Header("General Movement Settings")]
     [SerializeField] private float acceleration;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float jumpForce;
@@ -17,6 +17,10 @@ public class PlayerMovement : MonoBehaviour
     public float Magnitude { get; private set; }
     public Vector3 RelativeVel { get; private set; }
     public Vector3 Velocity { get; private set; }
+
+    [Header("Swim Settings")]
+    [SerializeField] private float swimAcceleration;
+    [SerializeField] private float swimJumpBoost;
 
     [Header("Hover Settings")]
     [SerializeField] private LayerMask environment;
@@ -46,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     {
         player.PlayerInput.OnMoveInput += ReceiveMoveInput;
         player.PlayerInput.OnJumpInput += ReceiveJumpInput;
+        player.PlayerInput.OnSwimSinkInput += ReceiveSwimSinkInput;
     }
 
     void FixedUpdate()
@@ -105,9 +110,9 @@ public class PlayerMovement : MonoBehaviour
         if (!Grounded) return;
 
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        rb.AddForce((InWater ? swimJumpBoost : 1f) * jumpForce * Vector3.up, ForceMode.Impulse);
 
-        player.CameraBody.CamHeadBob.BobOnce(5f);
+        player.CameraBody.CamHeadBob.BobOnce(6f);
     }
 
     private void Friction()
@@ -144,6 +149,14 @@ public class PlayerMovement : MonoBehaviour
     {
         this.Input = input;
         Moving = input != Vector2.zero;
+    }
+
+    private void ReceiveSwimSinkInput(bool sinking)
+    {
+        if (sinking && InWater)
+        {
+            rb.AddForce(swimAcceleration * Vector3.down, ForceMode.Impulse);
+        }
     }
 
     private void ReceiveJumpInput(bool jumping)

@@ -13,6 +13,9 @@ public class PlayerInput : MonoBehaviour
     public delegate void ReceiveJump(bool jumping);
     public event ReceiveJump OnJumpInput;
 
+    public delegate void ReceiveSwimSink(bool sinking);
+    public event ReceiveSwimSink OnSwimSinkInput;
+
     public delegate void ReceiveToggle(bool toggle);
     public event ReceiveToggle OnPerspectiveToggle;
 
@@ -22,6 +25,7 @@ public class PlayerInput : MonoBehaviour
 
     [Header("Keybinds")]
     [SerializeField] private KeyCode jumpKey;
+    [SerializeField] private KeyCode sinkSwimKey;
     [SerializeField] private KeyCode togglePerspectKey;
 
     void Update()
@@ -29,6 +33,7 @@ public class PlayerInput : MonoBehaviour
         OnMoveInput?.Invoke(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")));
         OnMouseInput?.Invoke(new Vector2(Input.GetAxisRaw("Mouse Y"), Input.GetAxisRaw("Mouse X")));
         OnJumpInput?.Invoke(Input.GetKeyDown(jumpKey));
+        OnSwimSinkInput?.Invoke(Input.GetKey(sinkSwimKey));
 
         OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
 

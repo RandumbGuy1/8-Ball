@@ -20,6 +20,8 @@ public class WaterCollider : MonoBehaviour
     {
         foreach (SubmergeeData entry in submergees.Values)
         {
+            if (!submergees.ContainsKey(entry.Rb)) continue;
+
             float submergence = EvaluateSubmergence(entry.Col);
             if (submergence < submergenceRequired) continue;
             
@@ -31,11 +33,8 @@ public class WaterCollider : MonoBehaviour
             entry.Rb.AddForce((1f - buoyancy * (submergence * submergence)) * Time.fixedDeltaTime * Physics.gravity, ForceMode.VelocityChange);
 
             //Apply Ripple Effects
-            if (submergence > 0.6f || entry.Rb.velocity.sqrMagnitude > 64f)
-            {
-                if (!entry.Ripples.gameObject.activeInHierarchy) entry.Ripples.gameObject.SetActive(true);
-            }
-            else if (entry.Ripples.gameObject.activeInHierarchy) entry.Ripples.gameObject.SetActive(false);
+            if (entry.Rb.velocity.sqrMagnitude > 36f || submergence > 0.75f) entry.Ripples.Play();
+            else entry.Ripples.Stop();
         }
     }
 
