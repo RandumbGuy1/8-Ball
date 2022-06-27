@@ -5,6 +5,7 @@ using UnityEngine;
 public class WaterCollider : MonoBehaviour
 {
     [Header("Submerge Settings")]
+    [SerializeField] private GameObject waterRipples;
     [SerializeField] private GameObject waterSplash;
     [SerializeField] private LayerMask waterMask;
     [SerializeField] private float buoyancy;
@@ -13,27 +14,28 @@ public class WaterCollider : MonoBehaviour
     [SerializeField] private float waterAngularDrag;
     [SerializeField] private float submergenceOffset = 0.5f;
 
-    private Dictionary<Rigidbody, Collider> submergees = new Dictionary<Rigidbody, Collider>();
+    private Dictionary<Rigidbody, SubmergeeData> submergees = new Dictionary<Rigidbody, SubmergeeData>();
 
     void FixedUpdate()
     {
-        foreach (KeyValuePair<Rigidbody, Collider> entry in submergees)
+        foreach (SubmergeeData entry in submergees.Values)
         {
-            float submergence = EvaluateSubmergence(entry.Value);
+            float submergence = EvaluateSubmergence(entry.Col);
             if (submergence < submergenceRequired) continue;
             
             //Apply Water Drag
-            entry.Key.velocity *= 1f - waterDrag * submergence * Time.fixedDeltaTime;
-            entry.Key.angularVelocity *= 1f - waterAngularDrag * submergence * Time.fixedDeltaTime;
+            entry.Rb.velocity *= 1f - waterDrag * submergence * Time.fixedDeltaTime;
+            entry.Rb.angularVelocity *= 1f - waterAngularDrag * submergence * Time.fixedDeltaTime;
 
             //Apply Bouyancy
-            entry.Key.AddForce((1f - buoyancy * (submergence * submergence)) * Time.fixedDeltaTime * Physics.gravity, ForceMode.VelocityChange);
+            entry.Rb.AddForce((1f - buoyancy * (submergence * submergence)) * Time.fixedDeltaTime * Physics.gravity, ForceMode.VelocityChange);
 
-            //Allow Player to Swim
-            PlayerMovement submergedPlayer = entry.Value.GetComponent<PlayerMovement>();
-            if (submergedPlayer == null) continue;
-
-            submergedPlayer.InWater = true;
+            //Apply Ripple Effects
+            if (submergence > 0.6f || entry.Rb.velocity.sqrMagnitude > 64f)
+            {
+                if (!entry.Ripples.gameObject.activeInHierarchy) entry.Ripples.gameObject.SetActive(true);
+            }
+            else if (entry.Ripples.gameObject.activeInHierarchy) entry.Ripples.gameObject.SetActive(false);
         }
     }
 
@@ -43,7 +45,18 @@ public class WaterCollider : MonoBehaviour
         if (rb == null || submergees.ContainsKey(rb)) return;
 
         PlaySplashEffect(col, rb);
-        submergees.Add(rb, col);
+
+        ParticleSystem ripples = ObjectPooler.Instance.Spawn(waterRipples, true, col.transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
+        ripples.transform.SetParent(rb.transform);
+
+        SubmergeeData toAdd = new SubmergeeData(col, rb, ripples);
+        submergees.Add(rb, toAdd);
+
+        //Allow Player to Swim
+        PlayerMovement submergedPlayer = col.GetComponent<PlayerMovement>();
+        if (submergedPlayer == null) return;
+
+        submergedPlayer.InWater = true;
     }
 
     void OnTriggerExit(Collider col)
@@ -52,7 +65,12 @@ public class WaterCollider : MonoBehaviour
         if (rb == null || !submergees.ContainsKey(rb)) return;
 
         PlaySplashEffect(col, rb);
+
+        GameObject ripples = submergees[rb].Ripples.gameObject;
         submergees.Remove(rb);
+
+        ripples.transform.SetParent(null);
+        ripples.SetActive(false);
 
         PlayerMovement submergedPlayer = col.GetComponent<PlayerMovement>();
         if (submergedPlayer == null) return;

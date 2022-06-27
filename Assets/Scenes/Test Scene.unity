@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 267.2458, g: 232.82317, b: 177.09167, a: 1}
+  m_IndirectSpecularColor: {r: 266.2448, g: 232.0114, b: 176.51257, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -620,6 +620,10 @@ MonoBehaviour:
     size: 3
     render: 0
   - prefab: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,
+      type: 3}
+    size: 15
+    render: 1
+  - prefab: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
       type: 3}
     size: 15
     render: 1
@@ -3179,6 +3183,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20cde30832ab84419398a5dc204fd8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waterRipples: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
+    type: 3}
   waterSplash: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,
     type: 3}
   waterMask:
@@ -3309,6 +3315,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20cde30832ab84419398a5dc204fd8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waterRipples: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
+    type: 3}
   waterSplash: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,
     type: 3}
   waterMask:
@@ -3471,7 +3479,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867256978}
   m_Layer: 0
-  m_Name: Save 0.7
+  m_Name: Save 0.8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
