@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float acceleration;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float jumpForce;
+    private Vector3 moveDir = Vector3.zero;
 
     public Vector2 Input { get; private set; } = Vector2.zero;
 
@@ -17,6 +18,18 @@ public class PlayerMovement : MonoBehaviour
     public float Magnitude { get; private set; }
     public Vector3 RelativeVel { get; private set; }
     public Vector3 Velocity { get; private set; }
+
+    [Header("Crouch Settings")]
+    [SerializeField] private float slideFriction;
+    [SerializeField] private float crouchMaxSpeed;
+    [SerializeField] private float crouchHeight;
+    [SerializeField] private float crouchSmoothTime;
+    [SerializeField] private float slideBoostSpeed;
+    private float playerHeight = 0f;
+    private Vector2 crouchVel = Vector2.zero;
+
+    public bool Crouching { get; private set; } = false;
+    public Vector3 CrouchOffset => (playerHeight - player.CapsuleCol.height) * transform.localScale.y * Vector3.down;
 
     [Header("Swim Settings")]
     [SerializeField] private float swimAcceleration;
@@ -48,9 +61,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        playerHeight = player.CapsuleCol.height;
+
         player.PlayerInput.OnMoveInput += ReceiveMoveInput;
         player.PlayerInput.OnJumpInput += ReceiveJumpInput;
         player.PlayerInput.OnSwimSinkInput += ReceiveSwimSinkInput;
+        player.PlayerInput.OnCrouchInput += ReceiveCrouchInput;
     }
 
     void FixedUpdate()
@@ -69,12 +85,14 @@ public class PlayerMovement : MonoBehaviour
         float movementMultiplier = 3.5f * Time.fixedDeltaTime * (Grounded ? 1f : 0.6f);
         ClampSpeed(movementMultiplier);
 
-        Vector3 moveDir = player.Orientation.forward * Input.y + player.Orientation.right * Input.x;
-        if (InWater) rb.AddForceAtPosition(acceleration * movementMultiplier * moveDir.normalized, transform.position + transform.up, ForceMode.Impulse); 
-        else rb.AddForce(acceleration * movementMultiplier * moveDir.normalized, ForceMode.Impulse);
-
         Magnitude = rb.velocity.magnitude;
         Velocity = rb.velocity;
+
+        if (Crouching) return;
+
+        moveDir = player.Orientation.forward * Input.y + player.Orientation.right * Input.x;
+        if (InWater) rb.AddForceAtPosition(acceleration * movementMultiplier * moveDir.normalized, transform.position + transform.up, ForceMode.Impulse); 
+        else rb.AddForce(acceleration * movementMultiplier * moveDir.normalized, ForceMode.Impulse);
     }
 
     private void HoverOffGround()
@@ -102,22 +120,79 @@ public class PlayerMovement : MonoBehaviour
     public void UpdateUprightForce()
     {
         Quaternion fromTo = Quaternion.FromToRotation(transform.up, Vector3.up);
+
         rb.AddTorque((new Vector3(fromTo.x, fromTo.y, fromTo.z) * uprightSpringStrength) - (rb.angularVelocity * uprightSpringStrengthDamper), ForceMode.Impulse);
     }
 
-    private void Jump()
+    private void ReceiveJumpInput(bool jumping)
     {
-        if (!Grounded) return;
+        Jumping = jumping;
+
+        if (!Grounded || !Jumping) return;
 
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         rb.AddForce((InWater ? swimJumpBoost : 1f) * jumpForce * Vector3.up, ForceMode.Impulse);
 
-        player.CameraBody.CamHeadBob.BobOnce(6f);
+        player.CameraBody.CamHeadBob.BobOnce(5.5f);
+    }
+
+    private void ReceiveSwimSinkInput(bool sinking)
+    {
+        if (sinking && InWater) rb.AddForce(swimAcceleration * Vector3.down, ForceMode.Impulse);
+    }
+
+    private void ReceiveCrouchInput(bool crouching)
+    {
+        UpdateCrouch();
+
+        if (InWater)
+        {
+            Crouching = false;
+            return;
+        }
+
+        bool prevCouching = Crouching;
+        Crouching = crouching;
+
+        if (Crouching == prevCouching) return;
+
+        if (Crouching)
+        {
+            player.CameraBody.CamHeadBob.BobOnce(6f);
+            rb.AddForce(Magnitude * slideBoostSpeed * (Grounded ? 0.8f : 0.3f) * moveDir.normalized);
+            return;
+        }
+
+        if (Grounded) rb.velocity *= 0.65f;
+    }
+    private void UpdateCrouch()
+    {
+        float targetScale = Crouching ? crouchHeight : playerHeight;
+        float targetCenter = (targetScale - playerHeight) * 0.5f;
+
+        if (player.CapsuleCol.height == targetScale && player.CapsuleCol.center.y == targetCenter) return;
+        if (Mathf.Abs(targetScale - player.CapsuleCol.height) < 0.01f && Mathf.Abs(targetCenter - player.CapsuleCol.center.y) < 0.01f)
+        {
+            player.CapsuleCol.height = targetScale;
+            player.CapsuleCol.center = Vector3.one * targetCenter;
+        }
+
+        player.CapsuleCol.height = Mathf.SmoothDamp(player.CapsuleCol.height, targetScale, ref crouchVel.x, crouchSmoothTime);
+        player.CapsuleCol.center = new Vector3(0, Mathf.SmoothDamp(player.CapsuleCol.center.y, targetCenter, ref crouchVel.y, crouchSmoothTime), 0);
+
+        player.Rendering.transform.localPosition = player.CapsuleCol.center;
+        player.Rendering.transform.localScale = new Vector3(1f, player.CapsuleCol.height * 0.5f, 1f);
     }
 
     private void Friction()
     {
         if (Jumping || !Grounded) return;
+
+        if (Crouching)
+        {
+            rb.AddForce(Magnitude * 0.12f * slideFriction * -rb.velocity.normalized);
+            return;
+        }
 
         Vector3 frictionForce = Vector3.zero;
 
@@ -133,35 +208,25 @@ public class PlayerMovement : MonoBehaviour
         readyToCounter.x = Input.x == 0f ? readyToCounter.x + 1 : 0;
         readyToCounter.y = Input.y == 0f ? readyToCounter.y + 1 : 0;
     }
-
-    bool CounterMomentum(float input, float mag, float threshold = 0.05f)
+    private bool CounterMomentum(float input, float mag, float threshold = 0.05f)
         => input > 0 && mag < -threshold || input < 0 && mag > threshold;
 
     private void ClampSpeed(float movementMultiplier)
     {
         Vector3 vel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        float coefficientOfFriction = acceleration / maxSpeed;
+        float coefficientOfFriction = acceleration / GetMaxSpeed();
 
         if (vel.sqrMagnitude > maxSpeed * maxSpeed) rb.AddForce(coefficientOfFriction * movementMultiplier * -vel, ForceMode.Impulse);
+    }
+    private float GetMaxSpeed()
+    {
+        if (Crouching) return crouchMaxSpeed;
+        return maxSpeed * (Grounded ? 1f : 1.15f);
     }
 
     private void ReceiveMoveInput(Vector2 input)
     {
-        this.Input = input;
-        Moving = input != Vector2.zero;
-    }
-
-    private void ReceiveSwimSinkInput(bool sinking)
-    {
-        if (sinking && InWater)
-        {
-            rb.AddForce(swimAcceleration * Vector3.down, ForceMode.Impulse);
-        }
-    }
-
-    private void ReceiveJumpInput(bool jumping)
-    {
-        Jumping = jumping;
-        if (jumping) Jump();
+        Input = input;
+        Moving = input != Vector2.zero && !Crouching;
     }
 }

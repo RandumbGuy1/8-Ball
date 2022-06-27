@@ -45,6 +45,10 @@ public class CameraHeadBob
 
     public void BobOnce(float magnitude)
     {
+        if (!enabled) return;
+
         landBobOffset -= magnitude;
     }
+
+    public void Enable(bool enabled) => this.enabled = enabled;
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class CameraIdleSway
 {
 	[Header("Head Sway Settings")]
+	[SerializeField] private bool enabled = true;
 	[SerializeField] private float swayAmount;
 	[SerializeField] private float swayFrequency;
 
@@ -14,6 +15,7 @@ public class CameraIdleSway
 
 	public void IdleCameraSway(PlayerRef player)
 	{
+		if (!enabled) return;
 		if (!player.PlayerMovement.Grounded || player.PlayerMovement.Magnitude > 5f) return;
 
 		headSwayScroller += Time.deltaTime * swayFrequency;
@@ -24,4 +26,6 @@ public class CameraIdleSway
 	{
 		return new Vector3(Mathf.Sin(Time), 1f * Mathf.Sin(2f * Time + Mathf.PI));
 	}
+
+	public void Enable(bool enabled) => this.enabled = enabled;
 }

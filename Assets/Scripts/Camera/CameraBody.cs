@@ -45,7 +45,7 @@ public class CameraBody : MonoBehaviour
             player.Orientation.localRotation = newPlayerRot;
             transform.localRotation = newCamRot;
 
-            player.PlayerCam.transform.localPosition = Vector3.back * camCollider.SmoothPull + camHeadBob.ViewBobOffset * 0.135f;
+            player.PlayerCam.transform.localPosition = Vector3.back * camCollider.SmoothPull + camHeadBob.ViewBobOffset * 0.135f + player.PlayerMovement.CrouchOffset;
             transform.position = player.transform.position + posOffset;
         }
     }

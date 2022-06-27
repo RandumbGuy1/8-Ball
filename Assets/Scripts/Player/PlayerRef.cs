@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerRef : MonoBehaviour
 {
@@ -11,7 +9,9 @@ public class PlayerRef : MonoBehaviour
     [SerializeField] private Camera playerCam;
     [SerializeField] private Transform orientation;
     [SerializeField] private MeshRenderer rendering;
+    [SerializeField] private CapsuleCollider capsuleCol;
 
+    public CapsuleCollider CapsuleCol => capsuleCol;
     public MeshRenderer Rendering => rendering;
     public PlayerMovement PlayerMovement => playerMovement;
     public PlayerInput PlayerInput => playerInput;

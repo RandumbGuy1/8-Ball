@@ -16,8 +16,14 @@ public class PlayerInput : MonoBehaviour
     public delegate void ReceiveSwimSink(bool sinking);
     public event ReceiveSwimSink OnSwimSinkInput;
 
+    public delegate void ReceiveCrouch(bool crouching);
+    public event ReceiveCrouch OnCrouchInput;
+
     public delegate void ReceiveToggle(bool toggle);
     public event ReceiveToggle OnPerspectiveToggle;
+
+    public delegate void ReceivePause(bool pause);
+    public event ReceivePause OnPauseToggle;
 
     public delegate void ReceieveMouseButton(int button);
     public event ReceieveMouseButton OnMouseButtonDownInput;
@@ -25,14 +31,22 @@ public class PlayerInput : MonoBehaviour
 
     [Header("Keybinds")]
     [SerializeField] private KeyCode jumpKey;
+    [SerializeField] private KeyCode crouchKey;
     [SerializeField] private KeyCode sinkSwimKey;
     [SerializeField] private KeyCode togglePerspectKey;
+    [SerializeField] private KeyCode pauseMenuKey;
 
     void Update()
     {
+        OnPauseToggle?.Invoke(Input.GetKeyDown(pauseMenuKey));
+
+        if (GameManager.Instance.CurrentGameState == GameState.Paused) return;
+
         OnMoveInput?.Invoke(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")));
         OnMouseInput?.Invoke(new Vector2(Input.GetAxisRaw("Mouse Y"), Input.GetAxisRaw("Mouse X")));
+
         OnJumpInput?.Invoke(Input.GetKeyDown(jumpKey));
+        OnCrouchInput?.Invoke(Input.GetKey(crouchKey));
         OnSwimSinkInput?.Invoke(Input.GetKey(sinkSwimKey));
 
         OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
