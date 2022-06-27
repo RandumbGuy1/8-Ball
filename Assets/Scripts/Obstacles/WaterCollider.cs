@@ -5,6 +5,7 @@ using UnityEngine;
 public class WaterCollider : MonoBehaviour
 {
     [Header("Submerge Settings")]
+    [SerializeField] private GameObject waterSplash;
     [SerializeField] private LayerMask waterMask;
     [SerializeField] private float buoyancy;
     [SerializeField] private float submergenceRequired = 0.1f;
@@ -41,6 +42,7 @@ public class WaterCollider : MonoBehaviour
         Rigidbody rb = col.GetComponent<Rigidbody>();
         if (rb == null || submergees.ContainsKey(rb)) return;
 
+        PlaySplashEffect(col, rb);
         submergees.Add(rb, col);
     }
 
@@ -49,12 +51,32 @@ public class WaterCollider : MonoBehaviour
         Rigidbody rb = col.GetComponent<Rigidbody>();
         if (rb == null || !submergees.ContainsKey(rb)) return;
 
+        PlaySplashEffect(col, rb);
         submergees.Remove(rb);
 
         PlayerMovement submergedPlayer = col.GetComponent<PlayerMovement>();
         if (submergedPlayer == null) return;
 
         submergedPlayer.InWater = false;
+    }
+
+    private void PlaySplashEffect(Collider col, Rigidbody rb)
+    {
+        float magnitude = rb.velocity.magnitude;
+        if (magnitude < 10f) return;
+
+        Vector3 colToWater = transform.position - col.transform.position;
+        Vector3 normal = Physics.Raycast(col.transform.position, colToWater.normalized, out var hit, colToWater.magnitude, waterMask) ? hit.normal : Vector3.up;
+        ParticleSystem splash = ObjectPooler.Instance.Spawn(waterSplash, true, col.transform.position, Quaternion.LookRotation(normal)).GetComponent<ParticleSystem>();
+
+        float magnitudeMulti = Mathf.Max(1f, magnitude * 0.25f) / 10;
+        splash.transform.localScale = Vector3.one * magnitudeMulti;
+
+        ParticleSystem.EmissionModule em = splash.emission;
+        em.rateOverTimeMultiplier = magnitudeMulti;
+
+        ParticleSystem.VelocityOverLifetimeModule velocityOverLifetime = splash.velocityOverLifetime;
+        velocityOverLifetime.radialMultiplier += magnitudeMulti;
     }
 
     private float EvaluateSubmergence(Collider col)

@@ -6,7 +6,6 @@ public class ClubShot : MonoBehaviour
 {
     [Header("GFX Settings")]
     [SerializeField] private LineRenderer lr;
-    [SerializeField] private ParticleSystem wind;
     [SerializeField] private Projecton projecton;
     [SerializeField] private GameObject ballGhostPrefb;
 
@@ -43,6 +42,7 @@ public class ClubShot : MonoBehaviour
 
     private void UpdateInput(int button)
     {
+        /*
         if (Input.GetKeyDown(KeyCode.E))
         {
             wind.Stop();
@@ -58,6 +58,7 @@ public class ClubShot : MonoBehaviour
                 rb.AddForce((player.PlayerCam.transform.forward + Vector3.up) * 20f, ForceMode.Impulse);
             }
         }
+        */
 
         if (button == 1) CalculateShot(button);
         if (currentBall != null) return;
