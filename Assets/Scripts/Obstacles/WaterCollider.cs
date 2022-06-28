@@ -23,7 +23,7 @@ public class WaterCollider : MonoBehaviour
             if (!submergees.ContainsKey(entry.Rb)) continue;
 
             float submergence = EvaluateSubmergence(entry.Col);
-            if (submergence < submergenceRequired) continue;
+            if (submergence < submergenceRequired) return;
             
             //Apply Water Drag
             entry.Rb.velocity *= 1f - waterDrag * submergence * Time.fixedDeltaTime;
@@ -43,13 +43,13 @@ public class WaterCollider : MonoBehaviour
         Rigidbody rb = col.GetComponent<Rigidbody>();
         if (rb == null || submergees.ContainsKey(rb)) return;
 
-        PlaySplashEffect(col, rb);
-
         ParticleSystem ripples = ObjectPooler.Instance.Spawn(waterRipples, true, col.transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
         ripples.transform.SetParent(rb.transform);
 
         SubmergeeData toAdd = new SubmergeeData(col, rb, ripples);
         submergees.Add(rb, toAdd);
+
+        PlaySplashEffect(toAdd, 2);
 
         //Allow Player to Swim
         PlayerMovement submergedPlayer = col.GetComponent<PlayerMovement>();
@@ -63,7 +63,7 @@ public class WaterCollider : MonoBehaviour
         Rigidbody rb = col.GetComponent<Rigidbody>();
         if (rb == null || !submergees.ContainsKey(rb)) return;
 
-        PlaySplashEffect(col, rb);
+        PlaySplashEffect(submergees[rb], 1);
 
         GameObject ripples = submergees[rb].Ripples.gameObject;
         submergees.Remove(rb);
@@ -77,14 +77,16 @@ public class WaterCollider : MonoBehaviour
         submergedPlayer.InWater = false;
     }
 
-    private void PlaySplashEffect(Collider col, Rigidbody rb)
+    private void PlaySplashEffect(SubmergeeData data, int splashCount, int iterCount = 1)
     {
-        float magnitude = rb.velocity.magnitude;
+        if (iterCount > 2) return;
+
+        float magnitude = data.Rb.velocity.magnitude;
         if (magnitude < 10f) return;
 
-        Vector3 colToWater = transform.position - col.transform.position;
-        Vector3 normal = Physics.Raycast(col.transform.position, colToWater.normalized, out var hit, colToWater.magnitude, waterMask) ? hit.normal : Vector3.up;
-        ParticleSystem splash = ObjectPooler.Instance.Spawn(waterSplash, true, col.transform.position, Quaternion.LookRotation(normal)).GetComponent<ParticleSystem>();
+        Vector3 colToWater = transform.position - data.Col.transform.position;
+        Vector3 normal = Physics.Raycast(data.Col.transform.position, colToWater.normalized, out var hit, colToWater.magnitude, waterMask) ? hit.normal : Vector3.up;
+        ParticleSystem splash = ObjectPooler.Instance.Spawn(waterSplash, true, data.Col.transform.position, Quaternion.LookRotation(normal * (iterCount % 2 == 0 ? -1f : 1f))).GetComponent<ParticleSystem>();
 
         float magnitudeMulti = Mathf.Max(1f, magnitude * 0.25f) / 10;
         splash.transform.localScale = Vector3.one * magnitudeMulti;
@@ -94,6 +96,9 @@ public class WaterCollider : MonoBehaviour
 
         ParticleSystem.VelocityOverLifetimeModule velocityOverLifetime = splash.velocityOverLifetime;
         velocityOverLifetime.radialMultiplier += magnitudeMulti;
+
+        iterCount++;
+        PlaySplashEffect(data, splashCount, iterCount);
     }
 
     private float EvaluateSubmergence(Collider col)

@@ -25,7 +25,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float crouchHeight;
     [SerializeField] private float crouchSmoothTime;
     [SerializeField] private float slideBoostSpeed;
+    [SerializeField] private float slideBoostCooldown;
     private float playerHeight = 0f;
+    private float timeSinceLastSlide = 0f;
     private Vector2 crouchVel = Vector2.zero;
 
     public bool Crouching { get; private set; } = false;
@@ -43,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rideSpringDamper;
     public bool InWater { get; set; }
     public bool Grounded { get; private set; }
+    private bool groundedLastFrame = false;
 
     [Header("Standing Settings")]
     [SerializeField] private float uprightSpringStrength;
@@ -82,15 +85,19 @@ public class PlayerMovement : MonoBehaviour
         HoverOffGround();
         UpdateUprightForce();
 
+        if (Grounded && !groundedLastFrame) player.CameraBody.CamHeadBob.BobOnce(Mathf.Abs(Velocity.y * 0.3f));
+
         float movementMultiplier = 3.5f * Time.fixedDeltaTime * (Grounded ? 1f : 0.6f);
         ClampSpeed(movementMultiplier);
 
         Magnitude = rb.velocity.magnitude;
         Velocity = rb.velocity;
 
+        moveDir = player.Orientation.forward * Input.y + player.Orientation.right * Input.x;
+        groundedLastFrame = Grounded;
+
         if (Crouching) return;
 
-        moveDir = player.Orientation.forward * Input.y + player.Orientation.right * Input.x;
         if (InWater) rb.AddForceAtPosition(acceleration * movementMultiplier * moveDir.normalized, transform.position + transform.up, ForceMode.Impulse); 
         else rb.AddForce(acceleration * movementMultiplier * moveDir.normalized, ForceMode.Impulse);
     }
@@ -148,18 +155,22 @@ public class PlayerMovement : MonoBehaviour
         if (InWater)
         {
             Crouching = false;
+            timeSinceLastSlide = slideBoostCooldown;
             return;
         }
+
+        if (!crouching) timeSinceLastSlide = Mathf.Max(0f, timeSinceLastSlide - Time.deltaTime);
 
         bool prevCouching = Crouching;
         Crouching = crouching;
 
         if (Crouching == prevCouching) return;
 
-        if (Crouching)
+        if (Crouching && timeSinceLastSlide <= 0f)
         {
             player.CameraBody.CamHeadBob.BobOnce(6f);
-            rb.AddForce(Magnitude * slideBoostSpeed * (Grounded ? 0.8f : 0.3f) * moveDir.normalized);
+            rb.AddForce(Magnitude * slideBoostSpeed * (Grounded ? 0.8f : 0.1f) * moveDir.normalized, ForceMode.Impulse);
+            timeSinceLastSlide = slideBoostCooldown;
             return;
         }
 
