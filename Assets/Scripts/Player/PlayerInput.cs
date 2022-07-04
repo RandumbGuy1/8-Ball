@@ -19,6 +19,9 @@ public class PlayerInput : MonoBehaviour
     public delegate void ReceiveCrouch(bool crouching);
     public event ReceiveCrouch OnCrouchInput;
 
+    public delegate void ReceiveInteract(bool interacting);
+    public event ReceiveInteract OnInteractInput;
+
     public delegate void ReceiveToggle(bool toggle);
     public event ReceiveToggle OnPerspectiveToggle;
 
@@ -33,8 +36,16 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private KeyCode jumpKey;
     [SerializeField] private KeyCode crouchKey;
     [SerializeField] private KeyCode sinkSwimKey;
+    [SerializeField] private KeyCode interactKey;
     [SerializeField] private KeyCode togglePerspectKey;
     [SerializeField] private KeyCode pauseMenuKey;
+
+    public KeyCode JumpKey => jumpKey;
+    public KeyCode CrouchKey => crouchKey;
+    public KeyCode SinkSwimKey => sinkSwimKey;
+    public KeyCode InteractKey => interactKey;
+    public KeyCode TogglePerspectKey => togglePerspectKey;
+    public KeyCode PauseMenuKey => pauseMenuKey;
 
     void Update()
     {
@@ -48,6 +59,7 @@ public class PlayerInput : MonoBehaviour
         OnJumpInput?.Invoke(Input.GetKeyDown(jumpKey));
         OnCrouchInput?.Invoke(Input.GetKey(crouchKey));
         OnSwimSinkInput?.Invoke(Input.GetKey(sinkSwimKey));
+        OnInteractInput?.Invoke(Input.GetKeyDown(interactKey));
 
         OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
 
