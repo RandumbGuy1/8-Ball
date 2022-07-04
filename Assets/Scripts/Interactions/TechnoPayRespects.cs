@@ -24,6 +24,7 @@ public class TechnoPayRespects : MonoBehaviour, IInteractable
     {
         used = true;
         technoQuotes.SetActive(true);
+        PostProcessingManager.Instance.AddExposure(20f);
     }
 
     public void OnStartHover(PlayerRef player)
