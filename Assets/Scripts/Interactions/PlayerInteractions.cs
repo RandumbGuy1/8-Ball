@@ -15,6 +15,7 @@ public class PlayerInteractions : MonoBehaviour
     [SerializeField] private PlayerRef player;
     [SerializeField] private TextMeshProUGUI interactionKeyBindText;
     [SerializeField] private TextMeshProUGUI interactionText;
+    [SerializeField] private GameObject interactionUI;
 
     private IInteractable interactable;
 
@@ -25,7 +26,8 @@ public class PlayerInteractions : MonoBehaviour
 
     private void CheckForInteractable(bool interact)
     {
-        if (Physics.SphereCast(player.PlayerCam.transform.position, interactionRadius, player.PlayerCam.transform.forward, out var hit, interactionRange, Interactables, QueryTriggerInteraction.Ignore))
+        Ray ray = player.PlayerCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        if (Physics.SphereCast(ray, interactionRadius, out var hit, interactionRange + (player.transform.position - player.PlayerCam.transform.position).magnitude, Interactables, QueryTriggerInteraction.Ignore))
         {
             GameObject currentleyLookingAt = hit.transform.gameObject;
 
@@ -51,13 +53,13 @@ public class PlayerInteractions : MonoBehaviour
             }
 
             string text = interactable.GetDescription(player);
-            interactionText.gameObject.SetActive(text != null);
-
-            if (!interactionText.gameObject.activeInHierarchy)
+            if (text == null)
             {
-                interactionText.text = " ";
+                ResetInteraction(false);
                 return;
             }
+
+            interactionUI.SetActive(true);
 
             interactionText.text = text;
             interactionKeyBindText.text = player.PlayerInput.InteractKey.ToString();
@@ -68,12 +70,12 @@ public class PlayerInteractions : MonoBehaviour
         else if (interactionText.text != " ") ResetInteraction();
     }
 
-    private void ResetInteraction()
+    private void ResetInteraction(bool noInteraction = true)
     {
-        interactionText.gameObject.SetActive(false);
+        interactionUI.SetActive(false);
         interactionText.text = " ";
 
-        if (interactable == null) return;
+        if (interactable == null || !noInteraction) return;
 
         interactable.OnEndHover(player);
         interactable = null;

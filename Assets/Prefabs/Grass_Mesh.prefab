@@ -92,7 +92,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.1
+  m_Radius: 1.25
   m_Center: {x: -0.033464253, y: 0.10119202, z: 1.0650247}
 --- !u!114 &862819570379606190
 MonoBehaviour:
@@ -109,7 +109,7 @@ MonoBehaviour:
   collidesWithGrass:
     serializedVersion: 2
     m_Bits: 1025
-  swayAmount: 1.5
-  dragAmount: 0.3
-  returnSpeed: 5.5
+  swayAmount: 1
+  returnSpeed: 8
   grassRenderer: {fileID: 1193654472305272996}
+  grassCol: {fileID: 8840551846033655669}

@@ -8,6 +8,7 @@ public class CameraBody : MonoBehaviour
     [SerializeField] private TPSCameraCollider camCollider;
     [SerializeField] private CameraLook camLookSettings;
     [SerializeField] private Vector3 posOffset;
+    private Vector3 smoothPosOffset = Vector3.zero;
 
     public CameraIdleSway CamIdleSway => camIdleSway;
     public CameraHeadBob CamHeadBob => camHeadBob;
@@ -45,8 +46,11 @@ public class CameraBody : MonoBehaviour
             player.Orientation.localRotation = newPlayerRot;
             transform.localRotation = newCamRot;
 
-            player.PlayerCam.transform.localPosition = Vector3.back * camCollider.SmoothPull + camHeadBob.ViewBobOffset * 0.135f + player.PlayerMovement.CrouchOffset;
-            transform.position = player.transform.position + posOffset;
+            Vector3 cameraTPSOffset = camCollider.Enabled ? posOffset : new Vector3(0f, 0.5f, 0f);
+            smoothPosOffset = Vector3.Lerp(smoothPosOffset, cameraTPSOffset, 6f * Time.deltaTime);
+
+            player.PlayerCam.transform.localPosition = Vector3.back * camCollider.SmoothPull + camHeadBob.ViewBobOffset * 0.135f + player.PlayerMovement.CrouchOffset + smoothPosOffset;
+            transform.position = player.transform.position;
         }
     }
 

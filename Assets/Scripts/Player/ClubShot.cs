@@ -11,12 +11,8 @@ public class ClubShot : MonoBehaviour
 
     [Header("Shoot Settings")]
     [SerializeField] private LayerMask balls;
-    [SerializeField] private float clubLength;
-    [SerializeField] private float clubChargeTime;
-    [SerializeField] private float maxClubCharge;
-    [SerializeField] private float upwardClamp;
-    [SerializeField] private float clubPower;
-    [SerializeField] private int predictionCount;
+    [SerializeField] private GameObject club;
+    private IClub equippedClub;
 
     [SerializeField] private Material unchargedMaterial;
     [SerializeField] private Material chargedMaterial;
@@ -38,34 +34,20 @@ public class ClubShot : MonoBehaviour
         lr.positionCount = 0;
         player.PlayerInput.OnMouseButtonDownInput += UpdateInput;
         player.PlayerInput.OnMouseButtonInput += CalculateShot;
+
+        if (club != null) equippedClub = club.GetComponent<IClub>();
     }
 
     private void UpdateInput(int button)
     {
-        /*
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            wind.Stop();
-            wind.Play();
-
-            Collider[] cols = Physics.OverlapSphere(wind.transform.position, 8f, balls);
-            foreach (Collider col in cols)
-            {
-                Rigidbody rb = col.GetComponent<Rigidbody>();
-                if (rb == null) continue;
-
-                rb.AddExplosionForce(50f, wind.transform.position, 8f, 1.5f, ForceMode.Impulse);
-                rb.AddForce((player.PlayerCam.transform.forward + Vector3.up) * 20f, ForceMode.Impulse);
-            }
-        }
-        */
+        if (club == null) return;
 
         if (button == 1) CalculateShot(button);
         if (currentBall != null) return;
 
-        //Check For balls
+        //Check For Balls
         Ray ray = player.PlayerCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-        if (Physics.Raycast(ray, out var hit, clubLength, balls))
+        if (Physics.Raycast(ray, out var hit, equippedClub.Stats.ClubLength + +(player.transform.position - player.PlayerCam.transform.position).magnitude, balls))
         {
             Rigidbody rb = hit.transform.GetComponent<Rigidbody>();
             if (rb == null) return;
@@ -78,7 +60,7 @@ public class ClubShot : MonoBehaviour
 
                 currentBall.collisionDetectionMode = CollisionDetectionMode.Discrete;
                 currentBall.isKinematic = true;
-                //AddSpring();
+                AddSpring();
             }
         }
     }
@@ -90,8 +72,8 @@ public class ClubShot : MonoBehaviour
         Vector3 toBall = currentBall.transform.position - player.transform.position;
         toBall.y = 0f;
 
-        float chargeRatio = chargePower / maxClubCharge;
-        int predictionCount = this.predictionCount;
+        float chargeRatio = chargePower / equippedClub.Stats.MaxClubCharge;
+        int predictionCount = equippedClub.Stats.PredictionCount;
         if (chargeRatio < 0.01f) predictionCount = Mathf.RoundToInt(predictionCount * 0.1f);
 
         lr.positionCount = 2 + predictionCount;
@@ -101,10 +83,10 @@ public class ClubShot : MonoBehaviour
         lr.endWidth = lr.startWidth * 0.8f;
         lr.material.Lerp(unchargedMaterial, chargedMaterial, chargeRatio);
 
-        Vector3 shotTrajectory = chargePower * clubPower * (toBall.normalized + 1.15f * smoothUpwardModifier * Vector3.up);
-        shotTrajectory = Vector3.ClampMagnitude(shotTrajectory, chargePower * clubPower);
+        Vector3 shotTrajectory = chargePower * equippedClub.Stats.ClubPower * (toBall.normalized + 1.15f * smoothUpwardModifier * Vector3.up);
+        shotTrajectory = Vector3.ClampMagnitude(shotTrajectory, chargePower * equippedClub.Stats.ClubPower);
 
-        upwardModifier = Mathf.Clamp(upwardModifier + Input.mouseScrollDelta.y * 0.1f, -upwardClamp, upwardClamp);
+        upwardModifier = Mathf.Clamp(upwardModifier + Input.mouseScrollDelta.y * 0.1f, -equippedClub.Stats.UpwardClamp, equippedClub.Stats.UpwardClamp);
         smoothUpwardModifier = Mathf.Lerp(smoothUpwardModifier, upwardModifier, 10f * Time.deltaTime);
 
         if (button == 1)
@@ -114,8 +96,8 @@ public class ClubShot : MonoBehaviour
         }
         else
         {
-            float target = button != -1 ? maxClubCharge : 0f;
-            chargePower = Mathf.SmoothDamp(chargePower, target, ref vel, clubChargeTime);
+            float target = button != -1 ? equippedClub.Stats.MaxClubCharge : 0f;
+            chargePower = Mathf.SmoothDamp(chargePower, target, ref vel, equippedClub.Stats.ClubChargeTime);
         }
 
         Vector3[] points = projecton.SimulateTrajectory(ballGhostPrefb, currentBall.transform.position, currentBall.transform.rotation, (Rigidbody rb) => rb.AddForce(shotTrajectory, ForceMode.VelocityChange), predictionCount, chargeRatio);
@@ -128,7 +110,7 @@ public class ClubShot : MonoBehaviour
         joint.autoConfigureConnectedAnchor = false;
         joint.connectedAnchor = currentBall.transform.position;
 
-        joint.maxDistance = clubLength;
+        joint.maxDistance = equippedClub.Stats.ClubLength;
         joint.minDistance = 0f;
 
         joint.spring = 5f;
