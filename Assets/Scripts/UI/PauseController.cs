@@ -6,6 +6,7 @@ public class PauseController : MonoBehaviour
     [SerializeField] private SettingsMenu settings;
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private PlayerRef player;
+    [SerializeField] private GameObject clubUI;
     private bool paused = false;
 
     void Awake() => player.PlayerInput.OnPauseToggle += HandlePause;
@@ -18,6 +19,7 @@ public class PauseController : MonoBehaviour
         paused = !paused;
 
         if (!paused) settings.CloseMenus();
+        clubUI.SetActive(!paused);
 
         GameManager.Instance.SetState(paused ? GameState.Paused : GameState.Gameplay);
         player.CameraBody.SetCursorState(!paused);

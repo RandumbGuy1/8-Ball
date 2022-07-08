@@ -4,39 +4,42 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-    public delegate void ReceiveMoveInput(Vector2 input);
-    public event ReceiveMoveInput OnMoveInput;
+    public delegate void ReceieveVector2Input(Vector2 input);
+    public delegate void ReceieveBoolInput(bool input);
+    public delegate void ReceieveIntInput(int input);
 
-    public delegate void ReceiveMouseInput(Vector2 input);
-    public event ReceiveMouseInput OnMouseInput;
+    public event ReceieveVector2Input OnMoveInput;
+    public event ReceieveVector2Input OnMouseInput;
 
-    public delegate void ReceiveJump(bool jumping);
-    public event ReceiveJump OnJumpInput;
+    public event ReceieveBoolInput OnJumpInput;
+    public event ReceieveBoolInput OnSwimSinkInput;
+    public event ReceieveBoolInput OnCrouchInput;
+    public event ReceieveBoolInput OnInteractInput;
 
-    public delegate void ReceiveSwimSink(bool sinking);
-    public event ReceiveSwimSink OnSwimSinkInput;
+    public event ReceieveIntInput OnAbilitySelectInput;
+    public event ReceieveIntInput OnClubSelectInput;
+    public event ReceieveBoolInput OnClubDropInput;
 
-    public delegate void ReceiveCrouch(bool crouching);
-    public event ReceiveCrouch OnCrouchInput;
+    public event ReceieveBoolInput OnPerspectiveToggle;
+    public event ReceieveBoolInput OnPauseToggle;
 
-    public delegate void ReceiveInteract(bool interacting);
-    public event ReceiveInteract OnInteractInput;
+    public event ReceieveIntInput OnMouseButtonDownInput;
+    public event ReceieveIntInput OnMouseButtonInput;
 
-    public delegate void ReceiveToggle(bool toggle);
-    public event ReceiveToggle OnPerspectiveToggle;
-
-    public delegate void ReceivePause(bool pause);
-    public event ReceivePause OnPauseToggle;
-
-    public delegate void ReceieveMouseButton(int button);
-    public event ReceieveMouseButton OnMouseButtonDownInput;
-    public event ReceieveMouseButton OnMouseButtonInput;
-
-    [Header("Keybinds")]
+    [Header("Movement Keybinds")]
     [SerializeField] private KeyCode jumpKey;
     [SerializeField] private KeyCode crouchKey;
     [SerializeField] private KeyCode sinkSwimKey;
+
+    [Header("Interact Keybinds")]
     [SerializeField] private KeyCode interactKey;
+
+    [Header("Club Keybinds")]
+    [SerializeField] private KeyCode dropClubKey;
+    [SerializeField] private List<KeyCode> clubAbilityKeys = new List<KeyCode>();
+    [SerializeField] private List<KeyCode> clubSwitchKeys = new List<KeyCode>();
+
+    [Header("UI Keybinds")]
     [SerializeField] private KeyCode togglePerspectKey;
     [SerializeField] private KeyCode pauseMenuKey;
 
@@ -60,11 +63,20 @@ public class PlayerInput : MonoBehaviour
         OnCrouchInput?.Invoke(Input.GetKey(crouchKey));
         OnSwimSinkInput?.Invoke(Input.GetKey(sinkSwimKey));
         OnInteractInput?.Invoke(Input.GetKeyDown(interactKey));
+        OnClubDropInput?.Invoke(Input.GetKeyDown(dropClubKey));
+        OnClubSelectInput?.Invoke(IterateKeyBinds(clubSwitchKeys));
+        OnAbilitySelectInput?.Invoke(IterateKeyBinds(clubAbilityKeys));
 
         OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
 
         OnMouseButtonDownInput?.Invoke(MouseButtonDown());
         OnMouseButtonInput?.Invoke(MouseButton());
+    }
+
+    int IterateKeyBinds(List<KeyCode> keys)
+    {
+        foreach (KeyCode key in keys) if (Input.GetKeyDown(key)) return keys.IndexOf(key);
+        return -1;
     }
 
     int MouseButton()
