@@ -38,7 +38,12 @@ public class ClubHolder : MonoBehaviour
         player.PlayerInput.OnClubDropInput += CheckForDrop;
         player.PlayerInput.OnClubSelectInput += CheckForSwitchClub;
 
-        SelectClub();
+        if (queueClubs.Count <= 0)
+        {
+            clubUI.HideUI();
+            switchTimer = 0f;
+            EquippedClub = null;
+        }
     }
 
     private void CheckForSwitchClub(int newSelect)

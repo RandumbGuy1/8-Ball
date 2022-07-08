@@ -7540,16 +7540,27 @@ MonoBehaviour:
     - Left Shift
 
 
+    Interact -  F
+
+
     Select Ball - Left Mouse Button Click
 
-    Charge Club - Left
-    Mouse Button Hold
+    Charge
+    Club - Left Mouse Button Hold
 
     Hit Balls :0 - Right Mouse Button Click
 
 
-    Toggle Perspective
-    - Tab
+    Drop
+    Club -  Q
+
+    Switch Clubs -  1, 2
+
+    Club Abilities -  X, Z
+
+
+    Toggle
+    Perspective - Tab
 
     Pause - Escape (how the hell else did you get here)'
   m_isRightToLeft: 0
