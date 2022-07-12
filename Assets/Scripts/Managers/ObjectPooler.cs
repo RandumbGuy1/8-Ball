@@ -8,6 +8,7 @@ public class ObjectPooler : MonoBehaviour
     public class Pool
     {
         [SerializeField] private GameObject prefab;
+        [SerializeField] private Component component;
         [SerializeField] private int size;
         [SerializeField] private bool render = true;
 
@@ -28,7 +29,6 @@ public class ObjectPooler : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        
 
         Instance = this;
         DontDestroyOnLoad(gameObject);

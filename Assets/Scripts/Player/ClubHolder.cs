@@ -27,6 +27,7 @@ public class ClubHolder : MonoBehaviour
     [SerializeField] private PlayerRef player;
 
     public IClub EquippedClub { get; private set; }
+    public IItem EquippedItem { get; private set; }
 
     void Awake()
     {
@@ -38,12 +39,8 @@ public class ClubHolder : MonoBehaviour
         player.PlayerInput.OnClubDropInput += CheckForDrop;
         player.PlayerInput.OnClubSelectInput += CheckForSwitchClub;
 
-        if (queueClubs.Count <= 0)
-        {
-            clubUI.HideUI();
-            switchTimer = 0f;
-            EquippedClub = null;
-        }
+        //If no clubs reset everything
+        if (queueClubs.Count <= 0) ResetData();
     }
 
     private void CheckForSwitchClub(int newSelect)
@@ -87,6 +84,9 @@ public class ClubHolder : MonoBehaviour
     {
         if (clubs.Contains(newClub)) return;
 
+        IItem newItem = EquippedItem = clubs[selectedClub].GetComponent<IItem>();
+        if (newItem == null) return;
+
         if (clubs.Count >= maxClubs)
         {
             DropClub(true);
@@ -100,6 +100,7 @@ public class ClubHolder : MonoBehaviour
 
         SelectClub();
         switchTimer = clubSwitchCooldown;
+        newItem.OnPickup(player);
     }
 
     private void SelectClub()
@@ -107,6 +108,7 @@ public class ClubHolder : MonoBehaviour
         if (clubs.Count <= 0 || switchTimer > 0f) return;
 
         EquippedClub = clubs[selectedClub].GetComponent<IClub>();
+        EquippedItem = clubs[selectedClub].GetComponent<IItem>();
         switchTimer = clubSwitchCooldown;
         clubUI.HideUI();
     }
@@ -116,32 +118,34 @@ public class ClubHolder : MonoBehaviour
         Collider col = clubs[selectedClub].GetComponent<Collider>();
         col.isTrigger = false;
 
+        EquippedItem.OnDrop(player);
         clubs.RemoveAt(selectedClub);
 
         if (clubs.Count > 0 && !pickupDrop)
         {
             selectedClub = selectedClub + 1 < clubs.Count ? selectedClub : clubs.Count - 1;
             SelectClub();
+            return;
         }
-        else if (clubs.Count == 0)
-        {
-            clubUI.HideUI();
-            switchTimer = 0f;
-            EquippedClub = null;
-        }
+
+        if (clubs.Count != 0) return;
+
+        ResetData();
     }
 
     private void UpdateClubUI()
     {
-        if (EquippedClub == null) return;
+        if (EquippedItem == null) return;
 
-        clubEquipText.text = EquippedClub.ClubSpriteSettings.ItemText;
-        clubEquipArt.sprite = EquippedClub.ClubSpriteSettings.ItemSprite;
+        clubEquipArt.color = Color.white;
+        clubEquipText.text = EquippedItem.SpriteSettings.ItemText;
+        clubEquipArt.sprite = EquippedItem.SpriteSettings.ItemSprite;
 
-        for (int i = 0; i < EquippedClub.ClubAbilitySpriteSettings.Count; i++)
+        for (int i = 0; i < EquippedItem.AbilitySpriteSettings.Count; i++)
         {
-            ItemArtSettings currentSettings = EquippedClub.ClubAbilitySpriteSettings[i];
+            ItemArtSettings currentSettings = EquippedItem.AbilitySpriteSettings[i];
 
+            clubAbilitiesArt[i].color = Color.white;
             clubAbilitiesText[i].text = currentSettings.ItemText;
             clubAbilitiesArt[i].sprite = currentSettings.ItemSprite;
 
@@ -149,5 +153,18 @@ public class ClubHolder : MonoBehaviour
             clubAbilitiesArt[i].rectTransform.localRotation = Quaternion.Euler(currentSettings.Rotation);
             clubAbilitiesArt[i].rectTransform.localPosition = spriteStartingPositions[i] + currentSettings.Position;
         }
+    }
+
+    void ResetData()
+    {
+        clubEquipText.text = "";
+        clubEquipArt.color = Color.clear;
+
+        foreach (TextMeshProUGUI text in clubAbilitiesText) text.text = "";
+        foreach (Image sprite in clubAbilitiesArt) sprite.color = Color.white;
+
+        clubUI.HideUI();
+        switchTimer = 0f;
+        EquippedClub = null;
     }
 }

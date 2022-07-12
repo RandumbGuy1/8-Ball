@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public interface IClub
 {
-    ItemArtSettings ClubSpriteSettings { get; }
-    List<ItemArtSettings> ClubAbilitySpriteSettings { get; }
-
     ClubStats Stats { get; }
 
     void ThrustBalls(PlayerRef player);
@@ -29,20 +25,4 @@ public struct ClubStats
     public float UpwardClamp => upwardClamp;
     public float ClubPower => clubPower;
     public int PredictionCount => predictionCount;
-}
-
-[System.Serializable]
-public struct ItemArtSettings
-{
-    [SerializeField] private string itemText;
-    [SerializeField] private Sprite itemSprite;
-    [SerializeField] private Vector3 scale;
-    [SerializeField] private Vector3 rotation;
-    [SerializeField] private Vector3 position;
-
-    public string ItemText => itemText;
-    public Sprite ItemSprite => itemSprite;
-    public Vector3 Scale => scale;
-    public Vector3 Rotation => rotation;
-    public Vector3 Position => position;
 }
