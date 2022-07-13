@@ -72,6 +72,7 @@ public struct ItemHoldSettings
 
     [SerializeField] private Vector3 switchOffsetPos;
     [SerializeField] private Vector3 switchOffsetRot;
+    [SerializeField] private float switchSmoothTime;
 
     public Vector3 DefaultPos => defaultPos;
     public Vector3 DefaultRot => defaultRot;
@@ -79,4 +80,5 @@ public struct ItemHoldSettings
 
     public Vector3 SwitchOffsetPos => switchOffsetPos;
     public Vector3 SwitchOffsetRot => switchOffsetRot;
+    public float SwitchSmoothTime => switchSmoothTime;
 }

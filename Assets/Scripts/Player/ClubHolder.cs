@@ -13,10 +13,6 @@ public class ClubHolder : MonoBehaviour
     [SerializeField] private ClubEquipController clubUI;
     [SerializeField] private int selectedClub;
     [SerializeField] private int maxClubs;
-    [SerializeField] private float clubSwitchCooldown;
-    private float switchTimer = 0f;
-
-    public float ClubSwitchCooldown => clubSwitchCooldown;
 
     [Header("UI Settings")]
     [SerializeField] private TextMeshProUGUI clubEquipText;
@@ -51,19 +47,16 @@ public class ClubHolder : MonoBehaviour
 
     private void CheckForSwitchClub(int newSelect)
     {
-        if (EquippedClub == null) return;
-
-        float lastTimer = switchTimer;
-        switchTimer = Mathf.Max(0f, switchTimer - Time.deltaTime);
-
-        //Update UI when the new club is fully equipped
-        if (lastTimer != 0 && switchTimer == 0)
+        //Add the queued clubs into inventory
+        if (queueClubs.Count > 0)
         {
-            clubUI.HideUI(false);
-            UpdateClubUI();
+            foreach (GameObject club in queueClubs) AddClub(club);
+            queueClubs.Clear();
         }
 
-        //If not inputting a keybind or using an invalid one return
+        if (EquippedItem == null) return;
+
+        //If not inputting a keybind or using an invalid keybind return
         if (newSelect == -1 || newSelect + 1 > clubs.Count) return;
 
         int previousClub = selectedClub;
@@ -72,26 +65,23 @@ public class ClubHolder : MonoBehaviour
         if (previousClub != selectedClub) SelectClub();
     }
 
+    //Check for key press of dropping if there are items in our inventory
     private void CheckForDrop(bool dropping)
     {   
-        //Add the qued clubs into inventory
-        if (queueClubs.Count > 0)
-        {
-            foreach (GameObject club in queueClubs) AddClub(club);
-            queueClubs.Clear();
-        }
-
-        if (!dropping || EquippedItem == null || clubs.Count == 0) return;
+        if (!dropping || clubs.Count <= 0) return;
 
         DropClub();
     }
 
+    //Public method of adding clubs to the inventory
     public void AddClub(GameObject newClub)
     {
         if (clubs.Contains(newClub)) return;
 
         IItem newItem = newClub.GetComponent<IItem>();
         if (newItem == null) return;
+
+        clubSway.ResetMovementValues();
 
         if (clubs.Count >= maxClubs)
         {
@@ -105,15 +95,15 @@ public class ClubHolder : MonoBehaviour
         }
 
         SelectClub(false);
-        switchTimer = clubSwitchCooldown;
-        
+
         newItem.OnPickup(player);
         newClub.transform.SetParent(weaponPos);
     }
 
+    //Setting active only our selected club
     private void SelectClub(bool switching = true)
     {
-        if (clubs.Count <= 0 || switchTimer > 0f) return;
+        if (clubs.Count <= 0) return;
 
         for (int i = 0; i < clubs.Count; i++) clubs[i].SetActive(i == selectedClub);
 
@@ -121,16 +111,18 @@ public class ClubHolder : MonoBehaviour
 
         EquippedClub = ItemGameObject.GetComponent<IClub>();
         EquippedItem = ItemGameObject.GetComponent<IItem>();
-        switchTimer = clubSwitchCooldown;
-        clubUI.HideUI();
+
+        clubUI.SetDirectPositionOffset(Vector3.right * 255f);
+        clubUI.HideUI(false);
+        UpdateClubUI();
 
         if (switching) clubSway.AddSwitchOffset(EquippedItem.HoldSettings.SwitchOffsetPos, EquippedItem.HoldSettings.SwitchOffsetRot);
+        else clubSway.ResetMovementValues();
     }
 
+    //Dropping current club
     private void DropClub(bool pickupDrop = false)
     {
-        if (clubs.Count <= 0 || switchTimer > 0f) return;
-
         ItemGameObject.transform.SetParent(null);
 
         EquippedItem.OnDrop(player, (rigidbody) => {
@@ -145,6 +137,7 @@ public class ClubHolder : MonoBehaviour
 
             rigidbody.AddTorque(3f * throwForce * rand.normalized, ForceMode.Impulse);
         } );
+        clubSway.ResetMovementValues();
         clubs.RemoveAt(selectedClub);
 
         if (clubs.Count > 0 && !pickupDrop)
@@ -159,6 +152,7 @@ public class ClubHolder : MonoBehaviour
         ResetData();
     }
 
+    //Updating club UI info
     private void UpdateClubUI()
     {
         if (EquippedItem == null) return;
@@ -196,13 +190,11 @@ public class ClubHolder : MonoBehaviour
         foreach (TextMeshProUGUI text in clubAbilitiesText) text.text = "";
         foreach (Image sprite in clubAbilitiesArt) sprite.color = Color.white;
 
-        clubUI.HideUI();
-        switchTimer = 0f;
-
         EquippedClub = null;
         EquippedItem = null;
         ItemGameObject = null;
 
         clubSway.ResetMovementValues();
+        clubUI.HideUI();
     }
 }

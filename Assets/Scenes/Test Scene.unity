@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 373.4473, g: 508.5746, b: 775.42535, a: 1}
+  m_IndirectSpecularColor: {r: 237.38982, g: 274.97626, b: 313.79025, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1109,6 +1109,7 @@ MonoBehaviour:
     pickupSmoothTime: 0.15
     switchOffsetPos: {x: 0, y: -2, z: 0}
     switchOffsetRot: {x: 360, y: 0, z: 0}
+    switchSmoothTime: 0.2
   clubSpriteSettings:
     itemText: Basic Club 2
     itemSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
@@ -9038,7 +9039,6 @@ MonoBehaviour:
   clubUI: {fileID: 746576489}
   selectedClub: 0
   maxClubs: 2
-  clubSwitchCooldown: 0.3
   clubEquipText: {fileID: 432628888}
   clubEquipArt: {fileID: 1888624301}
   clubAbilitiesText:
@@ -9077,14 +9077,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da307dfdfeedb14aa16cfdb783f7847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 40
-  maxSpeed: 18
+  acceleration: 30
+  maxSpeed: 16.5
   jumpForce: 50
   slideFriction: 20
   crouchMaxSpeed: 60
   crouchHeight: 1.2
   crouchSmoothTime: 0.08
-  slideBoostSpeed: 4
+  slideBoostSpeed: 3.5
   slideBoostCooldown: 0.65
   swimAcceleration: 4.5
   swimJumpBoost: 1.1
@@ -9097,9 +9097,9 @@ MonoBehaviour:
   rideSpringDamper: 8.5
   uprightSpringStrength: 4
   uprightSpringStrengthDamper: 0.05
-  friction: 5
+  friction: 6
   frictionMultiplier: 1
-  counterThresold: 3
+  counterThresold: 2
   player: {fileID: 1008010272}
   rb: {fileID: 1008010270}
 --- !u!75 &1008010269
@@ -9957,6 +9957,7 @@ MonoBehaviour:
     pickupSmoothTime: 0.15
     switchOffsetPos: {x: 0, y: -2, z: 0}
     switchOffsetRot: {x: 360, y: 0, z: 0}
+    switchSmoothTime: 0.2
   clubSpriteSettings:
     itemText: Basic Club
     itemSprite: {fileID: 0}
@@ -15066,13 +15067,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1659813574}
-  m_LocalRotation: {x: 0.977837, y: -0.058710415, z: -0.13460535, w: 0.14922859}
+  m_LocalRotation: {x: 0.9869834, y: -0.06994084, z: -0.12912706, w: 0.06556133}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 16.024, y: 196.98499, z: 189.28}
+  m_LocalEulerAnglesHint: {x: 6.393, y: 195.40999, z: 188.97299}
 --- !u!114 &1659813577
 MonoBehaviour:
   m_ObjectHideFlags: 0

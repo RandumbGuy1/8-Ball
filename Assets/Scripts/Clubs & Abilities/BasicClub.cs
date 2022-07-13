@@ -26,30 +26,29 @@ public class BasicClub : MonoBehaviour, IClub, IItem
     void Awake()
     {
         itemRb = gameObject.AddComponent<Rigidbody>();
+        rigidbodySettings.SetRigidbody(itemRb);
     }
 
     public void OnDrop(PlayerRef player, Action<Rigidbody> DropForce)
     {
         itemCol.enabled = true;
         pickup.PickedUp = false;
-        itemRb = gameObject.AddComponent<Rigidbody>();
 
-        DropForce(itemRb);
-    }
-
-    void Update()
-    {
-        if (pickup.PickedUp) return;
-
-        if (itemRb != null) rigidbodySettings.SetRigidbody(itemRb);
+        if (itemRb == null)
+        {
+            itemRb = gameObject.AddComponent<Rigidbody>();
+            rigidbodySettings.SetRigidbody(itemRb);
+            DropForce(itemRb);
+        }
     }
 
     public void OnPickup(PlayerRef player)
     {
         itemCol.enabled = false;
-
         pickup.PickedUp = true;
+
         Destroy(itemRb);
+        itemRb = null;
     }
 
     public void ThrustBalls(PlayerRef player)

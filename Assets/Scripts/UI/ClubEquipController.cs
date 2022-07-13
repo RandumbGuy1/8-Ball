@@ -18,4 +18,5 @@ public class ClubEquipController : MonoBehaviour
 
     public void HideUI(bool hide = true) => positionOffset = hide ? Vector3.right * 250f : Vector3.zero;
     public void SetPositionOffset(Vector3 position) => positionOffset = position;
+    public void SetDirectPositionOffset(Vector3 position) => equipUI.localPosition = position;
 }

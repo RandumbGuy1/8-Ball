@@ -27,7 +27,7 @@ public class ClubSway : MonoBehaviour
         if (itemToSway == null) return;
 
         CalculatePickupOffset(player.ClubHolder.ItemGameObject.transform, itemToSway);
-        CalculateSwitchOffset();
+        CalculateSwitchOffset(itemToSway);
 
         Vector3 newPos = startPos + itemToSway.HoldSettings.DefaultPos + switchOffsetPos;
         Quaternion newRot =  Quaternion.Euler(startRot + itemToSway.HoldSettings.DefaultRot + switchOffsetRot);
@@ -44,18 +44,19 @@ public class ClubSway : MonoBehaviour
 
     public void ResetMovementValues()
     {
-        switchOffsetPos = Vector3.zero;
-        switchOffsetRot = Vector3.zero;
         switchPosVel = Vector3.zero;
         switchRotVel = Vector3.zero;
+
+        switchOffsetPos = Vector3.zero;
+        switchOffsetRot = Vector3.zero;
     }
 
-    private void CalculateSwitchOffset()
+    private void CalculateSwitchOffset(IItem itemToSway)
     {
         if (switchOffsetPos == Vector3.zero && switchOffsetRot == Vector3.zero) return;
 
-        switchOffsetPos = Vector3.SmoothDamp(switchOffsetPos, Vector3.zero, ref switchPosVel, player.ClubHolder.ClubSwitchCooldown);
-        switchOffsetRot = Vector3.SmoothDamp(switchOffsetRot, Vector3.zero, ref switchRotVel, player.ClubHolder.ClubSwitchCooldown);
+        switchOffsetPos = Vector3.SmoothDamp(switchOffsetPos, Vector3.zero, ref switchPosVel, itemToSway.HoldSettings.SwitchSmoothTime);
+        switchOffsetRot = Vector3.SmoothDamp(switchOffsetRot, Vector3.zero, ref switchRotVel, itemToSway.HoldSettings.SwitchSmoothTime);
 
         if (switchOffsetPos.sqrMagnitude + switchOffsetRot.sqrMagnitude < 0.00002f)
         {
@@ -66,7 +67,15 @@ public class ClubSway : MonoBehaviour
 
     private void CalculatePickupOffset(Transform itemTransform, IItem itemToSway)
     {
+        if (itemTransform.localPosition == Vector3.zero && itemTransform.localRotation == Quaternion.Euler(Vector3.zero)) return;
+
         itemTransform.localPosition = Vector3.SmoothDamp(itemTransform.localPosition, Vector3.zero, ref pickUpPosVel, itemToSway.HoldSettings.PickupSmoothTime);
         itemTransform.localRotation = Quaternion.Lerp(itemTransform.localRotation, Quaternion.Euler(Vector3.zero), 1 / itemToSway.HoldSettings.PickupSmoothTime * Time.deltaTime);
+    
+        if (itemTransform.localPosition.sqrMagnitude + transform.localEulerAngles.sqrMagnitude < 0.00002f)
+        {
+            itemTransform.localPosition = Vector3.zero;
+            itemTransform.localRotation = Quaternion.Euler(Vector3.zero);
+        }
     }
 }
