@@ -66,6 +66,12 @@ public class ClubShot : MonoBehaviour
     {
         if (currentBall == null) return;
 
+        if (clubInventory.EquippedClub == null) 
+        {
+            RemoveBall(Vector3.zero, false);
+            return;
+        }
+
         Vector3 toBall = currentBall.transform.position - player.transform.position;
         toBall.y = 0f;
 
@@ -115,13 +121,17 @@ public class ClubShot : MonoBehaviour
         joint.massScale = 5f;
     }
 
-    private void RemoveBall(Vector3 force)
+    private void RemoveBall(Vector3 force, bool thrust = true)
     {
-        clubInventory.EquippedClub.ThrustBalls(player);
-
         currentBall.isKinematic = false;
         currentBall.collisionDetectionMode = ballDetection;
-        currentBall.AddForce(force, ForceMode.VelocityChange);
+
+        if (thrust)
+        {
+            clubInventory.EquippedClub.ThrustBalls(player);
+            currentBall.AddForce(force, ForceMode.VelocityChange);
+        }
+
         currentBall = null;
 
         lr.positionCount = 0;

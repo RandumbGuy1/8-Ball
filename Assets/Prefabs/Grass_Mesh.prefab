@@ -108,7 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collidesWithGrass:
     serializedVersion: 2
-    m_Bits: 1025
+    m_Bits: 5121
   swayAmount: 1
   returnSpeed: 8
   grassRenderer: {fileID: 1193654472305272996}

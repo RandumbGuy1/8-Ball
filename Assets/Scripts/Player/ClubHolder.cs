@@ -7,6 +7,7 @@ using TMPro;
 public class ClubHolder : MonoBehaviour
 {
     [Header("Equip Settings")]
+    [SerializeField] private float throwForce;
     [SerializeField] private List<GameObject> clubs = new List<GameObject>();
     [SerializeField] private List<GameObject> queueClubs = new List<GameObject>();
     [SerializeField] private ClubEquipController clubUI;
@@ -14,6 +15,8 @@ public class ClubHolder : MonoBehaviour
     [SerializeField] private int maxClubs;
     [SerializeField] private float clubSwitchCooldown;
     private float switchTimer = 0f;
+
+    public float ClubSwitchCooldown => clubSwitchCooldown;
 
     [Header("UI Settings")]
     [SerializeField] private TextMeshProUGUI clubEquipText;
@@ -25,9 +28,12 @@ public class ClubHolder : MonoBehaviour
 
     [Header("Refrences")]
     [SerializeField] private PlayerRef player;
+    [SerializeField] private Transform weaponPos;
+    [SerializeField] private ClubSway clubSway;
 
     public IClub EquippedClub { get; private set; }
     public IItem EquippedItem { get; private set; }
+    public GameObject ItemGameObject { get; private set; }
 
     void Awake()
     {
@@ -67,15 +73,15 @@ public class ClubHolder : MonoBehaviour
     }
 
     private void CheckForDrop(bool dropping)
-    {
+    {   
         //Add the qued clubs into inventory
-        if (queueClubs.Count != 0)
+        if (queueClubs.Count > 0)
         {
             foreach (GameObject club in queueClubs) AddClub(club);
             queueClubs.Clear();
         }
 
-        if (!dropping || EquippedClub == null) return;
+        if (!dropping || EquippedItem == null || clubs.Count == 0) return;
 
         DropClub();
     }
@@ -84,7 +90,7 @@ public class ClubHolder : MonoBehaviour
     {
         if (clubs.Contains(newClub)) return;
 
-        IItem newItem = EquippedItem = clubs[selectedClub].GetComponent<IItem>();
+        IItem newItem = newClub.GetComponent<IItem>();
         if (newItem == null) return;
 
         if (clubs.Count >= maxClubs)
@@ -98,27 +104,47 @@ public class ClubHolder : MonoBehaviour
             selectedClub = clubs.Count - 1;
         }
 
-        SelectClub();
+        SelectClub(false);
         switchTimer = clubSwitchCooldown;
+        
         newItem.OnPickup(player);
+        newClub.transform.SetParent(weaponPos);
     }
 
-    private void SelectClub()
+    private void SelectClub(bool switching = true)
     {
         if (clubs.Count <= 0 || switchTimer > 0f) return;
 
-        EquippedClub = clubs[selectedClub].GetComponent<IClub>();
-        EquippedItem = clubs[selectedClub].GetComponent<IItem>();
+        for (int i = 0; i < clubs.Count; i++) clubs[i].SetActive(i == selectedClub);
+
+        ItemGameObject = clubs[selectedClub];
+
+        EquippedClub = ItemGameObject.GetComponent<IClub>();
+        EquippedItem = ItemGameObject.GetComponent<IItem>();
         switchTimer = clubSwitchCooldown;
         clubUI.HideUI();
+
+        if (switching) clubSway.AddSwitchOffset(EquippedItem.HoldSettings.SwitchOffsetPos, EquippedItem.HoldSettings.SwitchOffsetRot);
     }
 
     private void DropClub(bool pickupDrop = false)
     {
-        Collider col = clubs[selectedClub].GetComponent<Collider>();
-        col.isTrigger = false;
+        if (clubs.Count <= 0 || switchTimer > 0f) return;
 
-        EquippedItem.OnDrop(player);
+        ItemGameObject.transform.SetParent(null);
+
+        EquippedItem.OnDrop(player, (rigidbody) => {
+            rigidbody.velocity = player.PlayerMovement.Rb.velocity;
+            rigidbody.AddForce(player.PlayerCam.transform.forward * throwForce + Vector3.up * 1.3f, ForceMode.Impulse);
+
+            Vector3 rand = Vector3.zero;
+
+            rand.x = Random.Range(-1f, 1f);
+            rand.y = Random.Range(-1f, 1f);
+            rand.z = Random.Range(-1f, 1f);
+
+            rigidbody.AddTorque(3f * throwForce * rand.normalized, ForceMode.Impulse);
+        } );
         clubs.RemoveAt(selectedClub);
 
         if (clubs.Count > 0 && !pickupDrop)
@@ -145,6 +171,13 @@ public class ClubHolder : MonoBehaviour
         {
             ItemArtSettings currentSettings = EquippedItem.AbilitySpriteSettings[i];
 
+            if (currentSettings.NotVisible)
+            {
+                clubAbilitiesText[i].text = "";
+                clubAbilitiesArt[i].color = Color.clear;
+                continue;
+            }
+
             clubAbilitiesArt[i].color = Color.white;
             clubAbilitiesText[i].text = currentSettings.ItemText;
             clubAbilitiesArt[i].sprite = currentSettings.ItemSprite;
@@ -165,6 +198,11 @@ public class ClubHolder : MonoBehaviour
 
         clubUI.HideUI();
         switchTimer = 0f;
+
         EquippedClub = null;
+        EquippedItem = null;
+        ItemGameObject = null;
+
+        clubSway.ResetMovementValues();
     }
 }

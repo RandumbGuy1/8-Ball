@@ -18,12 +18,20 @@ public class WaterCollider : MonoBehaviour
 
     void FixedUpdate()
     {
+        List<Rigidbody> rbToRemove = new List<Rigidbody>();
+
         foreach (SubmergeeData entry in submergees.Values)
         {
+            if (entry.Rb == null)
+            {
+                rbToRemove.Add(entry.Rb);
+                continue;
+            }
+
             if (!submergees.ContainsKey(entry.Rb)) continue;
 
             float submergence = EvaluateSubmergence(entry.Col);
-            if (submergence < submergenceRequired) return;
+            if (submergence < submergenceRequired) continue;
             
             //Apply Water Drag
             entry.Rb.velocity *= 1f - waterDrag * submergence * Time.fixedDeltaTime;
@@ -36,6 +44,8 @@ public class WaterCollider : MonoBehaviour
             if (entry.Rb.velocity.sqrMagnitude > 36f || submergence > 0.75f) entry.Ripples.Play();
             else entry.Ripples.Stop();
         }
+
+        foreach (Rigidbody rb in rbToRemove) submergees.Remove(rb);
     }
 
     void OnTriggerEnter(Collider col)
