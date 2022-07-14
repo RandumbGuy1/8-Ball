@@ -7,9 +7,19 @@ public class CameraBody : MonoBehaviour
     [SerializeField] private CameraHeadBob camHeadBob;
     [SerializeField] private TPSCameraCollider camCollider;
     [SerializeField] private CameraLook camLookSettings;
+    [SerializeField] private CameraSprintEffect camSprintEffect;
+
+    [Header("UnderWater Filter Settings")]
+    [SerializeField] private Volume regularVolume;
+    [SerializeField] private Volume underWaterVolume;
+    [SerializeField] private float filterSmoothTime;
+    private float targetWeight = 0f;
+
+    [Header("Regular Settings")]
     [SerializeField] private Vector3 posOffset;
     private Vector3 smoothPosOffset = Vector3.zero;
 
+    public Volume UnderWaterVolume => underWaterVolume;
     public CameraIdleSway CamIdleSway => camIdleSway;
     public CameraHeadBob CamHeadBob => camHeadBob;
     public TPSCameraCollider CamCollider => camCollider;
@@ -33,6 +43,7 @@ public class CameraBody : MonoBehaviour
 
     void LateUpdate()
     {
+        camSprintEffect.SpeedLines(player);
         camIdleSway.IdleCameraSway(player);
         camHeadBob.BobUpdate(player);
         camCollider.ColliderUpdate(player.PlayerCam.transform.position, player.transform.position);
@@ -52,7 +63,20 @@ public class CameraBody : MonoBehaviour
             player.PlayerCam.transform.localPosition = Vector3.back * camCollider.SmoothPull + camHeadBob.ViewBobOffset * 0.135f + player.PlayerMovement.CrouchOffset + smoothPosOffset;
             transform.position = player.transform.position;
         }
+
+        //Update Underwater filter
+        {
+            if (Mathf.Abs(targetWeight - underWaterVolume.weight) < 0.01f)
+            {
+                underWaterVolume.weight = targetWeight;
+                return;
+            }
+
+            underWaterVolume.weight = Mathf.Lerp(underWaterVolume.weight, targetWeight, filterSmoothTime * Time.deltaTime);
+        }
     }
+
+    public void SetUnderWaterVolumeWeight(float value) => targetWeight = value;
 
     public void SetCursorState(bool locked)
     {

@@ -7,7 +7,7 @@ public class ClubSway : MonoBehaviour
     private Vector3 switchOffsetPos = Vector3.zero, switchOffsetRot = Vector3.zero;
     private Vector3 switchPosVel = Vector3.zero, switchRotVel = Vector3.zero;
 
-    private Vector3 pickUpPosVel = Vector3.zero, pickUpRotVel = Vector3.zero;
+    private Vector3 pickUpPosVel = Vector3.zero;
 
     [Header("Refrences")]
     [SerializeField] private PlayerRef player;
