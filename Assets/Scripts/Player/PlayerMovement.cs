@@ -43,9 +43,22 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rideHeight;
     [SerializeField] private float rideSpringStrength;
     [SerializeField] private float rideSpringDamper;
-    public bool InWater { get; set; }
     public bool Grounded { get; private set; }
     private bool groundedLastFrame = false;
+
+    public delegate void WaterEnter(bool submerged);
+    public event WaterEnter OnWaterEnter;
+
+    private bool inWater = false;
+    public bool InWater
+    {
+        get => inWater;
+        set {
+            OnWaterEnter?.Invoke(value);
+            inWater = value;
+        }
+    }
+    public float Submergence { get; set; } = 0f;
 
     [Header("Standing Settings")]
     [SerializeField] private float uprightSpringStrength;

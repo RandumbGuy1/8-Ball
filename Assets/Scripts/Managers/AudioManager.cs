@@ -3,11 +3,10 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    [SerializeField] private GameObject soundInstancePrefab;
     [SerializeField] private Sound[] sounds;
-    [SerializeField] private AudioClip[] soundsToPlayOnAwake;
 
     private Dictionary<AudioClip, Sound> soundDictionary = new Dictionary<AudioClip, Sound>();
-
     public static AudioManager Instance;
 
     void Awake()
@@ -21,39 +20,59 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
+        //Store all sounds in a dictionary
         foreach (Sound sound in sounds)
         {
-            sound.Source = gameObject.AddComponent<AudioSource>();
-            sound.SetParamaters();
+            Queue<AudioSource> soundInstances = new Queue<AudioSource>();
+            for (int i = 0; i < sound.SoundCapacity; i++)
+            {
+                AudioSource instance = Instantiate(soundInstancePrefab).GetComponent<AudioSource>();
+                soundInstances.Enqueue(instance);
+            }
 
             soundDictionary.Add(sound.Clip, sound);
+            sound.SetSourceQueue(soundInstances);
+            
+            //Play all sounds set to playOnAwake
+            if (!sound.PlayOnAwake) continue;
+            PlayOnce(sound.Clip, Vector3.zero);
         }
-
-        foreach (AudioClip clip in soundsToPlayOnAwake) PlayOnce(clip);
     }
 
-    public void PlayOnce(AudioClip clip, float volumeMultiplier = 1f)
+    public AudioSource PlayOnce(AudioClip clip, Vector3 sourcePos, float volumeMultiplier = 1f)
     {
-        if (!soundDictionary.ContainsKey(clip) || (soundDictionary[clip].Looping && soundDictionary[clip].Source.isPlaying)) return;
+        if (!soundDictionary.ContainsKey(clip)) return null;
 
-        float tempVolume = soundDictionary[clip].Volume;
-        soundDictionary[clip].Volume *= volumeMultiplier;
+        //Spawn audio instance at the sounds source position
+        AudioSource source = soundDictionary[clip].SourcesQueue.Dequeue();
+        if (source == null) return null;
 
-        soundDictionary[clip].SetParamaters();
-        soundDictionary[clip].Source.Play();
+        //Set the data of the audio source using the sound class preset
+        soundDictionary[clip].SetParamaters(source);
+        source.volume *= volumeMultiplier;
 
-        soundDictionary[clip].Volume = tempVolume;
+        source.Play();
+
+        //Send sound back to the sounds pool
+        soundDictionary[clip].SourcesQueue.Enqueue(source);
+
+        return source;
     }
 
-    public void StopSound(AudioClip clip)
+    //Stop a certain audio source
+    public void StopSound(AudioClip clip, AudioSource source)
     {
         if (!soundDictionary.ContainsKey(clip)) return;
-        soundDictionary[clip].Source.Stop();
+        if (source == null) return;
+
+        soundDictionary[clip].StopInstance(source);
     }
 
-    public bool IsPlaying(AudioClip clip)
+    //Stop all audio of a certain sound
+    public void StopAllSounds(AudioClip clip)
     {
-        if (!soundDictionary.ContainsKey(clip)) return false;
-        return soundDictionary[clip].Source.isPlaying;
+        if (!soundDictionary.ContainsKey(clip)) return;
+
+        soundDictionary[clip].StopAllAudio();
     }
 }

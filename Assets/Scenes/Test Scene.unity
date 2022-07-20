@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 248.77216, g: 294.4011, b: 347.32837, a: 1}
+  m_IndirectSpecularColor: {r: 204.33023, g: 263.43207, b: 348.89087, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2532,27 +2532,22 @@ MonoBehaviour:
   pools:
   - prefab: {fileID: 8081192296064402897, guid: 5212b11ff2ab05946a8458af7bfa3d36,
       type: 3}
-    component: {fileID: 0}
     size: 50
     render: 0
   - prefab: {fileID: 8994456833051322008, guid: 06daeb3371c7d8143a6f617e75c963ff,
       type: 3}
-    component: {fileID: 0}
     size: 1
     render: 0
   - prefab: {fileID: 8596373606972076111, guid: ef268a5eecd250442be94e0d0a909a90,
       type: 3}
-    component: {fileID: 0}
     size: 1
     render: 0
   - prefab: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,
       type: 3}
-    component: {fileID: 0}
     size: 15
     render: 1
   - prefab: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
       type: 3}
-    component: {fileID: 0}
     size: 100
     render: 1
 --- !u!4 &336912172
@@ -8792,6 +8787,7 @@ GameObject:
   - component: {fileID: 1008010274}
   - component: {fileID: 1008010265}
   - component: {fileID: 1008010275}
+  - component: {fileID: 1008010276}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -9039,6 +9035,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1008010272}
   weaponPos: {fileID: 368762677}
+--- !u!114 &1008010276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008010263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 801a3eec318191243ad4f22ba2584190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  underWaterClip: {fileID: 8300000, guid: 00030e441ff1bfc41bdc07943fe976ff, type: 3}
+  waterMovementClip: {fileID: 8300000, guid: b30f0c94b0ff1c14583ae2d2a1d99bdd, type: 3}
+  player: {fileID: 1008010272}
 --- !u!1 &1012586626
 GameObject:
   m_ObjectHideFlags: 0
@@ -9103,8 +9114,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8e80958e45254d948aa2233bc64ab75d, type: 3}
   - {fileID: 8300000, guid: dc8c54c026a9f824ba673d4590ad1ac6, type: 3}
   - {fileID: 8300000, guid: 7ae44efa243c99f4e86d0c861c0cba56, type: 3}
-  underWaterClip: {fileID: 8300000, guid: 00030e441ff1bfc41bdc07943fe976ff, type: 3}
-  ripplesClip: {fileID: 8300000, guid: b30f0c94b0ff1c14583ae2d2a1d99bdd, type: 3}
   waterRipples: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
     type: 3}
   waterSplash: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,
@@ -9793,13 +9802,13 @@ MonoBehaviour:
     scale: {x: 0.4, y: 0.4, z: 1}
     rotation: {x: 0, y: 0, z: 0}
     position: {x: 0, y: 0, z: 0}
-    notVisible: 1
+    notVisible: 0
   - itemText: Ability 2
     itemSprite: {fileID: 0}
     scale: {x: 0.4, y: 0.4, z: 1}
     rotation: {x: 0, y: 0, z: 0}
     position: {x: 0, y: 0, z: 0}
-    notVisible: 1
+    notVisible: 0
   pickup: {fileID: 1060760401}
   itemCol: {fileID: 1060760396}
 --- !u!114 &1060760401
@@ -10129,8 +10138,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8e80958e45254d948aa2233bc64ab75d, type: 3}
   - {fileID: 8300000, guid: dc8c54c026a9f824ba673d4590ad1ac6, type: 3}
   - {fileID: 8300000, guid: 7ae44efa243c99f4e86d0c861c0cba56, type: 3}
-  underWaterClip: {fileID: 8300000, guid: 00030e441ff1bfc41bdc07943fe976ff, type: 3}
-  ripplesClip: {fileID: 8300000, guid: b30f0c94b0ff1c14583ae2d2a1d99bdd, type: 3}
   waterRipples: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
     type: 3}
   waterSplash: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,
@@ -11663,8 +11670,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8e80958e45254d948aa2233bc64ab75d, type: 3}
   - {fileID: 8300000, guid: dc8c54c026a9f824ba673d4590ad1ac6, type: 3}
   - {fileID: 8300000, guid: 7ae44efa243c99f4e86d0c861c0cba56, type: 3}
-  underWaterClip: {fileID: 8300000, guid: 00030e441ff1bfc41bdc07943fe976ff, type: 3}
-  ripplesClip: {fileID: 8300000, guid: b30f0c94b0ff1c14583ae2d2a1d99bdd, type: 3}
   waterRipples: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
     type: 3}
   waterSplash: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,
@@ -13532,8 +13537,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8e80958e45254d948aa2233bc64ab75d, type: 3}
   - {fileID: 8300000, guid: dc8c54c026a9f824ba673d4590ad1ac6, type: 3}
   - {fileID: 8300000, guid: 7ae44efa243c99f4e86d0c861c0cba56, type: 3}
-  underWaterClip: {fileID: 8300000, guid: 00030e441ff1bfc41bdc07943fe976ff, type: 3}
-  ripplesClip: {fileID: 8300000, guid: b30f0c94b0ff1c14583ae2d2a1d99bdd, type: 3}
   waterRipples: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
     type: 3}
   waterSplash: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,
@@ -14837,7 +14840,7 @@ Light:
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
-  m_ColorTemperature: 7581
+  m_ColorTemperature: 9000
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -14882,7 +14885,7 @@ MonoBehaviour:
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
   m_LightDimmer: 1
-  m_VolumetricDimmer: 3
+  m_VolumetricDimmer: 3.5
   m_LightUnit: 2
   m_FadeDistance: 10000
   m_AffectDiffuse: 1
@@ -14904,7 +14907,7 @@ MonoBehaviour:
   m_InteractsWithSky: 1
   m_AngularDiameter: 20.34
   m_FlareSize: 12.56
-  m_FlareTint: {r: 1, g: 0.5695688, b: 0.3820755, a: 1}
+  m_FlareTint: {r: 1, g: 0.7208622, b: 0.5990566, a: 1}
   m_FlareFalloff: 0
   m_SurfaceTexture: {fileID: 0}
   m_SurfaceTint: {r: 1, g: 1, b: 1, a: 1}
@@ -15750,8 +15753,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8e80958e45254d948aa2233bc64ab75d, type: 3}
   - {fileID: 8300000, guid: dc8c54c026a9f824ba673d4590ad1ac6, type: 3}
   - {fileID: 8300000, guid: 7ae44efa243c99f4e86d0c861c0cba56, type: 3}
-  underWaterClip: {fileID: 8300000, guid: 00030e441ff1bfc41bdc07943fe976ff, type: 3}
-  ripplesClip: {fileID: 8300000, guid: b30f0c94b0ff1c14583ae2d2a1d99bdd, type: 3}
   waterRipples: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
     type: 3}
   waterSplash: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,
@@ -16651,7 +16652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867256978}
   m_Layer: 0
-  m_Name: Save 1.42
+  m_Name: Save 1.5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16915,47 +16916,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 013d46c005796c74eba51aeec8c957c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundInstancePrefab: {fileID: 2670725041675076724, guid: 5b662a6057b1f814ead4066a61dd4fc1,
+    type: 3}
   sounds:
   - clip: {fileID: 8300000, guid: a6dfd206401404240bf6f16501ed0741, type: 3}
+    soundCapacity: 5
     volume: 1
     pitch: 1
+    spatialBlend: 1
     looping: 0
+    playOnAwake: 0
   - clip: {fileID: 8300000, guid: 8e80958e45254d948aa2233bc64ab75d, type: 3}
+    soundCapacity: 5
     volume: 1
     pitch: 1
+    spatialBlend: 1
     looping: 0
+    playOnAwake: 0
   - clip: {fileID: 8300000, guid: dc8c54c026a9f824ba673d4590ad1ac6, type: 3}
+    soundCapacity: 5
     volume: 1
     pitch: 1
+    spatialBlend: 1
     looping: 0
+    playOnAwake: 0
   - clip: {fileID: 8300000, guid: 7ae44efa243c99f4e86d0c861c0cba56, type: 3}
+    soundCapacity: 5
     volume: 1
     pitch: 1
+    spatialBlend: 1
     looping: 0
+    playOnAwake: 0
   - clip: {fileID: 8300000, guid: 00030e441ff1bfc41bdc07943fe976ff, type: 3}
+    soundCapacity: 1
     volume: 1
     pitch: 1
+    spatialBlend: 0
     looping: 1
+    playOnAwake: 0
   - clip: {fileID: 8300000, guid: eeea494cd51b9bf4fa456117674394f0, type: 3}
+    soundCapacity: 1
     volume: 0.15
     pitch: 1
+    spatialBlend: 0
     looping: 1
+    playOnAwake: 1
   - clip: {fileID: 8300000, guid: 56a0ae873eaebe343adefee62dd86830, type: 3}
+    soundCapacity: 1
     volume: 0.1
     pitch: 1
+    spatialBlend: 0
     looping: 1
+    playOnAwake: 1
   - clip: {fileID: 8300000, guid: b30f0c94b0ff1c14583ae2d2a1d99bdd, type: 3}
+    soundCapacity: 1
     volume: 1
     pitch: 1
+    spatialBlend: 0
     looping: 1
+    playOnAwake: 0
   - clip: {fileID: 8300000, guid: df827df14fc40c9429f05e89b06b3904, type: 3}
+    soundCapacity: 1
     volume: 0.55
     pitch: 1
+    spatialBlend: 0
     looping: 1
-  soundsToPlayOnAwake:
-  - {fileID: 8300000, guid: eeea494cd51b9bf4fa456117674394f0, type: 3}
-  - {fileID: 8300000, guid: 56a0ae873eaebe343adefee62dd86830, type: 3}
-  - {fileID: 8300000, guid: df827df14fc40c9429f05e89b06b3904, type: 3}
+    playOnAwake: 1
 --- !u!4 &1880470432
 Transform:
   m_ObjectHideFlags: 0
@@ -18246,8 +18272,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8e80958e45254d948aa2233bc64ab75d, type: 3}
   - {fileID: 8300000, guid: dc8c54c026a9f824ba673d4590ad1ac6, type: 3}
   - {fileID: 8300000, guid: 7ae44efa243c99f4e86d0c861c0cba56, type: 3}
-  underWaterClip: {fileID: 8300000, guid: 00030e441ff1bfc41bdc07943fe976ff, type: 3}
-  ripplesClip: {fileID: 8300000, guid: b30f0c94b0ff1c14583ae2d2a1d99bdd, type: 3}
   waterRipples: {fileID: 8353009695164067344, guid: 135b0a30b129e314794fe7ca7fc76137,
     type: 3}
   waterSplash: {fileID: 8321368323635513790, guid: 22481e56d9947a74ebfadb0d237a4e41,

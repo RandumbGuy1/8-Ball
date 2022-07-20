@@ -5,8 +5,6 @@ public class WaterCollider : MonoBehaviour
 {
     [Header("Submerge Settings")]
     [SerializeField] private List<AudioClip> splashClips = new List<AudioClip>();
-    [SerializeField] private AudioClip underWaterClip;
-    [SerializeField] private AudioClip ripplesClip;
     [Space(10)]
     [SerializeField] private GameObject waterRipples;
     [SerializeField] private GameObject waterSplash;
@@ -35,6 +33,8 @@ public class WaterCollider : MonoBehaviour
 
             if (!submergees.ContainsKey(entry.Rb)) continue;
 
+            entry.Ripples.transform.position = entry.Col.transform.position;
+
             float submergence = EvaluateSubmergence(entry.Col);
             if (submergence < submergenceRequired) continue;
             
@@ -53,9 +53,7 @@ public class WaterCollider : MonoBehaviour
             if (entry.Player == null) continue;
 
             entry.Player.CameraBody.SetUnderWaterVolumeWeight(submergence * submergence);
-
-            if (submergence > 0.85f) AudioManager.Instance.PlayOnce(underWaterClip);
-            else AudioManager.Instance.StopSound(underWaterClip);
+            entry.Player.PlayerMovement.Submergence = submergence;
         }
 
         foreach (Rigidbody rb in rbToRemove) submergees.Remove(rb);
@@ -67,7 +65,6 @@ public class WaterCollider : MonoBehaviour
         if (rb == null || submergees.ContainsKey(rb)) return;
 
         ParticleSystem ripples = ObjectPooler.Instance.Spawn(waterRipples, true, col.transform.position, Quaternion.identity).GetComponent<ParticleSystem>();
-        ripples.transform.SetParent(rb.transform);
 
         PlayerRef submergedPlayer = col.GetComponent<PlayerRef>();
         SubmergeeData toAdd = new SubmergeeData(submergedPlayer, col, rb, ripples);
@@ -85,49 +82,47 @@ public class WaterCollider : MonoBehaviour
         Rigidbody rb = col.GetComponent<Rigidbody>();
         if (rb == null || !submergees.ContainsKey(rb)) return;
 
-        PlaySplashEffect(submergees[rb], 1);
-
         PlayerRef submergedPlayer = submergees[rb].Player;
-        ParticleSystem ripples = submergees[rb].Ripples;
-        submergees.Remove(rb);
 
-        ripples.transform.SetParent(null);
-        ripples.gameObject.SetActive(false);
-        ripples.Stop();
-        AudioManager.Instance.StopSound(ripplesClip);
+        PlaySplashEffect(submergees[rb], 1);
+        submergees[rb].Remove();
+        submergees.Remove(rb);
 
         if (submergedPlayer == null) return;
 
         submergedPlayer.CameraBody.SetUnderWaterVolumeWeight(0);
         submergedPlayer.PlayerMovement.InWater = false;
-        AudioManager.Instance.StopSound(underWaterClip);
     }
 
-    private void PlaySplashEffect(SubmergeeData data, int splashCount, int iterCount = 1)
+    private int lastSoundIndex = 0;
+    private void PlaySplashEffect(SubmergeeData data, int splashCount)
     {
-        if (iterCount > 2) return;
-
         float magnitude = data.Rb.velocity.magnitude;
         float magnitudeMulti = Mathf.Max(1f, magnitude * 0.25f) / 10;
 
-        if (iterCount == 1) AudioManager.Instance.PlayOnce(splashClips[Mathf.RoundToInt(Random.Range(0, splashClips.Count - 1))], Mathf.Clamp01(magnitudeMulti));
+        int newSoundIndex = Mathf.RoundToInt(Random.Range(0, splashClips.Count - 1));
+        while (newSoundIndex == lastSoundIndex) newSoundIndex = Mathf.RoundToInt(Random.Range(0, splashClips.Count - 1));
+
+        AudioManager.Instance.PlayOnce(splashClips[newSoundIndex], data.Col.transform.position, Mathf.Clamp01(magnitudeMulti));
+        lastSoundIndex = newSoundIndex;
 
         if (magnitude < 10f) return;
 
         Vector3 colToWater = transform.position - data.Col.transform.position;
         Vector3 normal = Physics.Raycast(data.Col.transform.position, colToWater.normalized, out var hit, colToWater.magnitude, waterMask) ? hit.normal : Vector3.up;
-        ParticleSystem splash = ObjectPooler.Instance.Spawn(waterSplash, true, data.Col.transform.position, Quaternion.LookRotation(normal * (iterCount % 2 == 0 ? -1f : 1f))).GetComponent<ParticleSystem>();
         
-        splash.transform.localScale = Vector3.one * magnitudeMulti;
+        for (int i = 0; i < splashCount; i++)
+        {
+            ParticleSystem splash = ObjectPooler.Instance.Spawn(waterSplash, true, data.Col.transform.position, Quaternion.LookRotation(normal * (i % 2 == 0 ? 1f : -1f))).GetComponent<ParticleSystem>();
 
-        ParticleSystem.EmissionModule em = splash.emission;
-        em.rateOverTimeMultiplier = magnitudeMulti;
+            splash.transform.localScale = Vector3.one * magnitudeMulti;
 
-        ParticleSystem.VelocityOverLifetimeModule velocityOverLifetime = splash.velocityOverLifetime;
-        velocityOverLifetime.radialMultiplier += magnitudeMulti;
+            ParticleSystem.EmissionModule em = splash.emission;
+            em.rateOverTimeMultiplier = magnitudeMulti;
 
-        iterCount++;
-        PlaySplashEffect(data, splashCount, iterCount);
+            ParticleSystem.VelocityOverLifetimeModule velocityOverLifetime = splash.velocityOverLifetime;
+            velocityOverLifetime.radialMultiplier += magnitudeMulti;
+        }
     }
 
     /*

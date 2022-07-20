@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ObjectPooler : MonoBehaviour
 {
@@ -8,7 +7,6 @@ public class ObjectPooler : MonoBehaviour
     public class Pool
     {
         [SerializeField] private GameObject prefab;
-        [SerializeField] private Component component;
         [SerializeField] private int size;
         [SerializeField] private bool render = true;
 
@@ -61,7 +59,11 @@ public class ObjectPooler : MonoBehaviour
                 Renderer[] renders = poolSend.GetComponentsInChildren<Renderer>();
                 foreach (Renderer render in renders) render.enabled = false; 
             }
-            else poolSend.GetComponent<Renderer>().enabled = false;
+            else
+            {
+                Renderer render = poolSend.GetComponent<Renderer>();
+                if (render != null) render.enabled = false;
+            }
         }
 
         poolSend.SetActive(false);

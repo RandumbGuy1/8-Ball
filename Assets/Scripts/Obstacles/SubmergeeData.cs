@@ -15,4 +15,15 @@ public class SubmergeeData
         Rb = rb;
         Ripples = ripples;
     }
+
+    public void Remove()
+    {
+        Ripples.Stop();
+        Ripples.gameObject.SetActive(false);
+
+        Player = null;
+        Col = null;
+        Rb = null;
+        Ripples = null;
+    }
 }

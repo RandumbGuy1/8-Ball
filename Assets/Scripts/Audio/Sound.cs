@@ -1,26 +1,48 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class Sound 
 {
     [SerializeField] private AudioClip clip;
+    [SerializeField] private int soundCapacity;
     [SerializeField, Range(0, 1)] private float volume;
     [SerializeField, Range(0, 1)] private float pitch;
+    [SerializeField, Range(0, 1)] private float spatialBlend;
     [SerializeField] private bool looping;
-    public AudioSource Source { get; set; } = null;
+    [SerializeField] private bool playOnAwake;
 
     public AudioClip Clip => clip;
-    public float Volume { get => volume; set => volume = value; }
-    public float Pitch { get => pitch; set => pitch = value; } 
-    public bool Looping { get => looping; set => looping = value; } 
+    public bool PlayOnAwake => playOnAwake;
+    public int SoundCapacity => soundCapacity;
 
-    public void SetParamaters()
+    public Queue<AudioSource> SourcesQueue { get; private set; } = new Queue<AudioSource>();
+
+    public void SetParamaters(AudioSource source)
     {
-        if (Source == null) return;
+        if (source == null || SourcesQueue.Contains(source)) return;
 
-        Source.clip = clip;
-        Source.volume = volume;
-        Source.pitch = pitch;
-        Source.loop = looping;
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.loop = looping;
+        source.spatialBlend = spatialBlend;
+    }
+
+    public void StopInstance(AudioSource source)
+    {
+        if (source == null || !SourcesQueue.Contains(source)) return;
+
+        source.Stop();
+    }
+
+    public void StopAllAudio()
+    {
+        foreach (AudioSource source in SourcesQueue) source.Stop();
+    }
+
+    public void SetSourceQueue(Queue<AudioSource> queue)
+    {
+        SourcesQueue = queue;
     }
 }
