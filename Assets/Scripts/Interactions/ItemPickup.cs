@@ -2,6 +2,8 @@
 
 public class ItemPickup : MonoBehaviour, IInteractable
 {
+    [SerializeField] private AudioClip[] pickupClips = new AudioClip[0];
+
     public GameObject GameObject => gameObject;
     public bool PickedUp { get; set; }
 
@@ -12,7 +14,11 @@ public class ItemPickup : MonoBehaviour, IInteractable
         
     }
 
-    public void OnInteract(PlayerRef player) => player.ClubHolder.AddClub(gameObject);
+    public void OnInteract(PlayerRef player)
+    {
+        player.ClubHolder.AddClub(gameObject);
+        AudioManager.Instance.PlayOnce(pickupClips, transform.position);
+    }
 
     public void OnStartHover(PlayerRef player)
     {

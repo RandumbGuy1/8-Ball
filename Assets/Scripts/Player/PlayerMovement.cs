@@ -13,7 +13,18 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 Input { get; private set; } = Vector2.zero;
 
     public bool Jumping { get; private set; } = false;
-    public bool Moving { get; private set; } = false;
+
+    private bool moving = false;
+    public bool Moving
+    {
+        get => moving;
+
+        private set
+        {
+            if (moving != value) OnPlayerMove?.Invoke(value);
+            moving = value;
+        }
+    }
 
     public float Magnitude { get; private set; }
     public Vector3 RelativeVel { get; private set; }
@@ -43,11 +54,23 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rideHeight;
     [SerializeField] private float rideSpringStrength;
     [SerializeField] private float rideSpringDamper;
-    public bool Grounded { get; private set; }
-    private bool groundedLastFrame = false;
+    private bool grounded = false;
+    public bool Grounded 
+    {
+        get => grounded;
+        
+        private set
+        {
+            //Grounded for first frame
+            if (grounded != value && value) OnPlayerLand?.Invoke(Mathf.Abs(Velocity.y * 0.3f));
 
-    public delegate void WaterEnter(bool submerged);
-    public event WaterEnter OnWaterEnter;
+            grounded = value;
+        }   
+    }
+
+    public event PlayerInput.ReceieveBoolInput OnWaterEnter;
+    public event PlayerInput.ReceieveFloatInput OnPlayerLand;
+    public event PlayerInput.ReceieveBoolInput OnPlayerMove;
 
     private bool inWater = false;
     public bool InWater
@@ -98,8 +121,6 @@ public class PlayerMovement : MonoBehaviour
         HoverOffGround();
         UpdateUprightForce();
 
-        if (Grounded && !groundedLastFrame) player.CameraBody.CamHeadBob.BobOnce(Mathf.Abs(Velocity.y * 0.3f));
-
         float movementMultiplier = 3.5f * Time.fixedDeltaTime * (Grounded ? 1f : 0.6f);
         ClampSpeed(movementMultiplier);
 
@@ -107,7 +128,6 @@ public class PlayerMovement : MonoBehaviour
         Velocity = rb.velocity;
 
         moveDir = player.Orientation.forward * Input.y + player.Orientation.right * Input.x;
-        groundedLastFrame = Grounded;
 
         if (Crouching) return;
 

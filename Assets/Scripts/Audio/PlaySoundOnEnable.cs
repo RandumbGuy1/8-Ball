@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class PlaySoundOnEnable : MonoBehaviour
 {
+    [Header("Sound Settings")]
     [SerializeField] bool playOnAwake = false;
-    [SerializeField] private AudioSource source;
-    [SerializeField] private ParticleSystem particleDependancy;
+    [SerializeField] private float volumeMultiplier;
+    [SerializeField] private AudioClip source;
 
     void OnEnable()
     {
@@ -16,11 +17,6 @@ public class PlaySoundOnEnable : MonoBehaviour
             return;
         }
 
-        source.Play();
-    }
-
-    void OnDisable()
-    {
-        source.Stop();
+        AudioManager.Instance.PlayOnce(source, transform.position, volumeMultiplier);
     }
 }

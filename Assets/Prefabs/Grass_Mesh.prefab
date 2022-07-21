@@ -106,6 +106,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb39f4d0ec567a149b85cb95dd1fc11f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stepClips:
+  - {fileID: 8300000, guid: bd8fe1880d987894dadd1f4d31cc41c8, type: 3}
+  - {fileID: 8300000, guid: b098b0993f2978c418db85b29475b704, type: 3}
+  - {fileID: 8300000, guid: 7918ec94bc72dd242b090129430504fc, type: 3}
+  - {fileID: 8300000, guid: 7d9e7f508c9d9de4e8d1ec931a8921ac, type: 3}
+  - {fileID: 8300000, guid: 67e2f1b6ba3d53f41be551c1654feba1, type: 3}
   collidesWithGrass:
     serializedVersion: 2
     m_Bits: 5121

@@ -66,6 +66,8 @@ public struct ItemRigidbodySettings
 [System.Serializable]
 public struct ItemHoldSettings
 {
+    [SerializeField] private AudioClip itemEquipSound;
+
     [SerializeField] private Vector3 defaultPos;
     [SerializeField] private Vector3 defaultRot;
     [SerializeField] private float pickupSmoothTime;
@@ -73,6 +75,8 @@ public struct ItemHoldSettings
     [SerializeField] private Vector3 switchOffsetPos;
     [SerializeField] private Vector3 switchOffsetRot;
     [SerializeField] private float switchSmoothTime;
+
+    public AudioClip ItemEquipSound => itemEquipSound;
 
     public Vector3 DefaultPos => defaultPos;
     public Vector3 DefaultRot => defaultRot;

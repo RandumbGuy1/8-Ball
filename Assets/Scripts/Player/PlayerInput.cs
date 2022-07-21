@@ -7,6 +7,7 @@ public class PlayerInput : MonoBehaviour
     public delegate void ReceieveVector2Input(Vector2 input);
     public delegate void ReceieveBoolInput(bool input);
     public delegate void ReceieveIntInput(int input);
+    public delegate void ReceieveFloatInput(float input);
 
     public event ReceieveVector2Input OnMoveInput;
     public event ReceieveVector2Input OnMouseInput;

@@ -16,6 +16,8 @@ public class Sound
     public bool PlayOnAwake => playOnAwake;
     public int SoundCapacity => soundCapacity;
 
+    public float Volume => volume;
+
     public Queue<AudioSource> SourcesQueue { get; private set; } = new Queue<AudioSource>();
 
     public void SetParamaters(AudioSource source)

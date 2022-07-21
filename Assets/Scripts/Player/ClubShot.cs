@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using UnityEngine;
 
 public class ClubShot : MonoBehaviour
 {
@@ -11,6 +8,7 @@ public class ClubShot : MonoBehaviour
     [SerializeField] private GameObject ballGhostPrefb;
 
     [Header("Shoot Settings")]
+    [SerializeField] private AudioClip[] breakClips = new AudioClip[0];
     [SerializeField] private LayerMask balls;
     [SerializeField] private ClubHolder clubInventory;
 
@@ -128,6 +126,7 @@ public class ClubShot : MonoBehaviour
 
         if (thrust)
         {
+            AudioManager.Instance.PlayOnce(breakClips, transform.position, Mathf.Clamp01(chargePower));
             clubInventory.EquippedClub.ThrustBalls(player);
             currentBall.AddForce(force, ForceMode.VelocityChange);
         }

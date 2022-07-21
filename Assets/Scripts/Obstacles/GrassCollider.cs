@@ -5,6 +5,7 @@ using UnityEngine;
 public class GrassCollider : MonoBehaviour
 {
     [Header("Interactive Intensity")]
+    [SerializeField] private AudioClip[] stepClips = new AudioClip[0];
     [SerializeField] private LayerMask collidesWithGrass;
     [SerializeField] private float swayAmount;
     [SerializeField] private float returnSpeed;
@@ -35,6 +36,8 @@ public class GrassCollider : MonoBehaviour
         if (collidesWithGrass != (collidesWithGrass | 1 << layer)) return;
 
         collisionCount++;
+
+        AudioManager.Instance.PlayOnce(stepClips, transform.position);
     }
 
     void OnTriggerStay(Collider other)
@@ -43,7 +46,7 @@ public class GrassCollider : MonoBehaviour
         if (collidesWithGrass != (collidesWithGrass | 1 << layer)) return;
 
         Vector3 swayDir = transform.position - other.transform.position;
-        swayDir.y = -0.1f;
+        swayDir.y = -0.15f;
 
         Rigidbody rb = other.GetComponent<Rigidbody>();
 

@@ -118,6 +118,8 @@ public class ClubHolder : MonoBehaviour
 
         if (switching) clubSway.AddSwitchOffset(EquippedItem.HoldSettings.SwitchOffsetPos, EquippedItem.HoldSettings.SwitchOffsetRot);
         else clubSway.ResetMovementValues();
+
+        AudioManager.Instance.PlayOnce(EquippedItem.HoldSettings.ItemEquipSound, transform.position);
     }
 
     //Dropping current club

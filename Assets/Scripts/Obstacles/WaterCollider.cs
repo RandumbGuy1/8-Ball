@@ -4,7 +4,7 @@ using UnityEngine;
 public class WaterCollider : MonoBehaviour
 {
     [Header("Submerge Settings")]
-    [SerializeField] private List<AudioClip> splashClips = new List<AudioClip>();
+    [SerializeField] private AudioClip[] splashClips = new AudioClip[0];
     [Space(10)]
     [SerializeField] private GameObject waterRipples;
     [SerializeField] private GameObject waterSplash;
@@ -94,17 +94,12 @@ public class WaterCollider : MonoBehaviour
         submergedPlayer.PlayerMovement.InWater = false;
     }
 
-    private int lastSoundIndex = 0;
     private void PlaySplashEffect(SubmergeeData data, int splashCount)
     {
         float magnitude = data.Rb.velocity.magnitude;
         float magnitudeMulti = Mathf.Max(1f, magnitude * 0.25f) / 10;
 
-        int newSoundIndex = Mathf.RoundToInt(Random.Range(0, splashClips.Count - 1));
-        while (newSoundIndex == lastSoundIndex) newSoundIndex = Mathf.RoundToInt(Random.Range(0, splashClips.Count - 1));
-
-        AudioManager.Instance.PlayOnce(splashClips[newSoundIndex], data.Col.transform.position, Mathf.Clamp01(magnitudeMulti));
-        lastSoundIndex = newSoundIndex;
+        AudioManager.Instance.PlayOnce(splashClips, data.Col.transform.position, Mathf.Clamp01(magnitudeMulti));
 
         if (magnitude < 10f) return;
 

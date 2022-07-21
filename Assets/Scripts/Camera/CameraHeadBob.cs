@@ -18,6 +18,7 @@ public class CameraHeadBob
     private Vector3 springMotion = Vector3.zero;
     private float tiltSpring = 0f;
 
+    public bool Bobbing => viewBobTimer != 0f;
     public float TiltSway { get; private set; }
     public Vector3 ViewBobOffset { get; private set; }
 

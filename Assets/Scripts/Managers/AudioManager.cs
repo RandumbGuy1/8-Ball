@@ -6,19 +6,12 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private GameObject soundInstancePrefab;
     [SerializeField] private Sound[] sounds;
 
-    private Dictionary<AudioClip, Sound> soundDictionary = new Dictionary<AudioClip, Sound>();
+    public Dictionary<AudioClip, Sound> SoundDictionary { get; private set; } = new Dictionary<AudioClip, Sound>();
     public static AudioManager Instance;
 
     void Awake()
     {
-        if (Instance == this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         //Store all sounds in a dictionary
         foreach (Sound sound in sounds)
@@ -30,7 +23,7 @@ public class AudioManager : MonoBehaviour
                 soundInstances.Enqueue(instance);
             }
 
-            soundDictionary.Add(sound.Clip, sound);
+            SoundDictionary.Add(sound.Clip, sound);
             sound.SetSourceQueue(soundInstances);
             
             //Play all sounds set to playOnAwake
@@ -41,20 +34,54 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource PlayOnce(AudioClip clip, Vector3 sourcePos, float volumeMultiplier = 1f)
     {
-        if (!soundDictionary.ContainsKey(clip)) return null;
+        if (!SoundDictionary.ContainsKey(clip)) return null;
 
         //Spawn audio instance at the sounds source position
-        AudioSource source = soundDictionary[clip].SourcesQueue.Dequeue();
+        AudioSource source = SoundDictionary[clip].SourcesQueue.Dequeue();
         if (source == null) return null;
 
+        //Set source position
+        source.transform.position = sourcePos;
+
         //Set the data of the audio source using the sound class preset
-        soundDictionary[clip].SetParamaters(source);
+        SoundDictionary[clip].SetParamaters(source);
         source.volume *= volumeMultiplier;
 
         source.Play();
 
         //Send sound back to the sounds pool
-        soundDictionary[clip].SourcesQueue.Enqueue(source);
+        SoundDictionary[clip].SourcesQueue.Enqueue(source);
+
+        return source;
+    }
+
+    //Same as Play Once but takes an array of clips and chooses a random one
+    private Dictionary<AudioClip[], int> lastIndexes = new Dictionary<AudioClip[], int>();
+
+    public AudioSource PlayOnce(AudioClip[] clips, Vector3 sourcePos, float volumeMultiplier = 1f)
+    {
+        if (!lastIndexes.ContainsKey(clips)) lastIndexes.Add(clips, clips.Length);
+        
+        int newSoundIndex = Mathf.RoundToInt(Random.Range(0, clips.Length - 1));
+        while (newSoundIndex == lastIndexes[clips]) 
+            newSoundIndex = Mathf.RoundToInt(Random.Range(0, clips.Length - 1));
+
+        AudioClip clip = clips[newSoundIndex];
+        lastIndexes[clips] = newSoundIndex;
+
+        if (!SoundDictionary.ContainsKey(clip)) return null;
+
+        AudioSource source = SoundDictionary[clip].SourcesQueue.Dequeue();
+        if (source == null) return null;
+
+        source.transform.position = sourcePos;
+
+        SoundDictionary[clip].SetParamaters(source);
+        source.volume *= volumeMultiplier;
+
+        source.Play();
+
+        SoundDictionary[clip].SourcesQueue.Enqueue(source);
 
         return source;
     }
@@ -62,17 +89,17 @@ public class AudioManager : MonoBehaviour
     //Stop a certain audio source
     public void StopSound(AudioClip clip, AudioSource source)
     {
-        if (!soundDictionary.ContainsKey(clip)) return;
+        if (!SoundDictionary.ContainsKey(clip)) return;
         if (source == null) return;
 
-        soundDictionary[clip].StopInstance(source);
+        SoundDictionary[clip].StopInstance(source);
     }
 
     //Stop all audio of a certain sound
     public void StopAllSounds(AudioClip clip)
     {
-        if (!soundDictionary.ContainsKey(clip)) return;
+        if (!SoundDictionary.ContainsKey(clip)) return;
 
-        soundDictionary[clip].StopAllAudio();
+        SoundDictionary[clip].StopAllAudio();
     }
 }

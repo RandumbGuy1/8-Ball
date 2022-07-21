@@ -3,6 +3,7 @@ using UnityEngine.Rendering;
 
 public class CameraBody : MonoBehaviour
 {
+    [SerializeField] private CameraFOV camFov;
     [SerializeField] private CameraIdleSway camIdleSway;
     [SerializeField] private CameraHeadBob camHeadBob;
     [SerializeField] private TPSCameraCollider camCollider;
@@ -39,10 +40,14 @@ public class CameraBody : MonoBehaviour
             camCollider.Enabled = !camCollider.Enabled;
             player.Rendering.shadowCastingMode = camCollider.Enabled ? ShadowCastingMode.On : ShadowCastingMode.ShadowsOnly;
         };
+
+        player.PlayerMovement.OnPlayerLand += camHeadBob.BobOnce;
     }
 
     void LateUpdate()
     {
+        player.PlayerCam.fieldOfView = camFov.FOVUpdate(player);
+
         camSprintEffect.SpeedLines(player);
         camIdleSway.IdleCameraSway(player);
         camHeadBob.BobUpdate(player);
