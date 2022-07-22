@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     public float Magnitude { get; private set; }
     public Vector3 RelativeVel { get; private set; }
     public Vector3 Velocity { get; private set; }
+    public float MagToMaxRatio => Mathf.Clamp01(Magnitude / (GetMaxSpeed() * 1.5f));
 
     [Header("Crouch Settings")]
     [SerializeField] private float slideFriction;
@@ -70,7 +71,9 @@ public class PlayerMovement : MonoBehaviour
 
     public event PlayerInput.ReceieveBoolInput OnWaterEnter;
     public event PlayerInput.ReceieveFloatInput OnPlayerLand;
+
     public event PlayerInput.ReceieveBoolInput OnPlayerMove;
+    public event PlayerInput.ReceieveBoolInput OnPlayerCrouch;
 
     private bool inWater = false;
     public bool InWater
@@ -199,14 +202,20 @@ public class PlayerMovement : MonoBehaviour
 
         if (Crouching == prevCouching) return;
 
-        if (Crouching && timeSinceLastSlide <= 0f)
+        OnPlayerCrouch?.Invoke(Crouching);
+
+        //Crouch
+        if (Crouching)
         {
-            player.CameraBody.CamHeadBob.BobOnce(6f);
+            player.CameraBody.CamHeadBob.BobOnce(5f);
+
+            if (timeSinceLastSlide > 0f) return;
             rb.AddForce(Magnitude * slideBoostSpeed * (Grounded ? 0.8f : 0.1f) * moveDir.normalized, ForceMode.Impulse);
             timeSinceLastSlide = slideBoostCooldown;
             return;
         }
 
+        //Uncrouch
         if (Grounded) rb.velocity *= 0.65f;
     }
     private void UpdateCrouch()
@@ -234,7 +243,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Crouching)
         {
-            rb.AddForce(Magnitude * 0.12f * slideFriction * -rb.velocity.normalized);
+            rb.AddForce(slideFriction * -rb.velocity.normalized);
             return;
         }
 

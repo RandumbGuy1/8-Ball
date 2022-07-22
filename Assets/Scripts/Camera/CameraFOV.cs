@@ -11,9 +11,9 @@ public class CameraFOV
     public float FOVUpdate(PlayerRef player)
     {
         float fovOffset = 0f;
-        float fovCurve = (player.PlayerMovement.Magnitude / 40f) * (player.PlayerMovement.Magnitude / 40f);
+        float fovCurve = player.PlayerMovement.MagToMaxRatio * player.PlayerMovement.MagToMaxRatio;
 
-        if (player.PlayerMovement.Magnitude > 5f) fovOffset = 25f * fovCurve;
+        if (player.PlayerMovement.Magnitude > 5f) fovOffset = 20f * fovCurve;
 
         desiredFov = Mathf.SmoothDamp(desiredFov, fov + fovOffset, ref vel, fovSmoothTime);
         return desiredFov;

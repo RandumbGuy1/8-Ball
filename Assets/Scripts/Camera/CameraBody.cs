@@ -44,7 +44,7 @@ public class CameraBody : MonoBehaviour
         player.PlayerMovement.OnPlayerLand += camHeadBob.BobOnce;
     }
 
-    void LateUpdate()
+    void Update()
     {
         player.PlayerCam.fieldOfView = camFov.FOVUpdate(player);
 
@@ -52,7 +52,10 @@ public class CameraBody : MonoBehaviour
         camIdleSway.IdleCameraSway(player);
         camHeadBob.BobUpdate(player);
         camCollider.ColliderUpdate(player.PlayerCam.transform.position, player.transform.position);
+    }
 
+    void LateUpdate()
+    {
         //Apply Rotations And Positions
         {
             Vector3 externalPlayerRotation = new Vector3(player.PlayerMovement.Rb.rotation.x, player.PlayerMovement.Rb.rotation.y, player.PlayerMovement.Rb.rotation.z);

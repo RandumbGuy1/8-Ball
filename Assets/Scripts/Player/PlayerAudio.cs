@@ -8,6 +8,8 @@ public class PlayerAudio : MonoBehaviour
     [SerializeField] private AudioClip playerLandClip;
     [SerializeField] private float footStepFrequency;
     [SerializeField] private float footStepVolumeMultiplier;
+    [Space]
+    [SerializeField] private AudioClip playerCrouchClip;
     private float footstepDistance;
 
     [Header("Water Audio")]
@@ -34,8 +36,14 @@ public class PlayerAudio : MonoBehaviour
 
         player.PlayerMovement.OnPlayerLand += (float magnitude) => { AudioManager.Instance.PlayOnce(playerLandClip, transform.position); };
         player.PlayerMovement.OnPlayerMove += (bool input) => {
-            if (!player.PlayerMovement.Grounded) return;
+            if (!player.PlayerMovement.Grounded || input) return;
             AudioManager.Instance.PlayOnce(playerLandClip, transform.position, footStepVolumeMultiplier); 
+        };
+
+        player.PlayerMovement.OnPlayerCrouch += (bool input) => 
+        {
+            if (!player.PlayerMovement.Grounded) return;
+            AudioManager.Instance.PlayOnce(playerCrouchClip, transform.position);         
         };
 
         ToggleDistortion(GameState.Gameplay);

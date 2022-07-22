@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 203.82462, g: 262.4162, b: 347.33032, a: 1}
+  m_IndirectSpecularColor: {r: 203.3959, g: 262.1562, b: 347.20386, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8797,7 +8797,7 @@ AudioLowPassFilter:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.050795816
+      value: 0.02842201
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -8942,7 +8942,7 @@ MonoBehaviour:
   maxSpeed: 16.5
   jumpForce: 50
   slideFriction: 20
-  crouchMaxSpeed: 60
+  crouchMaxSpeed: 50
   crouchHeight: 1.2
   crouchSmoothTime: 0.08
   slideBoostSpeed: 3.5
@@ -9103,6 +9103,7 @@ MonoBehaviour:
   playerLandClip: {fileID: 8300000, guid: 7c490fede7242154394a0c2294ecd899, type: 3}
   footStepFrequency: 95
   footStepVolumeMultiplier: 0.45
+  playerCrouchClip: {fileID: 8300000, guid: 204942dee889fa44a8ba8e3e5bf420f2, type: 3}
   underWaterClip: {fileID: 8300000, guid: d995a8dc723d54146aa6f43d69767b2c, type: 3}
   waterMovementClip: {fileID: 8300000, guid: b30f0c94b0ff1c14583ae2d2a1d99bdd, type: 3}
   distortionFilter: {fileID: 1004681414}
@@ -14492,11 +14493,13 @@ MonoBehaviour:
     swayFrequency: 1.25
   camHeadBob:
     enabled: 1
-    viewBobMultiplier: {x: 1.25, y: 2.15}
+    viewBobMultiplier: {x: 1, y: 2}
     viewBobSpeed: 11.75
-    viewBobSmoothTime: 10
-    maxTilt: 1
-    tiltSmoothTime: 3
+    viewBobSmoothTime: 0.08
+    dampingRatio: 0
+    angularFrequency: 0
+    maxTilt: 3
+    tiltSmoothTime: 0.1
   camCollider:
     environment:
       serializedVersion: 2
@@ -17157,6 +17160,13 @@ MonoBehaviour:
   - clip: {fileID: 8300000, guid: 2ddfd7a9f922f7b43acdd2ffe1c450e4, type: 3}
     soundCapacity: 1
     volume: 1
+    pitch: 1
+    spatialBlend: 0
+    looping: 0
+    playOnAwake: 0
+  - clip: {fileID: 8300000, guid: 204942dee889fa44a8ba8e3e5bf420f2, type: 3}
+    soundCapacity: 2
+    volume: 0.2
     pitch: 1
     spatialBlend: 0
     looping: 0

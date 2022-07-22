@@ -26,7 +26,7 @@ public class CameraSprintEffect
 			ParticleSystem.VelocityOverLifetimeModule velOverLife = sprintEffect.velocityOverLifetime;
 			velOverLife.speedModifier = player.PlayerMovement.Magnitude / 20f;
 
-			if (windSource != null) windSource.volume = AudioManager.Instance.SoundDictionary[sprintClip].Volume * Mathf.Clamp01(player.PlayerMovement.Magnitude / 50f);
+			if (windSource != null) windSource.volume = AudioManager.Instance.SoundDictionary[sprintClip].Volume * player.PlayerMovement.MagToMaxRatio;
 		}
 		else if (sprintEffect.isPlaying)
         {
