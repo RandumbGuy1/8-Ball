@@ -11,6 +11,7 @@ public class PlayerRef : MonoBehaviour
     [SerializeField] private MeshRenderer rendering;
     [SerializeField] private CapsuleCollider capsuleCol;
     [SerializeField] private ClubHolder clubHolder;
+    [SerializeField] private PlayerDisplayDialogue dialogueHandler;
 
     public CapsuleCollider CapsuleCol => capsuleCol;
     public MeshRenderer Rendering => rendering;
@@ -20,6 +21,7 @@ public class PlayerRef : MonoBehaviour
     public Camera PlayerCam => playerCam;
     public Transform Orientation => orientation;
     public ClubHolder ClubHolder => clubHolder;
+    public PlayerDisplayDialogue DialogueHandler => dialogueHandler;
 
     void Awake()
     {

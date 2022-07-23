@@ -23,7 +23,7 @@ public class TechnoPayRespects : MonoBehaviour, IInteractable
     public void OnInteract(PlayerRef player)
     {
         used = true;
-        technoQuotes.SetActive(true);
+        Invoke(nameof(SetTechnoReal), 1f);
         PostProcessingManager.Instance.AddExposure(20f);
     }
 
@@ -31,4 +31,6 @@ public class TechnoPayRespects : MonoBehaviour, IInteractable
     {
         
     }
+
+    void SetTechnoReal() => technoQuotes.SetActive(true);
 }
