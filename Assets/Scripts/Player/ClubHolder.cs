@@ -123,7 +123,7 @@ public class ClubHolder : MonoBehaviour
     }
 
     //Dropping current club
-    private void DropClub(bool pickupDrop = false)
+    public void DropClub(bool pickupDrop = false, bool all = false)
     {
         ItemGameObject.transform.SetParent(null);
 
@@ -139,6 +139,7 @@ public class ClubHolder : MonoBehaviour
 
             rigidbody.AddTorque(3f * throwForce * rand.normalized, ForceMode.Impulse);
         } );
+
         clubSway.ResetMovementValues();
         clubs.RemoveAt(selectedClub);
 
@@ -146,6 +147,8 @@ public class ClubHolder : MonoBehaviour
         {
             selectedClub = selectedClub + 1 < clubs.Count ? selectedClub : clubs.Count - 1;
             SelectClub();
+
+            if (all) DropClub(false, true);
             return;
         }
 

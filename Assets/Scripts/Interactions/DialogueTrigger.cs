@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DialogueTrigger : MonoBehaviour, IInteractable
 {
+    [SerializeField] private ParticleSystem notification;
     [SerializeField] private Dialogue dialogue;
     public bool Talking { get; set; } = false;
 
@@ -22,6 +23,7 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
     public void OnInteract(PlayerRef player)
     {
         player.DialogueHandler.StartConversation(this, dialogue);
+        notification.Stop();
     }
 
     public void OnStartHover(PlayerRef player)
@@ -29,5 +31,9 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
 
     }
 
-    public void SetNewDialogue(Dialogue dialogue) => this.dialogue = dialogue;
+    public void SetNewDialogue(Dialogue dialogue)
+    {
+        this.dialogue = dialogue;
+        notification.Play();
+    }
 }

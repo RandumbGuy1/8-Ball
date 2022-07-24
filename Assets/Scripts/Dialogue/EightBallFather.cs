@@ -14,7 +14,8 @@ public class EightBallFather : MonoBehaviour
 
     public void ShovePlayer(PlayerRef player)
     {
-        player.PlayerMovement.GoLimp(0.5f);
+        player.ClubHolder.DropClub(false, true);
+        player.PlayerMovement.GoLimp(0.7f);
         player.PlayerMovement.Rb.AddExplosionForce(40f, transform.position + Vector3.down, 10f, 2f, ForceMode.VelocityChange);
     }
 }
