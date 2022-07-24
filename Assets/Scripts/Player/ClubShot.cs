@@ -126,6 +126,9 @@ public class ClubShot : MonoBehaviour
 
         if (thrust)
         {
+            IEightBall ball = currentBall.GetComponent<IEightBall>();
+            if (ball != null) ball.ClubBall(player);
+
             AudioManager.Instance.PlayOnce(breakClips, transform.position, Mathf.Clamp01(chargePower));
             clubInventory.EquippedClub.ThrustBalls(player);
             currentBall.AddForce(force, ForceMode.VelocityChange);

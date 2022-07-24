@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 216.31705, g: 273.92255, b: 359.1277, a: 1}
+  m_IndirectSpecularColor: {r: 211.27628, g: 269.88226, b: 355.21704, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5555,7 +5555,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 28.883686, w: 22.41759}
+  m_margin: {x: 0, y: 0, z: -74.43819, w: 22.41759}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -6222,6 +6222,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 733108965}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &745109351 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8081192296064402897, guid: 5212b11ff2ab05946a8458af7bfa3d36,
+    type: 3}
+  m_PrefabInstance: {fileID: 2094074649}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &745109352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745109351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0763aa306ed30c642bbcd7ecd899fc44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  father: {fileID: 2013205904595308289}
 --- !u!1 &746576482
 GameObject:
   m_ObjectHideFlags: 0
@@ -7649,6 +7668,7 @@ GameObject:
   m_Component:
   - component: {fileID: 853311519}
   - component: {fileID: 853311520}
+  - component: {fileID: 853311521}
   m_Layer: 5
   m_Name: Dialogue UI
   m_TagString: Untagged
@@ -7688,12 +7708,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 853311518}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ea5ab7bca3093c45956f5f55c4c3cfc, type: 3}
+  m_Script: {fileID: 11500000, guid: 35af8fca3aca9be4ba3d5515f3882504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equipUI: {fileID: 853311519}
-  animationSmoothing: 0.2
+  uiShake: {fileID: 853311521}
+  ui: {fileID: 853311519}
+  animationSmoothing: 0.3
   hideDirection: {x: 0, y: -120, z: 0}
+--- !u!114 &853311521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853311518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a39d572476ad42843b5ab94208d1dd7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &886696924
 GameObject:
   m_ObjectHideFlags: 0
@@ -9509,6 +9542,7 @@ MonoBehaviour:
   dialogueBox: {fileID: 853311520}
   nameText: {fileID: 705169457}
   dialogueText: {fileID: 1444631824}
+  timeBetweenCharacters: 0.05
   player: {fileID: 1008010272}
 --- !u!1 &1012586626
 GameObject:
@@ -15028,10 +15062,10 @@ MonoBehaviour:
     swayFrequency: 1.25
   camHeadBob:
     enabled: 1
-    viewBobMultiplier: {x: 1, y: 2}
+    viewBobMultiplier: {x: 1, y: 1.75}
     viewBobSpeed: 11.75
     viewBobDampingRatio: 0.2
-    viewBobAngularFrequency: 25
+    viewBobAngularFrequency: 23
     maxTilt: 3
     tiltSmoothTime: 0.1
   camCollider:
@@ -15877,11 +15911,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1715663384}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ea5ab7bca3093c45956f5f55c4c3cfc, type: 3}
+  m_Script: {fileID: 11500000, guid: 35af8fca3aca9be4ba3d5515f3882504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  equipUI: {fileID: 1715663385}
-  animationSmoothing: 0.15
+  uiShake: {fileID: 0}
+  ui: {fileID: 1715663385}
+  animationSmoothing: 0.2
   hideDirection: {x: 250, y: 0, z: 0}
 --- !u!1001 &1725745952
 PrefabInstance:
@@ -17272,7 +17307,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867256978}
   m_Layer: 0
-  m_Name: Save 1.7
+  m_Name: Save 1.8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19752,8 +19787,9 @@ GameObject:
   - component: {fileID: 2013205904595308287}
   - component: {fileID: 1525172743578657644}
   - component: {fileID: 2013205904595308288}
+  - component: {fileID: 2013205904595308289}
   m_Layer: 12
-  m_Name: 8 ball NPC
+  m_Name: 8 Ball NPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19804,9 +19840,43 @@ MonoBehaviour:
   dialogue:
     name: 8 Ball Father
     monologues:
-    - openPrompt: Hey!
-    - openPrompt: You There!
-    - openPrompt: STOP CLUBBING MY CHILD!!
+    - intensity: 1
+      openPrompt: Hello Player!
+    - intensity: 2
+      openPrompt: Welcome to Andriod 8 Ball for people who can't play IMessage games!
+        Because they bought an android and not an iphone :(
+    - intensity: 0
+      openPrompt: There's not much here . . .
+    - intensity: 1
+      openPrompt: The pool table is flooded . . .
+    - intensity: 1
+      openPrompt: And I don't even know where this water came from . . .
+    - intensity: 1
+      openPrompt: But oh well!
+    - intensity: 2
+      openPrompt: Make yourself at home!
+--- !u!114 &2013205904595308289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013205904595308285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48d149cb57c7cbb47b3bb1cb23223f72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  angryDialogue:
+    name: 8 Ball Father >:(
+    monologues:
+    - intensity: 45
+      openPrompt: HEY YOU!! LISTEN HERE!!
+    - intensity: 60
+      openPrompt: STOP CLUBBING MY CHILD!!!
+    - intensity: 60
+      openPrompt: OR ELSE!!!
+  trigger: {fileID: 2013205904595308288}
 --- !u!4 &4259081032746399368
 Transform:
   m_ObjectHideFlags: 0

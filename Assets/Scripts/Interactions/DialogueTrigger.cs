@@ -28,4 +28,6 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
     {
 
     }
+
+    public void SetNewDialogue(Dialogue dialogue) => this.dialogue = dialogue;
 }

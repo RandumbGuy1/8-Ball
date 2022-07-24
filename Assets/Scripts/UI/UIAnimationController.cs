@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 
-public class ClubEquipController : MonoBehaviour
+public class UIAnimationController : MonoBehaviour
 {
-    [SerializeField] private RectTransform equipUI;
+    [SerializeField] private CameraShaker uiShake;
+    [SerializeField] private RectTransform ui;
     [SerializeField] private float animationSmoothing;
     [SerializeField] private Vector3 hideDirection;
 
+    public CameraShaker UIShake => uiShake;
     private Vector3 startPos;
     private Vector3 desiredPositionOffset;
     private Vector3 smoothPositionOffset;
@@ -17,19 +19,19 @@ public class ClubEquipController : MonoBehaviour
             gameObject.SetActive(newState == GameState.Gameplay);
         };
 
-        startPos = equipUI.localPosition;
+        startPos = ui.localPosition;
 
         HideUI();
     }
 
     void Update()
     {
-        if (smoothPositionOffset == desiredPositionOffset) return;
+        Vector3 offset = uiShake == null ? Vector3.zero : uiShake.Offset;
 
         smoothPositionOffset = Vector3.SmoothDamp(smoothPositionOffset, desiredPositionOffset, ref positionOffsetVel, animationSmoothing);
-        equipUI.localPosition = startPos + smoothPositionOffset;
-
-        if ((desiredPositionOffset - smoothPositionOffset).sqrMagnitude < 0.001f) smoothPositionOffset = desiredPositionOffset;
+        
+        ui.localPosition = startPos + smoothPositionOffset + new Vector3(offset.x, offset.y, 0f);
+        ui.localRotation = Quaternion.Euler(ui.localRotation.x, ui.localRotation.y, offset.z + offset.x);
     }
 
     public void HideUI(bool hide = true) => desiredPositionOffset = hide ? hideDirection : Vector3.zero;

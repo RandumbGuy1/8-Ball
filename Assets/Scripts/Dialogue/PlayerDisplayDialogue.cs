@@ -5,9 +5,10 @@ using TMPro;
 
 public class PlayerDisplayDialogue : MonoBehaviour
 {
-    [SerializeField] private ClubEquipController dialogueBox;
+    [SerializeField] private UIAnimationController dialogueBox;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private float timeBetweenCharacters;
     private Dialogue message = null;
     private DialogueTrigger trigger = null;
 
@@ -33,12 +34,15 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
         while (i <= message.Monologues.Count)
         {
-            if (!dialogueSkip) return;
+            if (!dialogueSkip && i > 0) return;
             else if (i == message.Monologues.Count) break;
 
             IDialogueSection section = message.Monologues[i];
-            dialogueText.text = section.ReceievePrompt();
-            section.Accept();
+
+            StopAllCoroutines();
+            StartCoroutine(TypeWriteMonologue(section.ReceievePrompt()));
+
+            dialogueBox.UIShake.ShakeOnce(new PerlinShake(ShakeData.Create(section.Intensity, 7f, 1f, 10f)));
             i++;
             return;
         }
@@ -47,6 +51,16 @@ public class PlayerDisplayDialogue : MonoBehaviour
         trigger.Talking = false;
         message = null;
         trigger = null;
+    }
+
+    public IEnumerator TypeWriteMonologue(string sentence)
+    {
+        dialogueText.text = "";
+        foreach (char letter in sentence.ToCharArray())
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSeconds(timeBetweenCharacters);
+        }
     }
 
     public void StartConversation(DialogueTrigger trigger, Dialogue message)

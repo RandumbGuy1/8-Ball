@@ -10,7 +10,7 @@ public class ClubHolder : MonoBehaviour
     [SerializeField] private float throwForce;
     [SerializeField] private List<GameObject> clubs = new List<GameObject>();
     [SerializeField] private List<GameObject> queueClubs = new List<GameObject>();
-    [SerializeField] private ClubEquipController clubUI;
+    [SerializeField] private UIAnimationController clubUI;
     [SerializeField] private int selectedClub;
     [SerializeField] private int maxClubs;
 

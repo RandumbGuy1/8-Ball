@@ -22,6 +22,11 @@ public class PlayerInteractions : MonoBehaviour
     void Awake()
     {
         player.PlayerInput.OnInteractInput += CheckForInteractable;
+
+        GameManager.Instance.OnGameStateChanged += (GameState newState) => {
+            interactionUI.SetActive(newState == GameState.Gameplay);
+        };
+
     }
 
     private void CheckForInteractable(bool interact)
@@ -67,13 +72,13 @@ public class PlayerInteractions : MonoBehaviour
             if (interact) interactable.OnInteract(player);
 
         }
-        else if (interactionText.text != " ") ResetInteraction();
+        else ResetInteraction();
     }
 
     private void ResetInteraction(bool noInteraction = true)
     {
         interactionUI.SetActive(false);
-        interactionText.text = " ";
+        interactionText.text = "";
 
         if (interactable == null || !noInteraction) return;
 
