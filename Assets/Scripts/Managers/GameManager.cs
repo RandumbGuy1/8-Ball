@@ -13,16 +13,17 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
+        if (Instance != null && Instance != this)
+        {
+            Instance.SetState(GameState.Gameplay);
+            Destroy(this);
+        }
+        else
         {
             Instance = this;
-            Instance.SetState(GameState.Gameplay);
             DontDestroyOnLoad(gameObject);
-            return;
+            SetState(GameState.Gameplay);
         }
-
-        Instance.SetState(GameState.Gameplay);
-        Destroy(gameObject);
     }
 
     public void SetState(GameState newGameState)

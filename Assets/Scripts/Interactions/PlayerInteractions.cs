@@ -23,10 +23,14 @@ public class PlayerInteractions : MonoBehaviour
     {
         player.PlayerInput.OnInteractInput += CheckForInteractable;
 
-        GameManager.Instance.OnGameStateChanged += (GameState newState) => {
-            interactionUI.SetActive(newState == GameState.Gameplay);
-        };
+        GameManager.Instance.OnGameStateChanged += PauseEnable;
+    }
 
+    void OnDestroy() => GameManager.Instance.OnGameStateChanged -= PauseEnable;
+
+    private void PauseEnable(GameState newState)
+    {
+        if (interactionUI) interactionUI.SetActive(newState == GameState.Gameplay);
     }
 
     private void CheckForInteractable(bool interact)

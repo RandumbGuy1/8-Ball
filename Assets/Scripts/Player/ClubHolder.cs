@@ -125,6 +125,8 @@ public class ClubHolder : MonoBehaviour
     //Dropping current club
     public void DropClub(bool pickupDrop = false, bool all = false)
     {
+        if (clubs.Count == 0) return;
+
         ItemGameObject.transform.SetParent(null);
 
         EquippedItem.OnDrop(player, (rigidbody) => {

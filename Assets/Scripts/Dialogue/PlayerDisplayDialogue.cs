@@ -11,6 +11,7 @@ public class PlayerDisplayDialogue : MonoBehaviour
     [SerializeField] private float timeBetweenCharacters;
     private Dialogue message = null;
     private DialogueTrigger trigger = null;
+    private bool finishedTypeWriting = false;
 
     [Header("Refrences")]
     [SerializeField] private PlayerRef player;
@@ -32,11 +33,20 @@ public class PlayerDisplayDialogue : MonoBehaviour
         while (i <= message.Monologues.Count)
         {
             if (!dialogueSkip && i > 0) return;
-            else if (i == message.Monologues.Count) break;
 
-            dialogueBox.SetPositionOffsetRecoil(Vector3.down * 20f);
+            if (i == message.Monologues.Count) break;
+
+            if (!finishedTypeWriting && dialogueSkip)
+            { 
+                StopAllCoroutines();
+                dialogueText.text = message.Monologues[i - 1].ReceievePrompt();
+                finishedTypeWriting = true;
+                return;
+            }
 
             IDialogueSection section = message.Monologues[i];
+
+            dialogueBox.SetPositionOffsetRecoil(Vector3.down * 20f);
             section.DialogueAction?.Invoke();
 
             StopAllCoroutines();
@@ -55,12 +65,16 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
     public IEnumerator TypeWriteMonologue(string sentence)
     {
+        finishedTypeWriting = false;
+
         dialogueText.text = "";
         foreach (char letter in sentence.ToCharArray())
         {
             dialogueText.text += letter;
             yield return new WaitForSeconds(timeBetweenCharacters);
         }
+
+        finishedTypeWriting = true;
     }
 
     public void StartConversation(DialogueTrigger trigger, Dialogue message)

@@ -15,13 +15,18 @@ public class UIAnimationController : MonoBehaviour
 
     void Awake()
     {
-        GameManager.Instance.OnGameStateChanged += (GameState newState) => {
-            gameObject.SetActive(newState == GameState.Gameplay);
-        };
+        GameManager.Instance.OnGameStateChanged += PauseEnable;
 
         startPos = ui.localPosition;
 
         HideUI();
+    }
+
+    void OnDestroy() => GameManager.Instance.OnGameStateChanged -= PauseEnable;
+
+    private void PauseEnable(GameState newState)
+    {
+        if (gameObject) gameObject.SetActive(newState == GameState.Gameplay);
     }
 
     void Update()

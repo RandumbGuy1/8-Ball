@@ -13,7 +13,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private PlayerRef player;
     private List<GameObject> menus = new List<GameObject>();
 
-    private void Awake()
+    void Awake()
     {
         menus = new List<GameObject>
         {
@@ -21,11 +21,16 @@ public class SettingsMenu : MonoBehaviour
             audioMenu,
             controlsMenu
         };
+ 
+        GameManager.Instance.OnGameStateChanged += PauseEnable;
+    }
 
-        GameManager.Instance.OnGameStateChanged += (GameState newState) => {
-            if (newState == GameState.Paused) return;
-            CloseMenus();
-        };
+    void OnDestroy() => GameManager.Instance.OnGameStateChanged -= PauseEnable;
+
+    private void PauseEnable(GameState newState)
+    {
+        if (newState == GameState.Paused) return;
+        CloseMenus();
     }
 
     public void SetTargetFrameRate(string frames)
