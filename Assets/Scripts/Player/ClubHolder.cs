@@ -112,7 +112,7 @@ public class ClubHolder : MonoBehaviour
         EquippedClub = ItemGameObject.GetComponent<IClub>();
         EquippedItem = ItemGameObject.GetComponent<IItem>();
 
-        clubUI.SetDirectPositionOffset(Vector3.right * 255f);
+        clubUI.HideUISnap();
         clubUI.HideUI(false);
         UpdateClubUI();
 

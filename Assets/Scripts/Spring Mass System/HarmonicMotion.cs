@@ -71,7 +71,7 @@ public static class HarmonicMotion
 	/// <param name="velocity">velocity value to update
 	/// <param name="targetState">velocity value to update
 	/// <param name="springMotionParams">motion parameters to use
-	public static void CalculateSpring(ref float state, ref float velocity, float targetState, DampenedSpringMotionParams springMotionParams)
+	private static void CalculateSpring(ref float state, ref float velocity, float targetState, DampenedSpringMotionParams springMotionParams)
 	{
 		float oldPos = state - targetState; // update in equilibrium relative space
 		float oldVel = velocity;

@@ -21,6 +21,11 @@ public class SettingsMenu : MonoBehaviour
             audioMenu,
             controlsMenu
         };
+
+        GameManager.Instance.OnGameStateChanged += (GameState newState) => {
+            if (newState == GameState.Paused) return;
+            CloseMenus();
+        };
     }
 
     public void SetTargetFrameRate(string frames)

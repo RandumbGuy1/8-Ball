@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     public event ReceieveBoolInput OnSwimSinkInput;
     public event ReceieveBoolInput OnCrouchInput;
     public event ReceieveBoolInput OnInteractInput;
+    public event ReceieveBoolInput OnDialogueInput;
 
     public event ReceieveIntInput OnAbilitySelectInput;
     public event ReceieveIntInput OnClubSelectInput;
@@ -34,6 +35,7 @@ public class PlayerInput : MonoBehaviour
 
     [Header("Interact Keybinds")]
     [SerializeField] private KeyCode interactKey;
+    [SerializeField] private KeyCode dialogueKey;
 
     [Header("Club Keybinds")]
     [SerializeField] private KeyCode dropClubKey;
@@ -50,6 +52,7 @@ public class PlayerInput : MonoBehaviour
     public KeyCode InteractKey => interactKey;
     public KeyCode TogglePerspectKey => togglePerspectKey;
     public KeyCode PauseMenuKey => pauseMenuKey;
+    public KeyCode DialogueKey => dialogueKey;
 
     void Update()
     {
@@ -67,6 +70,7 @@ public class PlayerInput : MonoBehaviour
         OnClubDropInput?.Invoke(Input.GetKeyDown(dropClubKey));
         OnClubSelectInput?.Invoke(IterateKeyBinds(clubSwitchKeys));
         OnAbilitySelectInput?.Invoke(IterateKeyBinds(clubAbilityKeys));
+        OnDialogueInput?.Invoke(Input.GetKeyDown(dialogueKey));
 
         OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
 

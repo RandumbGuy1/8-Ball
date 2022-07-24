@@ -4,19 +4,40 @@ public class ClubEquipController : MonoBehaviour
 {
     [SerializeField] private RectTransform equipUI;
     [SerializeField] private float animationSmoothing;
-    private Vector3 positionOffset;
+    [SerializeField] private Vector3 hideDirection;
+
+    private Vector3 startPos;
+    private Vector3 desiredPositionOffset;
+    private Vector3 smoothPositionOffset;
     private Vector3 positionOffsetVel;
+
+    void Awake()
+    {
+        GameManager.Instance.OnGameStateChanged += (GameState newState) => {
+            gameObject.SetActive(newState == GameState.Gameplay);
+        };
+
+        startPos = equipUI.localPosition;
+
+        HideUI();
+    }
 
     void Update()
     {
-        if (equipUI.localPosition == positionOffset) return;
+        if (smoothPositionOffset == desiredPositionOffset) return;
 
-        equipUI.localPosition = Vector3.SmoothDamp(equipUI.localPosition, positionOffset, ref positionOffsetVel, animationSmoothing);
+        smoothPositionOffset = Vector3.SmoothDamp(smoothPositionOffset, desiredPositionOffset, ref positionOffsetVel, animationSmoothing);
+        equipUI.localPosition = startPos + smoothPositionOffset;
 
-        if ((positionOffset - equipUI.localPosition).sqrMagnitude < 0.001f) equipUI.localPosition = positionOffset;
+        if ((desiredPositionOffset - smoothPositionOffset).sqrMagnitude < 0.001f) smoothPositionOffset = desiredPositionOffset;
     }
 
-    public void HideUI(bool hide = true) => positionOffset = hide ? Vector3.right * 250f : Vector3.zero;
-    public void SetPositionOffset(Vector3 position) => positionOffset = position;
-    public void SetDirectPositionOffset(Vector3 position) => equipUI.localPosition = position;
+    public void HideUI(bool hide = true) => desiredPositionOffset = hide ? hideDirection : Vector3.zero;
+    public void SetPositionOffset(Vector3 position) => desiredPositionOffset = position;
+
+    public void HideUISnap(bool hide = true)
+    {
+        desiredPositionOffset = hide ? hideDirection : Vector3.zero;
+        smoothPositionOffset = hide ? hideDirection : Vector3.zero;
+    }
 }

@@ -5,42 +5,64 @@ using TMPro;
 
 public class PlayerDisplayDialogue : MonoBehaviour
 {
-    [SerializeField] private GameObject dialogueBox;
+    [SerializeField] private ClubEquipController dialogueBox;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI dialogueText;
+    private Dialogue message = null;
+    private DialogueTrigger trigger = null;
+
+    [Header("Refrences")]
+    [SerializeField] private PlayerRef player;
+
+    void Awake()
+    {
+        player.PlayerInput.OnDialogueInput += UpdateDialogue;
+    }
+
+    int i = 0;
+    private void UpdateDialogue(bool dialogueSkip)
+    {
+        if (message == null || trigger == null)
+        {
+            ResetUI();
+            return;
+        }
+
+        trigger.Talking = true;
+        nameText.text = message.Name;
+
+        while (i <= message.Monologues.Count)
+        {
+            if (!dialogueSkip) return;
+            else if (i == message.Monologues.Count) break;
+
+            IDialogueSection section = message.Monologues[i];
+            dialogueText.text = section.ReceievePrompt();
+            section.Accept();
+            i++;
+            return;
+        }
+
+        dialogueBox.HideUI();
+        trigger.Talking = false;
+        message = null;
+        trigger = null;
+    }
 
     public void StartConversation(DialogueTrigger trigger, Dialogue message)
     {
         ResetUI();
-        StopAllCoroutines();
-        StartCoroutine(DialogueSequence(trigger, message));
-    }
 
-    private IEnumerator DialogueSequence(DialogueTrigger trigger, Dialogue dialogue)
-    {
-        trigger.Talking = true;
-        dialogueBox.SetActive(true);
+        this.message = message;
+        this.trigger = trigger;
 
-        nameText.text = dialogue.Name;
-
-        for (int i = 0; i < dialogue.Monologues.Count; i++)
-        {
-            IDialogueSection message = dialogue.Monologues[i];
-            dialogueText.text = message.ReceievePrompt();
-
-            while (!Input.GetKeyDown(KeyCode.E)) yield return null;
-
-            yield return null;
-        }
-
-        trigger.Talking = false;
-        ResetUI();
+        dialogueBox.HideUI(false);
     }
 
     private void ResetUI()
     {
-        dialogueBox.SetActive(false);
         nameText.text = "";
         dialogueText.text = "";
+        i = 0;
     }
 }
