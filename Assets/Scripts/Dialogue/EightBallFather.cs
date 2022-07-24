@@ -9,7 +9,12 @@ public class EightBallFather : MonoBehaviour
 
     public void AlertFather(PlayerRef player)
     {
-        player.PlayerMovement.Rb.AddExplosionForce(30f, transform.position, 5f, 1f, ForceMode.Impulse);
         trigger.SetNewDialogue(angryDialogue);
+    }
+
+    public void ShovePlayer(PlayerRef player)
+    {
+        player.PlayerMovement.GoLimp(0.5f);
+        player.PlayerMovement.Rb.AddExplosionForce(40f, transform.position + Vector3.down, 10f, 2f, ForceMode.VelocityChange);
     }
 }

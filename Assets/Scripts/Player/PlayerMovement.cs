@@ -101,6 +101,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     public Rigidbody Rb => rb;
 
+    public bool Limp { get; private set; }
+    private float limpElapsed = 0f;
+    private float limpTime;
+
     void Awake()
     {
         playerHeight = player.CapsuleCol.height;
@@ -118,6 +122,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
+        limpElapsed += Time.fixedDeltaTime;
+        if (limpElapsed < limpTime) return;
+
         RelativeVel = player.Orientation.InverseTransformDirection(rb.velocity);
 
         Friction();
@@ -281,5 +288,13 @@ public class PlayerMovement : MonoBehaviour
     {
         Input = input;
         Moving = input != Vector2.zero && !Crouching;
+    }
+
+    public void GoLimp(float seconds)
+    {
+        limpTime = seconds;
+        limpElapsed = 0f;
+
+        Grounded = false;
     }
 }

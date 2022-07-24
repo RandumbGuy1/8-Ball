@@ -36,6 +36,7 @@ public class UIAnimationController : MonoBehaviour
 
     public void HideUI(bool hide = true) => desiredPositionOffset = hide ? hideDirection : Vector3.zero;
     public void SetPositionOffset(Vector3 position) => desiredPositionOffset = position;
+    public void SetPositionOffsetRecoil(Vector3 position) => smoothPositionOffset += position;
 
     public void HideUISnap(bool hide = true)
     {

@@ -15,10 +15,7 @@ public class PlayerDisplayDialogue : MonoBehaviour
     [Header("Refrences")]
     [SerializeField] private PlayerRef player;
 
-    void Awake()
-    {
-        player.PlayerInput.OnDialogueInput += UpdateDialogue;
-    }
+    void Awake() => player.PlayerInput.OnDialogueInput += UpdateDialogue;
 
     int i = 0;
     private void UpdateDialogue(bool dialogueSkip)
@@ -37,7 +34,10 @@ public class PlayerDisplayDialogue : MonoBehaviour
             if (!dialogueSkip && i > 0) return;
             else if (i == message.Monologues.Count) break;
 
+            dialogueBox.SetPositionOffsetRecoil(Vector3.down * 20f);
+
             IDialogueSection section = message.Monologues[i];
+            section.DialogueAction?.Invoke();
 
             StopAllCoroutines();
             StartCoroutine(TypeWriteMonologue(section.ReceievePrompt()));
@@ -65,6 +65,8 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
     public void StartConversation(DialogueTrigger trigger, Dialogue message)
     {
+        if (trigger != null) trigger.Talking = false;
+
         ResetUI();
 
         this.message = message;

@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public interface IDialogueSection
 {
+    UnityEvent DialogueAction { get; }
+
     int Intensity { get; }
     string ReceievePrompt();
 }
@@ -21,9 +24,12 @@ public class Dialogue
 [System.Serializable]
 public class Monologue : IDialogueSection
 {
-    [SerializeField] private int intensity;
     [TextArea(3, 10)] [SerializeField] private string openPrompt;
+    [SerializeField] private int intensity;
+    [SerializeField] private UnityEvent dialogueAction;
+
     public int Intensity => intensity;
     public string ReceievePrompt() => openPrompt;
+    public UnityEvent DialogueAction => dialogueAction;
 }
 
