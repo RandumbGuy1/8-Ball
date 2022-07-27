@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 203.82193, g: 262.4162, b: 347.33325, a: 1}
+  m_IndirectSpecularColor: {r: 204.58072, g: 263.73456, b: 349.2605, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13212,12 +13212,18 @@ MonoBehaviour:
       dialogueAction:
         m_PersistentCalls:
           m_Calls: []
-    - openPrompt: Love You! <3
+    - openPrompt: Love You!
       intensity: 0
       dialogueAction:
         m_PersistentCalls:
           m_Calls: []
-    - openPrompt: Goodbye Now!! And stop syping this shit dialogue
+    - openPrompt: <3
+      intensity: 1
+      dialogueAction:
+        m_PersistentCalls:
+          m_Calls: []
+    - openPrompt: Goodbye Now!! And stop typing this shit dialogue its not real no
+        matter how badly you want it to be
       intensity: 1
       dialogueAction:
         m_PersistentCalls:
@@ -51188,12 +51194,12 @@ MonoBehaviour:
       dialogueAction:
         m_PersistentCalls:
           m_Calls: []
-    - openPrompt: The answer is BLACK HISTORY MONTH!!111!!
+    - openPrompt: The answer is black history month
       intensity: 15
       dialogueAction:
         m_PersistentCalls:
           m_Calls: []
-    - openPrompt: LMAOOFROFLDSOSH
+    - openPrompt: lmao
       intensity: 35
       dialogueAction:
         m_PersistentCalls:
@@ -82012,7 +82018,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867256978}
   m_Layer: 0
-  m_Name: Save 2.2
+  m_Name: Save 2.31
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

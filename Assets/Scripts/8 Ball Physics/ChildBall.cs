@@ -26,7 +26,7 @@ public class ChildBall : MonoBehaviour, IEightBall
 
     public void ClubBall(PlayerRef player, float charge)
     {
-        if (charge < 0.4f)
+        if (charge < 0.3f)
         {
             player.DialogueHandler.StartConversation(trigger, notSoHurtDialogue);
             return;
