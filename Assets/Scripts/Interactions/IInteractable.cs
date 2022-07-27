@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
+    PlayerRef Player { get; set; }
     GameObject GameObject { get; }
     string GetDescription(PlayerRef player);
 

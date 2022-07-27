@@ -97,6 +97,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2Int readyToCounter = Vector2Int.zero;
 
     [Header("Refrences")]
+    [SerializeField] private PhysicMaterial bouncy;
+    [SerializeField] private PhysicMaterial slippery;
     [SerializeField] private PlayerRef player;
     [SerializeField] private Rigidbody rb;
     public Rigidbody Rb => rb;
@@ -104,6 +106,7 @@ public class PlayerMovement : MonoBehaviour
     public bool Limp { get; private set; }
     private float limpElapsed = 0f;
     private float limpTime;
+    private SpringJoint joint;
 
     void Awake()
     {
@@ -124,6 +127,8 @@ public class PlayerMovement : MonoBehaviour
     {
         limpElapsed += Time.fixedDeltaTime;
         if (limpElapsed < limpTime) return;
+
+        player.CapsuleCol.material = slippery;
 
         RelativeVel = player.Orientation.InverseTransformDirection(rb.velocity);
 
@@ -296,5 +301,24 @@ public class PlayerMovement : MonoBehaviour
         limpElapsed = 0f;
 
         Grounded = false;
+        player.CapsuleCol.material = bouncy;
     }
+
+    public void AddSpring(Transform connectedAnchor, float maxDistance)
+    {
+        if (joint != null) return;
+
+        joint = player.gameObject.AddComponent<SpringJoint>();
+        joint.autoConfigureConnectedAnchor = false;
+        joint.connectedAnchor = connectedAnchor.position;
+
+        joint.maxDistance = maxDistance;
+        joint.minDistance = 0f;
+
+        joint.spring = 6f;
+        joint.damper = 10f;
+        joint.massScale = 5f;
+    }
+
+    public void RemoveSpring() => Destroy(joint);
 }

@@ -3,6 +3,7 @@
 public class ItemPickup : MonoBehaviour, IInteractable
 {
     [SerializeField] private AudioClip[] pickupClips = new AudioClip[0];
+    public PlayerRef Player { get; set; }
 
     public GameObject GameObject => gameObject;
     public bool PickedUp { get; set; }

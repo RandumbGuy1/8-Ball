@@ -5,6 +5,7 @@ using UnityEngine;
 public class TechnoPayRespects : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject technoQuotes;
+    public PlayerRef Player { get; set; }
 
     public GameObject GameObject => gameObject;
     private bool used = false;

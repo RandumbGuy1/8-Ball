@@ -5,6 +5,7 @@ using TMPro;
 
 public class PlayerDisplayDialogue : MonoBehaviour
 {
+    [SerializeField] private AudioClip dialogueCharacter;
     [SerializeField] private UIAnimationController dialogueBox;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI dialogueText;
@@ -34,8 +35,6 @@ public class PlayerDisplayDialogue : MonoBehaviour
         {
             if (!dialogueSkip && i > 0) return;
 
-            if (i == message.Monologues.Count) break;
-
             if (!finishedTypeWriting && dialogueSkip)
             { 
                 StopAllCoroutines();
@@ -43,6 +42,8 @@ public class PlayerDisplayDialogue : MonoBehaviour
                 finishedTypeWriting = true;
                 return;
             }
+
+            if (i == message.Monologues.Count) break;
 
             IDialogueSection section = message.Monologues[i];
 
@@ -71,6 +72,8 @@ public class PlayerDisplayDialogue : MonoBehaviour
         foreach (char letter in sentence.ToCharArray())
         {
             dialogueText.text += letter;
+            AudioManager.Instance.PlayOnce(dialogueCharacter, transform.position);
+
             yield return new WaitForSeconds(timeBetweenCharacters);
         }
 
@@ -79,7 +82,7 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
     public void StartConversation(DialogueTrigger trigger, Dialogue message)
     {
-        if (trigger != null) trigger.Talking = false;
+        if (this.trigger != null) this.trigger.Talking = false;
 
         ResetUI();
 

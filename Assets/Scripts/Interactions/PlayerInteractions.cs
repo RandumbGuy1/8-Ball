@@ -73,7 +73,11 @@ public class PlayerInteractions : MonoBehaviour
             interactionText.text = text;
             interactionKeyBindText.text = player.PlayerInput.InteractKey.ToString();
 
-            if (interact) interactable.OnInteract(player);
+            if (interact)
+            {
+                interactable.Player = player;
+                interactable.OnInteract(player);
+            }
 
         }
         else ResetInteraction();

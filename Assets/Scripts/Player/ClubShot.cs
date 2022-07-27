@@ -21,7 +21,6 @@ public class ClubShot : MonoBehaviour
     private float upwardModifier = 0f;
     private float smoothUpwardModifier = 0f;
     private float vel = 0f;
-    private SpringJoint joint;
 
     [Header("Refrences")]
     [SerializeField] private PlayerRef player;
@@ -55,7 +54,13 @@ public class ClubShot : MonoBehaviour
 
                 currentBall.collisionDetectionMode = CollisionDetectionMode.Discrete;
                 currentBall.isKinematic = true;
-                AddSpring();
+                player.PlayerMovement.AddSpring(currentBall.transform, clubInventory.EquippedClub.Stats.ClubLength);
+
+                IEightBall ball = currentBall.GetComponent<IEightBall>();
+                if (ball == null) return;
+
+                ball.SelectBall(player);
+                ball.Player = player;
             }
         }
     }
@@ -105,20 +110,6 @@ public class ClubShot : MonoBehaviour
         for (int i = 0; i < predictionCount; i++) lr.SetPosition(i + 2, points[i]);
     }
 
-    private void AddSpring()
-    {
-        joint = player.gameObject.AddComponent<SpringJoint>();
-        joint.autoConfigureConnectedAnchor = false;
-        joint.connectedAnchor = currentBall.transform.position;
-
-        joint.maxDistance = clubInventory.EquippedClub.Stats.ClubLength;
-        joint.minDistance = 0f;
-
-        joint.spring = 5f;
-        joint.damper = 10f;
-        joint.massScale = 5f;
-    }
-
     private void RemoveBall(Vector3 force, bool thrust = true)
     {
         currentBall.isKinematic = false;
@@ -127,7 +118,7 @@ public class ClubShot : MonoBehaviour
         if (thrust)
         {
             IEightBall ball = currentBall.GetComponent<IEightBall>();
-            if (ball != null) ball.ClubBall(player);
+            if (ball != null) ball.ClubBall(player, chargePower / clubInventory.EquippedClub.Stats.MaxClubCharge);
 
             AudioManager.Instance.PlayOnce(breakClips, transform.position, Mathf.Clamp01(chargePower));
             clubInventory.EquippedClub.ThrustBalls(player);
@@ -141,6 +132,6 @@ public class ClubShot : MonoBehaviour
         chargePower = 0f;
         upwardModifier = 0f;
 
-        Destroy(joint);
+        player.PlayerMovement.RemoveSpring();
     }
 }

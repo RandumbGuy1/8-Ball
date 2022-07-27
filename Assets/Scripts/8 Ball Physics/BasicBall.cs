@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicBall : MonoBehaviour, IEightBall
+public class BasicBall : MonoBehaviour
 {
-    public void ClubBall(PlayerRef player)
-    {
 
-    }
 }
