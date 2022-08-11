@@ -6,6 +6,7 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
 {
     [SerializeField] private ParticleSystem notification;
     [SerializeField] private Dialogue dialogue;
+    [SerializeField] private Dialogue dialogue2;
     public bool Talking { get; set; } = false;
     public PlayerRef Player { get; set; }
 
@@ -27,6 +28,7 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
 
         player.DialogueHandler.StartConversation(this, dialogue);
         notification.Stop();
+        SetNewDialogue(dialogue2);
     }
 
     public void OnStartHover(PlayerRef player)

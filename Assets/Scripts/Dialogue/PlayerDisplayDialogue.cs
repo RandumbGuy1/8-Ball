@@ -16,6 +16,7 @@ public class PlayerDisplayDialogue : MonoBehaviour
     [SerializeField] private GameObject optionUI;
     [SerializeField] private List<TextMeshProUGUI> optionsTexts = new List<TextMeshProUGUI>();
     [SerializeField] private List<TextMeshProUGUI> optionsTextsKeyBinds = new List<TextMeshProUGUI>();
+    [SerializeField] private GameObject skipHintText;
 
     private Dialogue message = null;
 
@@ -107,6 +108,7 @@ public class PlayerDisplayDialogue : MonoBehaviour
         StartCoroutine(TypeWriteMonologue(section.OpenPrompt));
 
         dialogueBox.UIShake.ShakeOnce(new PerlinShake(ShakeData.Create(section.Intensity, 7f, 1f, 10f)));
+        skipHintText.SetActive(currentOptions == null);
         i++;
     }
 
@@ -177,9 +179,14 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
     public void StartConversation(DialogueTrigger trigger, Dialogue message)
     {
+        if (message.Monologues.Count == 0) return;
+
         if (this.trigger != null) this.trigger.Talking = false;
 
+        monologueQueue.Clear();
+
         ResetUI();
+        ResetOptionsUI();
 
         this.message = message;
         this.trigger = trigger;

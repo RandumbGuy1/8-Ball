@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 290.58688, g: 416.86017, b: 686.39014, a: 1}
+  m_IndirectSpecularColor: {r: 276.05023, g: 401.2122, b: 662.1997, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -307,7 +307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -165.7, y: 85.8}
+  m_AnchoredPosition: {x: 173.6, y: -3.8}
   m_SizeDelta: {x: 201.42346, y: 27.802032}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8545645
@@ -13204,6 +13204,10 @@ GameObject:
   - component: {fileID: 377698313}
   - component: {fileID: 377698312}
   - component: {fileID: 377698311}
+  - component: {fileID: 377698317}
+  - component: {fileID: 377698315}
+  - component: {fileID: 377698316}
+  - component: {fileID: 377698318}
   m_Layer: 12
   m_Name: Abz
   m_TagString: Untagged
@@ -13240,9 +13244,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 605778248}
   dialogue:
-    name: Abz
     monologues:
     - {fileID: 11400000, guid: 7bd574832862999409d915910d26f836, type: 2}
+  dialogue2:
+    monologues:
+    - {fileID: 11400000, guid: d764056a09fcd3f429250d0e39545a5b, type: 2}
+    - {fileID: 11400000, guid: e5a423ee59f07a547b79aaa640d9ba72, type: 2}
+    - {fileID: 11400000, guid: 1312d839762ddb947bf9249c864a12f5, type: 2}
+    - {fileID: 11400000, guid: 9be173c520b0d814a9b64cd46c6b5219, type: 2}
+    - {fileID: 11400000, guid: 22e2fd29ebad6e144ad076e54d98d504, type: 2}
+    - {fileID: 11400000, guid: c9fc416fe734e8545ba924e8e550dc66, type: 2}
 --- !u!65 &377698312
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13303,6 +13314,70 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 377698309}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &377698315
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377698309}
+  serializedVersion: 2
+  m_Mass: 2
+  m_Drag: 1
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!75 &377698316
+ConstantForce:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377698309}
+  m_Enabled: 1
+  m_Force: {x: 0, y: -20, z: 0}
+  m_RelativeForce: {x: 0, y: 0, z: 0}
+  m_Torque: {x: 0, y: 0, z: 0}
+  m_RelativeTorque: {x: 0, y: 0, z: 0}
+--- !u!114 &377698317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377698309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a63eb3e5543b534c937bd7a9c8efb4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abbieDialogue:
+    monologues: []
+  carbonDialogue:
+    monologues: []
+  carbonTrigger: {fileID: 1492469206}
+  abbieTrigger: {fileID: 377698311}
+--- !u!143 &377698318
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377698309}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1
+  m_Radius: 0.50000006
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &382030576
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22803,7 +22878,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 1334612637}
   dialogue:
-    name: 
+    monologues:
+    - {fileID: 11400000, guid: b59801dcf808b824ab257dab5e18bce8, type: 2}
+  dialogue2:
     monologues: []
 --- !u!65 &578606640
 BoxCollider:
@@ -29637,7 +29714,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -786, y: -94.500084}
+  m_AnchoredPosition: {x: -792, y: -92}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &669892608
@@ -31803,16 +31880,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shittingBricks:
-    name: 
     monologues: []
   hurtDialogue:
-    name: 
     monologues: []
   notSoHurtDialogue:
-    name: 
     monologues: []
   trauma:
-    name: 
     monologues: []
   father: {fileID: 2013205904595308289}
   trigger: {fileID: 745109353}
@@ -31833,7 +31906,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 1161061439}
   dialogue:
-    name: 
+    monologues: []
+  dialogue2:
     monologues: []
 --- !u!54 &745109355 stripped
 Rigidbody:
@@ -33612,7 +33686,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -110.5, y: 85.8}
+  m_AnchoredPosition: {x: 110.8, y: -4.3}
   m_SizeDelta: {x: 201.42346, y: 27.802032}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &816974032
@@ -38406,6 +38480,7 @@ MonoBehaviour:
   optionsTextsKeyBinds:
   - {fileID: 1768866038}
   - {fileID: 595520800}
+  skipHintText: {fileID: 1003610351}
   player: {fileID: 1008010272}
 --- !u!1001 &1010117419
 PrefabInstance:
@@ -51465,7 +51540,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 1783473064}
   dialogue:
-    name: 
+    monologues: []
+  dialogue2:
     monologues: []
 --- !u!65 &1182704169
 BoxCollider:
@@ -53567,7 +53643,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 397, y: -94.500084}
+  m_AnchoredPosition: {x: -792, y: -92}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1281306480
@@ -53624,7 +53700,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -59560,7 +59636,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 465827966}
   dialogue:
-    name: 
+    monologues: []
+  dialogue2:
     monologues: []
 --- !u!65 &1337402781
 BoxCollider:
@@ -61686,7 +61763,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -80.231384, w: -14.6482315}
+  m_margin: {x: 0, y: 0, z: -17.578651, w: -15.692459}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -62964,7 +63041,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 2116706015}
   dialogue:
-    name: 
+    monologues:
+    - {fileID: 11400000, guid: aee69af8674d8fd4ea172c65c0f16311, type: 2}
+    - {fileID: 11400000, guid: 700dae1951abd2142bc7f30993c5d343, type: 2}
+  dialogue2:
     monologues: []
 --- !u!65 &1492469207
 BoxCollider:
@@ -81357,7 +81437,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 109.4, y: 85.8}
+  m_AnchoredPosition: {x: 111.1, y: -39}
   m_SizeDelta: {x: 201.42346, y: 27.802032}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1827608052
@@ -82579,7 +82659,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867256978}
   m_Layer: 0
-  m_Name: Save 2.4
+  m_Name: Save 2.53
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85514,7 +85594,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 163.7, y: 85.8}
+  m_AnchoredPosition: {x: 173.9, y: -39.6}
   m_SizeDelta: {x: 201.42346, y: 27.802032}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2049796157
@@ -92565,7 +92645,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 1525104060}
   dialogue:
-    name: 
+    monologues: []
+  dialogue2:
     monologues: []
 --- !u!114 &2013205904595308289
 MonoBehaviour:
@@ -92581,7 +92662,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shoveForce: 50
   angryDialogue:
-    name: 
     monologues: []
   trigger: {fileID: 2013205904595308288}
 --- !u!4 &4259081032746399368
