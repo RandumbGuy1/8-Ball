@@ -15,9 +15,13 @@ public class PlayerDisplayDialogue : MonoBehaviour
     [Header("Options Dialogue")]
     [SerializeField] private GameObject optionUI;
     [SerializeField] private List<TextMeshProUGUI> optionsTexts = new List<TextMeshProUGUI>();
+    [SerializeField] private List<TextMeshProUGUI> optionsTextsKeyBinds = new List<TextMeshProUGUI>();
 
     private Dialogue message = null;
-    private Options currentOptions;
+
+    private List<Monologue> monologueQueue = new List<Monologue>();
+    private Options currentOptions = null;
+
     private DialogueTrigger trigger = null;
     private bool finishedTypeWriting = false;
 
@@ -33,51 +37,77 @@ public class PlayerDisplayDialogue : MonoBehaviour
     int i = 0;
     private void UpdateDialogue(bool dialogueSkip)
     {
+        //Handle Input 
+        if (!dialogueSkip) return;
+
+        //If there is no message or speaker return
         if (message == null || trigger == null)
         {
             ResetUI();
             return;
         }
 
-        trigger.Talking = true;
-        nameText.text = message.Name;
-
-        while (i <= message.Monologues.Count)
+        if (monologueQueue.Count == 0)
         {
-            //Handle Input 
-            {
-                if (!dialogueSkip && i > 0) return;
+            ExitDialogue();
+            return;
+        }
 
-                if (!finishedTypeWriting && dialogueSkip)
-                {
-                    StopAllCoroutines();
-                    dialogueText.text = message.Monologues[i - 1].OpenPrompt;
-                    finishedTypeWriting = true;
-                    return;
-                }
+        trigger.Talking = true;
 
-                if (i == message.Monologues.Count) break;
-            }
+        //Dont skip using E if there is a question
+        if (currentOptions != null) return;
 
-            Monologue section = message.Monologues[i];
-            currentOptions = section.Branch;
-
-            dialogueBox.SetPositionOffsetRecoil(Vector3.down * 20f);
-            section.DialogueAction?.Invoke();
-
+        //If the entire message hasnt been written yet, skip to its finished state
+        if (!finishedTypeWriting)
+        {
             StopAllCoroutines();
-            StartCoroutine(TypeWriteMonologue(section.OpenPrompt));
+            dialogueText.text = monologueQueue[i - 1].OpenPrompt;
+            finishedTypeWriting = true;
+            return;
+        }
 
-            dialogueBox.UIShake.ShakeOnce(new PerlinShake(ShakeData.Create(section.Intensity, 7f, 1f, 10f)));
+        //Dialogue is Finished
+        if (i == monologueQueue.Count)
+        {
+            ExitDialogue();
+            return;
+        }
+
+        Display();
+        return;
+
+        void ExitDialogue()
+        {
+            dialogueBox.HideUI();
+            trigger.Talking = false;
+            message = null;
+            trigger = null;
+            currentOptions = null;
+        }
+    }
+
+    private void Display()
+    {
+        if (i > monologueQueue.Count - 1) return;
+
+        Monologue section = monologueQueue[i];
+        if (section == null)
+        {
             i++;
             return;
         }
 
-        dialogueBox.HideUI();
-        trigger.Talking = false;
-        message = null;
-        trigger = null;
-        currentOptions = null;
+        currentOptions = section.Branch;
+
+        dialogueBox.SetPositionOffsetRecoil(Vector3.down * 20f);
+        section.DialogueAction?.Invoke();
+
+        StopAllCoroutines();
+        StartCoroutine(TypeWriteMonologue(section.OpenPrompt));
+
+        dialogueBox.UIShake.ShakeOnce(new PerlinShake(ShakeData.Create(section.Intensity, 7f, 1f, 10f)));
+        i++;
     }
 
     private void UpdateOptions(int index)
@@ -90,9 +120,43 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
         //UI Update
         optionUI.SetActive(true);
-        for (int i = 0; i < currentOptions.OptionTexts.Length; i++) optionsTexts[i].text = currentOptions.OptionTexts[i];
-    
-        
+        for (int i = 0; i < currentOptions.OptionTexts.Length; i++)
+        {
+            if (i >= optionsTexts.Count) continue;
+            if (i >= optionsTextsKeyBinds.Count) continue;
+
+            optionsTexts[i].text = currentOptions.OptionTexts[i];
+            optionsTextsKeyBinds[i].text = player.PlayerInput.DialogueOptionsKeys[i].ToString();
+        }
+
+        //If an option hasnt been picked yet do nothing
+        if (index == -1) return;
+
+        //Make sure we select a valid dialogue branch based on our option
+        if (currentOptions.DialogueContinuations.Length == 0 || index >= currentOptions.DialogueContinuations.Length)
+        {
+            //If there isnt a valid followup branch just skip to the next monologue
+            currentOptions = null;
+            finishedTypeWriting = true;
+            UpdateDialogue(true);
+            return;
+        }
+
+        Dialogue addedDialogue = currentOptions.DialogueContinuations[index];
+
+        //Add the follow up monologues of that option
+        for (int i = addedDialogue.Monologues.Count - 1; i > -1; i--)
+        {
+            Monologue addedMonologue = addedDialogue.Monologues[i];
+
+            if (addedMonologue == null) continue;
+            monologueQueue.Insert(this.i, addedMonologue);
+        }
+
+        //Skip to the next monologue
+        currentOptions = null;
+        finishedTypeWriting = true;
+        UpdateDialogue(true);
     }
 
     public IEnumerator TypeWriteMonologue(string sentence)
@@ -121,6 +185,10 @@ public class PlayerDisplayDialogue : MonoBehaviour
         this.trigger = trigger;
 
         dialogueBox.HideUI(false);
+        monologueQueue = new List<Monologue>(message.Monologues);
+        Display();
+
+        nameText.text = trigger.gameObject.name;
     }
 
     private void ResetUI()

@@ -10,17 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a30f25792786fd4b83444a52212a851, type: 3}
-  m_Name: Abz Branch 1
+  m_Name: Abz Branch 2
   m_EditorClassIdentifier: 
   optionsTexts:
-  - Hey!
-  - Fuck you!
+  - 19
+  - 21
   dialogueContinuations:
-  - name: Abz :)
-    monologues:
-    - {fileID: 11400000, guid: b0d415c1cab9ca64997c2f0c4ef81937, type: 2}
-    - {fileID: 11400000, guid: 2e63623580d6f7547a93df04cc25c957, type: 2}
-  - name: Abz :(
-    monologues:
-    - {fileID: 11400000, guid: 39282e59b6d9b384494f70dc41b293c5, type: 2}
-    - {fileID: 11400000, guid: e5a423ee59f07a547b79aaa640d9ba72, type: 2}
+  - monologues: []
+  - monologues:
+    - {fileID: 11400000, guid: 08bd5b04c8ef68d408723dee30eb0155, type: 2}

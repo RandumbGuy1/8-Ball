@@ -55,6 +55,7 @@ public class PlayerInput : MonoBehaviour
     public KeyCode TogglePerspectKey => togglePerspectKey;
     public KeyCode PauseMenuKey => pauseMenuKey;
     public KeyCode DialogueKey => dialogueKey;
+    public List<KeyCode> DialogueOptionsKeys => dialogueOptionsKeys;
 
     void Update()
     {

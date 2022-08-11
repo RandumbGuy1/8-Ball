@@ -7,8 +7,8 @@ using UnityEngine;
 public class Options : ScriptableObject
 {
     [SerializeField] private string[] optionsTexts = new string[2];
-    [SerializeField] private Monologue[] monologueContinuations = new Monologue[2];
+    [SerializeField] private Dialogue[] dialogueContinuations = new Dialogue[2];
 
     public string[] OptionTexts => optionsTexts;
-    public Monologue[] MonologueContinuations => monologueContinuations;
+    public Dialogue[] DialogueContinuations => dialogueContinuations;
 }
