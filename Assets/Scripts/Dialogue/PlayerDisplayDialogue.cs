@@ -5,19 +5,30 @@ using TMPro;
 
 public class PlayerDisplayDialogue : MonoBehaviour
 {
+    [Header("Main Dialogue")]
     [SerializeField] private AudioClip dialogueCharacter;
     [SerializeField] private UIAnimationController dialogueBox;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private float timeBetweenCharacters;
+
+    [Header("Options Dialogue")]
+    [SerializeField] private GameObject optionUI;
+    [SerializeField] private List<TextMeshProUGUI> optionsTexts = new List<TextMeshProUGUI>();
+
     private Dialogue message = null;
+    private Options currentOptions;
     private DialogueTrigger trigger = null;
     private bool finishedTypeWriting = false;
 
     [Header("Refrences")]
     [SerializeField] private PlayerRef player;
 
-    void Awake() => player.PlayerInput.OnDialogueInput += UpdateDialogue;
+    void Awake()
+    {
+        player.PlayerInput.OnDialogueInput += UpdateDialogue;
+        player.PlayerInput.OnDialogueOptionsInput += UpdateOptions;
+    }
 
     int i = 0;
     private void UpdateDialogue(bool dialogueSkip)
@@ -33,25 +44,29 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
         while (i <= message.Monologues.Count)
         {
-            if (!dialogueSkip && i > 0) return;
+            //Handle Input 
+            {
+                if (!dialogueSkip && i > 0) return;
 
-            if (!finishedTypeWriting && dialogueSkip)
-            { 
-                StopAllCoroutines();
-                dialogueText.text = message.Monologues[i - 1].ReceievePrompt();
-                finishedTypeWriting = true;
-                return;
+                if (!finishedTypeWriting && dialogueSkip)
+                {
+                    StopAllCoroutines();
+                    dialogueText.text = message.Monologues[i - 1].OpenPrompt;
+                    finishedTypeWriting = true;
+                    return;
+                }
+
+                if (i == message.Monologues.Count) break;
             }
 
-            if (i == message.Monologues.Count) break;
-
-            IDialogueSection section = message.Monologues[i];
+            Monologue section = message.Monologues[i];
+            currentOptions = section.Branch;
 
             dialogueBox.SetPositionOffsetRecoil(Vector3.down * 20f);
             section.DialogueAction?.Invoke();
 
             StopAllCoroutines();
-            StartCoroutine(TypeWriteMonologue(section.ReceievePrompt()));
+            StartCoroutine(TypeWriteMonologue(section.OpenPrompt));
 
             dialogueBox.UIShake.ShakeOnce(new PerlinShake(ShakeData.Create(section.Intensity, 7f, 1f, 10f)));
             i++;
@@ -62,6 +77,22 @@ public class PlayerDisplayDialogue : MonoBehaviour
         trigger.Talking = false;
         message = null;
         trigger = null;
+        currentOptions = null;
+    }
+
+    private void UpdateOptions(int index)
+    {
+        if (currentOptions == null)
+        {
+            ResetOptionsUI();
+            return;
+        }
+
+        //UI Update
+        optionUI.SetActive(true);
+        for (int i = 0; i < currentOptions.OptionTexts.Length; i++) optionsTexts[i].text = currentOptions.OptionTexts[i];
+    
+        
     }
 
     public IEnumerator TypeWriteMonologue(string sentence)
@@ -96,6 +127,12 @@ public class PlayerDisplayDialogue : MonoBehaviour
     {
         nameText.text = "";
         dialogueText.text = "";
-        i = 0;
+        i = 0;      
+    }
+
+    private void ResetOptionsUI()
+    {
+        optionUI.SetActive(false);
+        foreach (TextMeshProUGUI text in optionsTexts) text.text = "";
     }
 }

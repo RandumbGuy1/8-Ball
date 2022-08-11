@@ -1,18 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public interface IDialogueSection
-{
-    UnityEvent DialogueAction { get; }
-
-    int Intensity { get; }
-    string ReceievePrompt();
-}
-
 [System.Serializable]
-public class Dialogue 
+public class Dialogue
 {
     [SerializeField] private string name;
     [SerializeField] List<Monologue> monologues = new List<Monologue>();
@@ -21,15 +12,12 @@ public class Dialogue
     public List<Monologue> Monologues => monologues;
 }
 
-[System.Serializable]
-public class Monologue : IDialogueSection
+public interface IDialogueSection
 {
-    [TextArea(3, 10)] [SerializeField] private string openPrompt;
-    [SerializeField] private int intensity;
-    [SerializeField] private UnityEvent dialogueAction;
+    UnityEvent DialogueAction { get; }
 
-    public int Intensity => intensity;
-    public string ReceievePrompt() => openPrompt;
-    public UnityEvent DialogueAction => dialogueAction;
+    int Intensity { get; }
+    string ReceievePrompt();
+    string[] ReceievePrompts();
 }
 

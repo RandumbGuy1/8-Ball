@@ -17,6 +17,7 @@ public class PlayerInput : MonoBehaviour
     public event ReceieveBoolInput OnCrouchInput;
     public event ReceieveBoolInput OnInteractInput;
     public event ReceieveBoolInput OnDialogueInput;
+    public event ReceieveIntInput OnDialogueOptionsInput;
 
     public event ReceieveIntInput OnAbilitySelectInput;
     public event ReceieveIntInput OnClubSelectInput;
@@ -36,6 +37,7 @@ public class PlayerInput : MonoBehaviour
     [Header("Interact Keybinds")]
     [SerializeField] private KeyCode interactKey;
     [SerializeField] private KeyCode dialogueKey;
+    [SerializeField] private List<KeyCode> dialogueOptionsKeys = new List<KeyCode>();
 
     [Header("Club Keybinds")]
     [SerializeField] private KeyCode dropClubKey;
@@ -71,6 +73,7 @@ public class PlayerInput : MonoBehaviour
         OnClubSelectInput?.Invoke(IterateKeyBinds(clubSwitchKeys));
         OnAbilitySelectInput?.Invoke(IterateKeyBinds(clubAbilityKeys));
         OnDialogueInput?.Invoke(Input.GetKeyDown(dialogueKey));
+        OnDialogueOptionsInput?.Invoke(IterateKeyBinds(dialogueOptionsKeys));
 
         OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
 

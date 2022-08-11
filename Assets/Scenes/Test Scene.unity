@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 204.58072, g: 263.73456, b: 349.2605, a: 1}
+  m_IndirectSpecularColor: {r: 276.05023, g: 401.2122, b: 662.1997, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13167,67 +13167,7 @@ MonoBehaviour:
   dialogue:
     name: Abz
     monologues:
-    - openPrompt: Hey Bon
-      intensity: 3
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Its been a while since we last talked
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: I know you miss me, . . . sorry about that
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: I promise I will come back, one day
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: You just have to stay strong and keep waiting!
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: I promise I'm okay, dont worry about me!
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Even if I'm just a figment of your games imagination . . .
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: I really think you need this . . .
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: I . . .
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Love You!
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: <3
-      intensity: 1
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Goodbye Now!! And stop typing this shit dialogue its not real no
-        matter how badly you want it to be
-      intensity: 1
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    - {fileID: 11400000, guid: 7bd574832862999409d915910d26f836, type: 2}
 --- !u!65 &377698312
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22788,13 +22728,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 1334612637}
   dialogue:
-    name: Sunbrella
-    monologues:
-    - openPrompt: :))
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    name: 
+    monologues: []
 --- !u!65 &578606640
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29459,6 +29394,177 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 668591014}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &669892606
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 669892607}
+  - component: {fileID: 669892609}
+  - component: {fileID: 669892608}
+  m_Layer: 5
+  m_Name: Text (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &669892607
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669892606}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1827608051}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 397, y: -94.500084}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &669892608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669892606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Option 2
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 13d91f0d4dfdb784eacf343d6e77484e, type: 2}
+  m_sharedMaterial: {fileID: 1713897387496805616, guid: 13d91f0d4dfdb784eacf343d6e77484e,
+    type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 10
+  m_fontSizeBase: 10
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: -80.231384, w: -14.6482315}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &669892609
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669892606}
+  m_CullTransparentMesh: 0
+--- !u!1 &673300747
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 673300748}
+  m_Layer: 5
+  m_Name: Dialogue Options UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &673300748
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673300747}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 816974031}
+  - {fileID: 1827608051}
+  m_Father: {fileID: 853311519}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &678960763
 GameObject:
   m_ObjectHideFlags: 0
@@ -31486,95 +31592,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shittingBricks:
-    name: 8 Ball Child :{
-    monologues:
-    - openPrompt: Wait! Please stop!!
-      intensity: 9
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: DONT CLUB ME!!!!
-      intensity: 18
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: NOOOOOOOOOOOOOOOO!!!!
-      intensity: 18
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    name: 
+    monologues: []
   hurtDialogue:
-    name: '8 Ball Child D:'
-    monologues:
-    - openPrompt: Ouch!
-      intensity: 8
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    name: 
+    monologues: []
   notSoHurtDialogue:
-    name: Child Ball :/
-    monologues:
-    - openPrompt: Ah!, oh that wasn't that hard of a hit!
-      intensity: 6
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Phew
-      intensity: 3
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    name: 
+    monologues: []
   trauma:
-    name: 8 Ball Child :(
-    monologues:
-    - openPrompt: AAAAAHHH
-      intensity: 7
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: GET AWAY FROM ME!!
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 745109352}
-            m_MethodName: RunAwayFromPlayer
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-    - openPrompt: PLEASE!!!
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 745109352}
-            m_MethodName: Meme
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-          - m_Target: {fileID: 745109352}
-            m_MethodName: RunAwayFromPlayer
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
+    name: 
+    monologues: []
   father: {fileID: 2013205904595308289}
   trigger: {fileID: 745109353}
   achievement: {fileID: 2066240984}
@@ -31594,23 +31622,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 1161061439}
   dialogue:
-    name: 8 Ball Child
-    monologues:
-    - openPrompt: O-oh, Hey there! . . .
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Im Tony!
-      intensity: 3
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Please dont hit me . . .
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    name: 
+    monologues: []
 --- !u!54 &745109355 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 8081192296064402899, guid: 5212b11ff2ab05946a8458af7bfa3d36,
@@ -33353,6 +33366,81 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 810569615}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &816974030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 816974031}
+  - component: {fileID: 816974033}
+  - component: {fileID: 816974032}
+  m_Layer: 5
+  m_Name: Option 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &816974031
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816974030}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_Children:
+  - {fileID: 1281306479}
+  m_Father: {fileID: 673300748}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -110.5, y: 85.8}
+  m_SizeDelta: {x: 201.42346, y: 27.802032}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &816974032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816974030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.08477215, g: 0.08882481, b: 0.14150941, a: 0.5686275}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &816974033
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816974030}
+  m_CullTransparentMesh: 0
 --- !u!1001 &817437339
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34644,6 +34732,7 @@ RectTransform:
   - {fileID: 705169456}
   - {fileID: 1444631823}
   - {fileID: 1003610352}
+  - {fileID: 673300748}
   m_Father: {fileID: 746576486}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -37978,6 +38067,7 @@ MonoBehaviour:
   sinkSwimKey: 304
   interactKey: 102
   dialogueKey: 101
+  dialogueOptionsKeys: 6300000076000000
   dropClubKey: 113
   clubAbilityKeys: 780000007a000000
   clubSwitchKeys: 3100000032000000
@@ -38098,6 +38188,10 @@ MonoBehaviour:
   nameText: {fileID: 705169457}
   dialogueText: {fileID: 1444631824}
   timeBetweenCharacters: 0.025
+  optionUI: {fileID: 673300747}
+  optionsTexts:
+  - {fileID: 1281306480}
+  - {fileID: 669892608}
   player: {fileID: 1008010272}
 --- !u!1001 &1010117419
 PrefabInstance:
@@ -40245,7 +40339,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1096427020}
   serializedVersion: 6
   lengthInSec: 5
-  simulationSpeed: 1
+  simulationSpeed: 2
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -51157,53 +51251,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 1783473064}
   dialogue:
-    name: Plai
-    monologues:
-    - openPrompt: Yo Playa!
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: I got a joke to tell you!
-      intensity: 4
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Whats a gamers worst enemy?
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Lag? . . . No
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Hackers? . . . No
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Bad Teamates? . . . No
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Well . . .
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: The answer is black history month
-      intensity: 15
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: lmao
-      intensity: 35
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    name: 
+    monologues: []
 --- !u!65 &1182704169
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -53270,6 +53319,140 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1278726599}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1281306478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1281306479}
+  - component: {fileID: 1281306481}
+  - component: {fileID: 1281306480}
+  m_Layer: 5
+  m_Name: Text (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1281306479
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281306478}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_Children: []
+  m_Father: {fileID: 816974031}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 397, y: -94.500084}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1281306480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281306478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Option 1
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 13d91f0d4dfdb784eacf343d6e77484e, type: 2}
+  m_sharedMaterial: {fileID: 1713897387496805616, guid: 13d91f0d4dfdb784eacf343d6e77484e,
+    type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 10
+  m_fontSizeBase: 10
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: -80.231384, w: -14.6482315}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1281306481
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281306478}
+  m_CullTransparentMesh: 0
 --- !u!1001 &1284348903
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59163,48 +59346,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 465827966}
   dialogue:
-    name: PatAPizza
-    monologues:
-    - openPrompt: OMG!
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: SPEEDZ IS HAVING AN AFFIAR
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: canceled!
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: "im thinking of switching to arch linux \r"
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: upset feet next youtube video when?!?!
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: namespace!
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Flame superior!
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Bye!
-      intensity: 10
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    name: 
+    monologues: []
 --- !u!65 &1337402781
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -62607,13 +62750,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 2116706015}
   dialogue:
-    name: Carbon
-    monologues:
-    - openPrompt: When the
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    name: 
+    monologues: []
 --- !u!65 &1492469207
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -71980,7 +72118,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.91701204, b: 0.8392157, a: 1}
-  m_Intensity: 34858.48
+  m_Intensity: 34000
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -72019,7 +72157,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
@@ -72036,13 +72174,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1659813574}
-  m_LocalRotation: {x: 0.9865779, y: -0.06917506, z: -0.12953892, w: 0.07140412}
+  m_LocalRotation: {x: 0.9012696, y: -0.3293493, z: 0.2797841, w: 0.031033024}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 7.064, y: 195.51599, z: 188.98499}
+  m_LocalEulerAnglesHint: {x: 13.900001, y: 150.10101, z: 216.41899}
 --- !u!114 &1659813577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72063,7 +72201,7 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
-  m_Intensity: 34858.48
+  m_Intensity: 34000
   m_EnableSpotReflector: 0
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
@@ -73119,7 +73257,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1723458788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.17, y: 0, z: 1.74}
+  m_LocalPosition: {x: -0.17, y: -0, z: 1.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1096427021}
@@ -73145,7 +73283,7 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
-  m_Intensity: 23.54
+  m_Intensity: 25.2
   m_EnableSpotReflector: 0
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
@@ -73159,7 +73297,7 @@ MonoBehaviour:
   m_ShapeWidth: 0.5
   m_ShapeHeight: 0.5
   m_AspectRatio: 1
-  m_ShapeRadius: 0.025
+  m_ShapeRadius: 3.4
   m_SoftnessScale: 1
   m_UseCustomSpotLightShadowCone: 0
   m_CustomSpotLightShadowCone: 30
@@ -73248,8 +73386,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.53508776, b: 0, a: 1}
-  m_Intensity: 1524601.6
-  m_Range: 20
+  m_Intensity: 4817992.5
+  m_Range: 37.03
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -73291,11 +73429,11 @@ Light:
   m_LightShadowCasterMode: 2
   m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 0
-  m_ColorTemperature: 3057
+  m_ColorTemperature: 2969
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
-  m_ShadowRadius: 0
+  m_ShadowRadius: 3.4
   m_ShadowAngle: 0
 --- !u!1001 &1725745952
 PrefabInstance:
@@ -80836,6 +80974,81 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1821337003}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1827608050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1827608051}
+  - component: {fileID: 1827608053}
+  - component: {fileID: 1827608052}
+  m_Layer: 5
+  m_Name: Option 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1827608051
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827608050}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_Children:
+  - {fileID: 669892607}
+  m_Father: {fileID: 673300748}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 109.4, y: 85.8}
+  m_SizeDelta: {x: 201.42346, y: 27.802032}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1827608052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827608050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.08477215, g: 0.08882481, b: 0.14150941, a: 0.5686275}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1827608053
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827608050}
+  m_CullTransparentMesh: 0
 --- !u!1001 &1827626679
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -82018,7 +82231,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867256978}
   m_Layer: 0
-  m_Name: Save 2.31
+  m_Name: Save 2.4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91929,56 +92142,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 1525104060}
   dialogue:
-    name: 8 Ball Father
-    monologues:
-    - openPrompt: Hello Player!
-      intensity: 1
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Welcome to Andriod 8 Ball for people who can't play IMessage games!
-        Because they bought an android and not an iphone :(
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: There's not much here . . .
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: The pool table is flooded . . .
-      intensity: 1
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: And I don't even know where this water came from . . .
-      intensity: 1
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: But oh well!
-      intensity: 1
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Also this is my child Tony! He likes the sunshine and being made
-        by medicore developers!
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Im sure you two will get along, just dont use any clubs on him
-        . . .
-      intensity: 0
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: Anyways enough chit chat, make yourself at home!
-      intensity: 2
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
+    name: 
+    monologues: []
 --- !u!114 &2013205904595308289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91993,45 +92158,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shoveForce: 50
   angryDialogue:
-    name: 8 Ball Father >:(
-    monologues:
-    - openPrompt: HEY YOU!! LISTEN HERE!!
-      intensity: 45
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 2013205904595308289}
-            m_MethodName: GrabPlayer
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-    - openPrompt: STOP CLUBBING MY CHILD!!!
-      intensity: 60
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls: []
-    - openPrompt: OR ELSE!!!
-      intensity: 60
-      dialogueAction:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 2013205904595308289}
-            m_MethodName: ShovePlayer
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
+    name: 
+    monologues: []
   trigger: {fileID: 2013205904595308288}
 --- !u!4 &4259081032746399368
 Transform:
