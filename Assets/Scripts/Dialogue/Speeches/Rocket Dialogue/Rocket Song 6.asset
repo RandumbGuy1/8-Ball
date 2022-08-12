@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2544304831aeed4ba493b34abf2b605, type: 3}
-  m_Name: Abz Death
+  m_Name: Rocket Song 6
   m_EditorClassIdentifier: 
   branch: {fileID: 0}
-  openPrompt: Dies of death
+  openPrompt: But I guess I'll play a game . . .
   intensity: 3
-  authorEmotion: 5
+  authorEmotion: 1

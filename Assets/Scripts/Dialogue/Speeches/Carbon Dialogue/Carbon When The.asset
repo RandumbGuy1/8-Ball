@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2544304831aeed4ba493b34abf2b605, type: 3}
-  m_Name: Abz Death
+  m_Name: Carbon When The
   m_EditorClassIdentifier: 
   branch: {fileID: 0}
-  openPrompt: Dies of death
-  intensity: 3
-  authorEmotion: 5
+  openPrompt: When The
+  intensity: 1
+  authorEmotion: 3

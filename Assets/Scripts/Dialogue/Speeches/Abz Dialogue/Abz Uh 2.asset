@@ -14,7 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   branch: {fileID: 0}
   openPrompt: '"When the"?!!? That makes no sense, wheres the context!'
-  intensity: 0
-  dialogueAction:
-    m_PersistentCalls:
-      m_Calls: []
+  intensity: 3
+  authorEmotion: 2

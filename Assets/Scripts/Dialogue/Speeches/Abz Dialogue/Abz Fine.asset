@@ -15,6 +15,4 @@ MonoBehaviour:
   branch: {fileID: 11400000, guid: 52c6d717392e3924289421c3691d40f6, type: 2}
   openPrompt: Fine! Idk make me say fly high or something!
   intensity: 10
-  dialogueAction:
-    m_PersistentCalls:
-      m_Calls: []
+  authorEmotion: 3

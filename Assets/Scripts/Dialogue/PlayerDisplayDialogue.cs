@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class PlayerDisplayDialogue : MonoBehaviour
@@ -18,12 +19,22 @@ public class PlayerDisplayDialogue : MonoBehaviour
     [SerializeField] private List<TextMeshProUGUI> optionsTextsKeyBinds = new List<TextMeshProUGUI>();
     [SerializeField] private GameObject skipHintText;
 
-    private Dialogue message = null;
+    [Header("Emotions")]
+    [SerializeField] private Image authorEmotionImage;
+    [SerializeField] private Sprite happySprite;
+    [SerializeField] private Sprite sadSprite;
+    [SerializeField] private Sprite scaredSprite;
+    [SerializeField] private Sprite angrySprite;
+    [SerializeField] private Sprite normalSprite;
+    [SerializeField] private Sprite deathSprite;
+
+    private Dialogue currentMessage = null;
+    private DialogueAction currentDialogueAction = null;
 
     private List<Monologue> monologueQueue = new List<Monologue>();
     private Options currentOptions = null;
 
-    private DialogueTrigger trigger = null;
+    private DialogueTrigger currentTrigger = null;
     private bool finishedTypeWriting = false;
 
     [Header("Refrences")]
@@ -42,7 +53,7 @@ public class PlayerDisplayDialogue : MonoBehaviour
         if (!dialogueSkip) return;
 
         //If there is no message or speaker return
-        if (message == null || trigger == null)
+        if (currentMessage == null || currentTrigger == null)
         {
             ResetUI();
             return;
@@ -53,8 +64,6 @@ public class PlayerDisplayDialogue : MonoBehaviour
             ExitDialogue();
             return;
         }
-
-        trigger.Talking = true;
 
         //Dont skip using E if there is a question
         if (currentOptions != null) return;
@@ -72,26 +81,19 @@ public class PlayerDisplayDialogue : MonoBehaviour
         if (i == monologueQueue.Count)
         {
             ExitDialogue();
+            FireDialogueEvent(DialougeActionTime.End);
             return;
         }
 
         Display();
-        return;
-
-        void ExitDialogue()
-        {
-            dialogueBox.HideUI();
-            trigger.Talking = false;
-            message = null;
-            trigger = null;
-            currentOptions = null;
-        }
+        return;       
     }
 
     private void Display()
     {
         if (i > monologueQueue.Count - 1) return;
 
+        //If there is no monologue seciton here, just skip it
         Monologue section = monologueQueue[i];
         if (section == null)
         {
@@ -99,16 +101,30 @@ public class PlayerDisplayDialogue : MonoBehaviour
             return;
         }
 
+        //Save the current option branch we are on
         currentOptions = section.Branch;
+        skipHintText.SetActive(currentOptions == null);
 
+        //UI bob effect
         dialogueBox.SetPositionOffsetRecoil(Vector3.down * 20f);
-        section.DialogueAction?.Invoke();
+        dialogueBox.UIShake.ShakeOnce(new PerlinShake(ShakeData.Create(section.Intensity, 7f, 1f, 10f)));
+
+        //Get action from monologue
+        currentDialogueAction = currentMessage.FindAction(section);
+        FireDialogueEvent(DialougeActionTime.Start);
 
         StopAllCoroutines();
         StartCoroutine(TypeWriteMonologue(section.OpenPrompt));
 
-        dialogueBox.UIShake.ShakeOnce(new PerlinShake(ShakeData.Create(section.Intensity, 7f, 1f, 10f)));
-        skipHintText.SetActive(currentOptions == null);
+        //Set appropiate profile for speaker
+        if (currentMessage.Author != null)
+        {
+            nameText.text = currentMessage.Author.AuthorName;
+            authorEmotionImage.color = Color.white;
+            authorEmotionImage.sprite = SelectEmotion(section.AuthorEmotion);
+        }
+
+        //Move forward
         i++;
     }
 
@@ -144,7 +160,7 @@ public class PlayerDisplayDialogue : MonoBehaviour
             return;
         }
 
-        Dialogue addedDialogue = currentOptions.DialogueContinuations[index];
+        Branch addedDialogue = currentOptions.DialogueContinuations[index];
 
         //Add the follow up monologues of that option
         for (int i = addedDialogue.Monologues.Count - 1; i > -1; i--)
@@ -180,34 +196,61 @@ public class PlayerDisplayDialogue : MonoBehaviour
     public void StartConversation(DialogueTrigger trigger, Dialogue message)
     {
         if (message.Monologues.Count == 0) return;
-
-        if (this.trigger != null) this.trigger.Talking = false;
+        if (currentTrigger != null) currentTrigger.Talking = false;
 
         monologueQueue.Clear();
-
         ResetUI();
         ResetOptionsUI();
 
-        this.message = message;
-        this.trigger = trigger;
+        currentMessage = message;
+        currentTrigger = trigger;
+        currentTrigger.Talking = true;
 
         dialogueBox.HideUI(false);
-        monologueQueue = new List<Monologue>(message.Monologues);
+        monologueQueue = new List<Monologue>(currentMessage.Monologues);
         Display();
-
-        nameText.text = trigger.gameObject.name;
     }
 
     private void ResetUI()
     {
         nameText.text = "";
         dialogueText.text = "";
-        i = 0;      
+        authorEmotionImage.color = Color.clear;
+        i = 0;
     }
 
     private void ResetOptionsUI()
     {
         optionUI.SetActive(false);
         foreach (TextMeshProUGUI text in optionsTexts) text.text = "";
+    }
+
+    private Sprite SelectEmotion(Emotion emotion)
+    {
+        switch (emotion)
+        {
+            case Emotion.Happy: return happySprite;
+            case Emotion.Sad: return sadSprite;
+            case Emotion.Scared: return scaredSprite;
+            case Emotion.Normal: return normalSprite;
+            case Emotion.Angry: return angrySprite;
+            case Emotion.Death: return deathSprite;
+            default: return normalSprite;
+        }
+    }
+
+    void ExitDialogue()
+    {
+        dialogueBox.HideUI();
+        currentTrigger.Talking = false;
+        currentMessage = null;
+        currentTrigger = null;
+        currentOptions = null;
+    }
+
+    void FireDialogueEvent(DialougeActionTime timeToFire)
+    {
+        if (currentDialogueAction != null && currentDialogueAction.Time == timeToFire)
+            currentDialogueAction.MonologueEvent?.Invoke();
     }
 }
