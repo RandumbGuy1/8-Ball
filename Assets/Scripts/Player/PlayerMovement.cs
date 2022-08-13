@@ -133,7 +133,7 @@ public class PlayerMovement : MonoBehaviour
         RelativeVel = player.Orientation.InverseTransformDirection(rb.velocity);
 
         Friction();
-        HoverOffGround();
+        HoverOffGround(CalculateVault());
         UpdateUprightForce();
 
         float movementMultiplier = 3.5f * Time.fixedDeltaTime * (Grounded ? 1f : 0.6f);
@@ -150,10 +150,20 @@ public class PlayerMovement : MonoBehaviour
         else rb.AddForce(acceleration * movementMultiplier * moveDir.normalized, ForceMode.Impulse);
     }
 
-    private void HoverOffGround()
+    private Vector3 CalculateVault()
     {
-        Grounded = Physics.SphereCast(transform.position, 0.3f, Vector3.down, out _, rideHeight + rideRayExtension, environment) || InWater;
-        bool buffer = Physics.Raycast(transform.position, Vector3.down, out var hit, rideHeight + rideRayExtension * 1.35f, environment);
+        bool wallCheck = Physics.Raycast(transform.position + player.Orientation.forward, 
+            Vector3.down, rideHeight + rideRayExtension * 1.5f, environment);
+
+        return wallCheck ? (player.Orientation.forward + moveDir).normalized : Vector3.zero;
+    }
+
+    private void HoverOffGround(Vector3 bufferOffset)
+    {
+        Vector3 bufferPosition = transform.position + bufferOffset;
+        bool buffer = Physics.Raycast(bufferPosition, Vector3.down, out var hit, rideHeight + rideRayExtension * 1.5f, environment);
+
+        Grounded = Physics.SphereCast(transform.position, 0.3f, Vector3.down, out _, rideHeight + rideRayExtension, environment) || InWater || buffer;
 
         if (!buffer || InWater) return;
 

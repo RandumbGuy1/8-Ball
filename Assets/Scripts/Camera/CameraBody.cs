@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
+using System;
 
 public class CameraBody : MonoBehaviour
 {
+    [SerializeField] private CameraFilters camFilters;
     [SerializeField] private CameraFOV camFov;
     [SerializeField] private CameraIdleSway camIdleSway;
     [SerializeField] private CameraHeadBob camHeadBob;
@@ -10,17 +12,11 @@ public class CameraBody : MonoBehaviour
     [SerializeField] private CameraLook camLookSettings;
     [SerializeField] private CameraSprintEffect camSprintEffect;
 
-    [Header("UnderWater Filter Settings")]
-    [SerializeField] private Volume regularVolume;
-    [SerializeField] private Volume underWaterVolume;
-    [SerializeField] private float filterSmoothTime;
-    private float targetWeight = 0f;
-
-    [Header("Regular Settings")]
+    [Header("Basic Settings")]
     [SerializeField] private Vector3 posOffset;
     private Vector3 smoothPosOffset = Vector3.zero;
 
-    public Volume UnderWaterVolume => underWaterVolume;
+    public CameraFilters CamFilters => camFilters;
     public CameraIdleSway CamIdleSway => camIdleSway;
     public CameraHeadBob CamHeadBob => camHeadBob;
     public TPSCameraCollider CamCollider => camCollider;
@@ -52,6 +48,7 @@ public class CameraBody : MonoBehaviour
         camIdleSway.IdleCameraSway(player);
         camHeadBob.BobUpdate(player);
         camCollider.ColliderUpdate(player.PlayerCam.transform.position, player.transform.position);
+        camFilters.UpdateUnderWaterFilter();
     }
 
     void LateUpdate()
@@ -65,26 +62,13 @@ public class CameraBody : MonoBehaviour
             player.Orientation.localRotation = newPlayerRot;
             transform.localRotation = newCamRot;
 
-            Vector3 cameraTPSOffset = camCollider.Enabled ? posOffset : new Vector3(0f, 0.5f, 0f);
+            Vector3 cameraTPSOffset = camCollider.Enabled ? posOffset : Vector3.zero;
             smoothPosOffset = Vector3.Lerp(smoothPosOffset, cameraTPSOffset, 6f * Time.deltaTime);
 
             player.PlayerCam.transform.localPosition = Vector3.back * camCollider.SmoothPull + camHeadBob.ViewBobOffset * 0.135f + player.PlayerMovement.CrouchOffset + smoothPosOffset;
-            transform.position = player.transform.position;
-        }
-
-        //Update Underwater filter
-        {
-            if (Mathf.Abs(targetWeight - underWaterVolume.weight) < 0.01f)
-            {
-                underWaterVolume.weight = targetWeight;
-                return;
-            }
-
-            underWaterVolume.weight = Mathf.Lerp(underWaterVolume.weight, targetWeight, filterSmoothTime * Time.deltaTime);
+            transform.position = player.transform.position + Vector3.up * 0.5f;
         }
     }
-
-    public void SetUnderWaterVolumeWeight(float value) => targetWeight = value;
 
     public void SetCursorState(bool locked)
     {

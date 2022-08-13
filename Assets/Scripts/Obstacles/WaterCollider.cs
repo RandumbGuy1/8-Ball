@@ -52,7 +52,7 @@ public class WaterCollider : MonoBehaviour
             //Play underwater ambience
             if (entry.Player == null) continue;
 
-            entry.Player.CameraBody.SetUnderWaterVolumeWeight(submergence * submergence);
+            entry.Player.CameraBody.CamFilters.SetUnderWaterVolumeWeight(submergence * submergence);
             entry.Player.PlayerMovement.Submergence = submergence;
         }
 
@@ -90,7 +90,7 @@ public class WaterCollider : MonoBehaviour
 
         if (submergedPlayer == null) return;
 
-        submergedPlayer.CameraBody.SetUnderWaterVolumeWeight(0);
+        submergedPlayer.CameraBody.CamFilters.SetUnderWaterVolumeWeight(0);
         submergedPlayer.PlayerMovement.InWater = false;
     }
 

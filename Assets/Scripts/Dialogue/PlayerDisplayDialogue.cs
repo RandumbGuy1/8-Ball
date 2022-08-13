@@ -15,8 +15,9 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
     [Header("Options Dialogue")]
     [SerializeField] private GameObject optionUI;
-    [SerializeField] private List<TextMeshProUGUI> optionsTexts = new List<TextMeshProUGUI>();
-    [SerializeField] private List<TextMeshProUGUI> optionsTextsKeyBinds = new List<TextMeshProUGUI>();
+    [SerializeField] private TextMeshProUGUI[] optionsTexts = new TextMeshProUGUI[2];
+    [SerializeField] private TextMeshProUGUI[] optionsTextsKeyBinds = new TextMeshProUGUI[2];
+    [SerializeField] private UIColorController[] selectEffects = new UIColorController[2];
     [SerializeField] private GameObject skipHintText;
 
     [Header("Emotions")]
@@ -65,9 +66,6 @@ public class PlayerDisplayDialogue : MonoBehaviour
             return;
         }
 
-        //Dont skip using E if there is a question
-        if (currentOptions != null) return;
-
         //If the entire message hasnt been written yet, skip to its finished state
         if (!finishedTypeWriting)
         {
@@ -76,6 +74,9 @@ public class PlayerDisplayDialogue : MonoBehaviour
             finishedTypeWriting = true;
             return;
         }
+
+        //Dont skip using E if there is a question
+        if (currentOptions != null) return;
 
         //Dialogue is Finished
         if (i == monologueQueue.Count)
@@ -113,6 +114,7 @@ public class PlayerDisplayDialogue : MonoBehaviour
         currentDialogueAction = currentMessage.FindAction(section);
         FireDialogueEvent(DialougeActionTime.Start);
 
+        //Do the typewriter effect for dialogue
         StopAllCoroutines();
         StartCoroutine(TypeWriteMonologue(section.OpenPrompt));
 
@@ -140,8 +142,8 @@ public class PlayerDisplayDialogue : MonoBehaviour
         optionUI.SetActive(true);
         for (int i = 0; i < currentOptions.OptionTexts.Length; i++)
         {
-            if (i >= optionsTexts.Count) continue;
-            if (i >= optionsTextsKeyBinds.Count) continue;
+            if (i >= optionsTexts.Length) continue;
+            if (i >= optionsTextsKeyBinds.Length) continue;
 
             optionsTexts[i].text = currentOptions.OptionTexts[i];
             optionsTextsKeyBinds[i].text = player.PlayerInput.DialogueOptionsKeys[i].ToString();
@@ -149,6 +151,9 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
         //If an option hasnt been picked yet do nothing
         if (index == -1) return;
+
+        //Select effect
+        selectEffects[index].SnapOpacity(80f);
 
         //Make sure we select a valid dialogue branch based on our option
         if (currentOptions.DialogueContinuations.Length == 0 || index >= currentOptions.DialogueContinuations.Length)

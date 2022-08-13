@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -19,9 +20,32 @@ public class Projecton : MonoBehaviour
 
         foreach (GameObject obstacle in obstacles)
         {
-            GameObject environment = ObjectPooler.Instance.Spawn(obstacle, false);
-            environment.transform.SetParent(null);
+            GameObject environment = Instantiate(obstacle, obstacle.transform.position, obstacle.transform.rotation);
             SceneManager.MoveGameObjectToScene(environment, simulationScene);
+
+            List<GameObject> childrenToDestroy = new List<GameObject>();
+
+            if (environment.transform.childCount > 0)
+            {
+                foreach (Transform child in environment.transform)
+                {
+                    if (!child.GetComponent<Collider>())
+                    {
+                        childrenToDestroy.Add(child.gameObject);
+                        continue;
+                    }
+
+                    Renderer render = child.GetComponent<Renderer>();
+                    if (render != null) render.enabled = false;
+                }
+            }
+            else
+            {
+                Renderer render = environment.GetComponent<Renderer>();
+                if (render != null) render.enabled = false;
+            }
+
+            foreach (GameObject child in childrenToDestroy) Destroy(child);
         }
     }
 
