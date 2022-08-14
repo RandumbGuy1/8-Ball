@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2544304831aeed4ba493b34abf2b605, type: 3}
+  m_Name: Plai Answer 1
+  m_EditorClassIdentifier: 
+  branch: {fileID: 11400000, guid: 42701ef31eda27942b2f6f82fb6578a0, type: 2}
+  openPrompt: 'Hackers? . . . No, '
+  intensity: 2
+  authorEmotion: 6

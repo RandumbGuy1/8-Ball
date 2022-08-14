@@ -24,5 +24,10 @@ public enum Emotion
     Angry,
     Normal,
     Scared,
-    Death
+    Death,
+    Confused,
+    Lust,
+    Scream,
+    Thinking,
+    Laughing
 };

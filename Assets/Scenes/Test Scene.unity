@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 276.0512, g: 401.21317, b: 662.1997, a: 1}
+  m_IndirectSpecularColor: {r: 238.6923, g: 331.72632, b: 501.42712, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13432,12 +13432,12 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls:
           - m_Target: {fileID: 377698317}
-            m_MethodName: AlertCarbon
-            m_Mode: 1
+            m_MethodName: AlertTrigger
+            m_Mode: 3
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
+              m_IntArgument: 1
               m_FloatArgument: 0
               m_StringArgument: 
               m_BoolArgument: 0
@@ -13542,40 +13542,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a63eb3e5543b534c937bd7a9c8efb4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abbieDialogue:
-    author: {fileID: 11400000, guid: c39222cb1739d7744a21c0440f8bf145, type: 2}
-    monologues:
-    - {fileID: 11400000, guid: d764056a09fcd3f429250d0e39545a5b, type: 2}
-    - {fileID: 11400000, guid: e5a423ee59f07a547b79aaa640d9ba72, type: 2}
-    - {fileID: 11400000, guid: 1312d839762ddb947bf9249c864a12f5, type: 2}
-    - {fileID: 11400000, guid: 9be173c520b0d814a9b64cd46c6b5219, type: 2}
-    - {fileID: 11400000, guid: 22e2fd29ebad6e144ad076e54d98d504, type: 2}
-    - {fileID: 11400000, guid: c9fc416fe734e8545ba924e8e550dc66, type: 2}
-    dialogueActions: []
-  carbonDialogue:
-    author: {fileID: 11400000, guid: 62ddb8ead87492c4e900532faa469bf9, type: 2}
-    monologues:
-    - {fileID: 11400000, guid: aee69af8674d8fd4ea172c65c0f16311, type: 2}
-    - {fileID: 11400000, guid: 700dae1951abd2142bc7f30993c5d343, type: 2}
-    dialogueActions:
-    - time: 1
-      monologueKey: {fileID: 11400000, guid: 700dae1951abd2142bc7f30993c5d343, type: 2}
-      monologueEvent:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 377698317}
-            m_MethodName: AlertAbbie
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-  carbonTrigger: {fileID: 1492469206}
-  abbieTrigger: {fileID: 377698311}
+  convoStarter: {fileID: 377698311}
+  convesators:
+  - trigger: {fileID: 377698311}
+    dialouges:
+    - author: {fileID: 11400000, guid: c39222cb1739d7744a21c0440f8bf145, type: 2}
+      monologues:
+      - {fileID: 11400000, guid: d764056a09fcd3f429250d0e39545a5b, type: 2}
+      - {fileID: 11400000, guid: e5a423ee59f07a547b79aaa640d9ba72, type: 2}
+      - {fileID: 11400000, guid: 1312d839762ddb947bf9249c864a12f5, type: 2}
+      - {fileID: 11400000, guid: 9be173c520b0d814a9b64cd46c6b5219, type: 2}
+      - {fileID: 11400000, guid: 22e2fd29ebad6e144ad076e54d98d504, type: 2}
+      - {fileID: 11400000, guid: c9fc416fe734e8545ba924e8e550dc66, type: 2}
+      dialogueActions: []
+  - trigger: {fileID: 1492469206}
+    dialouges:
+    - author: {fileID: 11400000, guid: 62ddb8ead87492c4e900532faa469bf9, type: 2}
+      monologues:
+      - {fileID: 11400000, guid: aee69af8674d8fd4ea172c65c0f16311, type: 2}
+      - {fileID: 11400000, guid: 700dae1951abd2142bc7f30993c5d343, type: 2}
+      dialogueActions:
+      - time: 1
+        monologueKey: {fileID: 11400000, guid: 700dae1951abd2142bc7f30993c5d343, type: 2}
+        monologueEvent:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 377698317}
+              m_MethodName: AlertTrigger
+              m_Mode: 3
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
 --- !u!143 &377698318
 CharacterController:
   m_ObjectHideFlags: 0
@@ -39135,6 +39137,11 @@ MonoBehaviour:
   angrySprite: {fileID: 21300000, guid: 788e627522f8dec4ab153ce682864f6a, type: 3}
   normalSprite: {fileID: 21300000, guid: 2c1c3103b41423d4aab92ccf9e2bfcc5, type: 3}
   deathSprite: {fileID: 21300000, guid: ad83f8d6f3fd04f42a4612c7c06b794c, type: 3}
+  confusedSprite: {fileID: 21300000, guid: d81b85084592e3940993a47614ea2053, type: 3}
+  lustSprite: {fileID: 21300000, guid: 4c2094abd64e21a46a579a3b9046d0ed, type: 3}
+  screamSprite: {fileID: 21300000, guid: 791d055f2ac79324b8aaa3cca0e2e723, type: 3}
+  thinkingSprite: {fileID: 21300000, guid: 16ef366f6de54fb498d2ab6c2ebce79e, type: 3}
+  laughingSprite: {fileID: 21300000, guid: 761b0a9a921031f4dbf6066e7df2aefd, type: 3}
   player: {fileID: 1008010272}
 --- !u!1001 &1010117419
 PrefabInstance:
@@ -52287,8 +52294,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 1783473064}
   dialogue:
-    author: {fileID: 0}
-    monologues: []
+    author: {fileID: 11400000, guid: fb275ae8ec2077d4688df5376e3fd568, type: 2}
+    monologues:
+    - {fileID: 11400000, guid: d2326c170f333d9469f8701eadb02124, type: 2}
+    - {fileID: 11400000, guid: 56fcd67172764814b82de0d441a3bd95, type: 2}
     dialogueActions: []
 --- !u!65 &1182704169
 BoxCollider:
@@ -60729,8 +60738,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notification: {fileID: 465827966}
   dialogue:
-    author: {fileID: 0}
-    monologues: []
+    author: {fileID: 11400000, guid: efe799e0d06f40e43b206a3a023f3d80, type: 2}
+    monologues:
+    - {fileID: 11400000, guid: a94a87e02115dd34ba86cfb2a4c4e713, type: 2}
+    - {fileID: 11400000, guid: e252bb7dd14242d4aa43d482034958e7, type: 2}
+    - {fileID: 11400000, guid: b350ab82e977fe248975a57cde9f0aeb, type: 2}
+    - {fileID: 11400000, guid: 67a59f3f30584c841b987ca5c0c42e7f, type: 2}
+    - {fileID: 11400000, guid: 33670f0d3978fe442b83c141162a609f, type: 2}
+    - {fileID: 11400000, guid: 184d8dc974334f441b0728ee7e368a7b, type: 2}
+    - {fileID: 11400000, guid: 8c03798a3f5613a4c9e05707756234bf, type: 2}
+    - {fileID: 11400000, guid: a062b5ec1d2b8d84d8dc3c39c9724bf9, type: 2}
+    - {fileID: 11400000, guid: 1703e09da5ffeb34991c1abea8639fd9, type: 2}
+    - {fileID: 11400000, guid: 84d24211bcdb0254f9dff8abf4fcb170, type: 2}
+    - {fileID: 11400000, guid: 65fb25b7afbf866419ab6eb03c4e120e, type: 2}
+    - {fileID: 11400000, guid: 951880d6fc500e141845797e3cd80c75, type: 2}
     dialogueActions: []
 --- !u!65 &1337402781
 BoxCollider:
@@ -73932,13 +73953,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1659813574}
-  m_LocalRotation: {x: 0.9012696, y: -0.3293493, z: 0.2797841, w: 0.031033024}
+  m_LocalRotation: {x: 0.90180355, y: -0.3388462, z: 0.26820445, w: -0.0002152295}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 13.900001, y: 150.10101, z: 216.41899}
+  m_LocalEulerAnglesHint: {x: 10.450001, y: 150.52501, z: 218.431}
 --- !u!114 &1659813577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84402,7 +84423,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867256978}
   m_Layer: 0
-  m_Name: Save 2.63
+  m_Name: Save 2.7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

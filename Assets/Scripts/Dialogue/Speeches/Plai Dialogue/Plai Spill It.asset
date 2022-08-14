@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a30f25792786fd4b83444a52212a851, type: 3}
-  m_Name: Branch 4
+  m_Name: Plai Spill It
   m_EditorClassIdentifier: 
   optionsTexts:
-  - Bruh
-  - Bruh
+  - Then what?
   dialogueContinuations:
   - monologues:
-    - {fileID: 11400000, guid: dcbf99fb47f54d34f90938bd7f2d4dec, type: 2}
-  - monologues:
-    - {fileID: 11400000, guid: dcbf99fb47f54d34f90938bd7f2d4dec, type: 2}
+    - {fileID: 11400000, guid: 0370a51b8088bb84f969152790e3e0a8, type: 2}
+    - {fileID: 11400000, guid: df93029271723f04a9e61cf52cf7390a, type: 2}
+    - {fileID: 11400000, guid: 7b8bb5d8470d8384ba3707a0790dcb40, type: 2}
+    - {fileID: 11400000, guid: 97d6ddfb63d2113448d381896f497363, type: 2}

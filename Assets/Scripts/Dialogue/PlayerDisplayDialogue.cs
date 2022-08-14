@@ -28,6 +28,11 @@ public class PlayerDisplayDialogue : MonoBehaviour
     [SerializeField] private Sprite angrySprite;
     [SerializeField] private Sprite normalSprite;
     [SerializeField] private Sprite deathSprite;
+    [SerializeField] private Sprite confusedSprite;
+    [SerializeField] private Sprite lustSprite;
+    [SerializeField] private Sprite screamSprite;
+    [SerializeField] private Sprite thinkingSprite;
+    [SerializeField] private Sprite laughingSprite;
 
     private Dialogue currentMessage = null;
     private DialogueAction currentDialogueAction = null;
@@ -85,6 +90,8 @@ public class PlayerDisplayDialogue : MonoBehaviour
             FireDialogueEvent(DialougeActionTime.End);
             return;
         }
+
+        FireDialogueEvent(DialougeActionTime.End);
 
         Display();
         return;       
@@ -156,7 +163,7 @@ public class PlayerDisplayDialogue : MonoBehaviour
         selectEffects[index].SnapOpacity(80f);
 
         //Make sure we select a valid dialogue branch based on our option
-        if (currentOptions.DialogueContinuations.Length == 0 || index >= currentOptions.DialogueContinuations.Length)
+        if (currentOptions.DialogueContinuations.Length == 0)
         {
             //If there isnt a valid followup branch just skip to the next monologue
             currentOptions = null;
@@ -165,8 +172,10 @@ public class PlayerDisplayDialogue : MonoBehaviour
             return;
         }
 
-        Branch addedDialogue = currentOptions.DialogueContinuations[index];
+        //Make sure we can only select a valid branch if there is one
+        if (index >= currentOptions.DialogueContinuations.Length) return;
 
+        Branch addedDialogue = currentOptions.DialogueContinuations[index];
         //Add the follow up monologues of that option
         for (int i = addedDialogue.Monologues.Count - 1; i > -1; i--)
         {
@@ -200,6 +209,13 @@ public class PlayerDisplayDialogue : MonoBehaviour
 
     public void StartConversation(DialogueTrigger trigger, Dialogue message)
     {
+        //If there is no message or speaker return
+        if (trigger == null || message == null)
+        {
+            ResetUI();
+            return;
+        }
+
         if (message.Monologues.Count == 0) return;
         if (currentTrigger != null) currentTrigger.Talking = false;
 
@@ -240,6 +256,11 @@ public class PlayerDisplayDialogue : MonoBehaviour
             case Emotion.Normal: return normalSprite;
             case Emotion.Angry: return angrySprite;
             case Emotion.Death: return deathSprite;
+            case Emotion.Confused: return confusedSprite;
+            case Emotion.Lust: return lustSprite;
+            case Emotion.Thinking: return thinkingSprite;
+            case Emotion.Scream: return screamSprite;
+            case Emotion.Laughing: return laughingSprite;
             default: return normalSprite;
         }
     }

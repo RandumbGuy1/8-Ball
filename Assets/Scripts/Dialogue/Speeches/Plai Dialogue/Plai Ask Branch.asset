@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a30f25792786fd4b83444a52212a851, type: 3}
+  m_Name: Plai Ask Branch
+  m_EditorClassIdentifier: 
+  optionsTexts:
+  - Ye
+  - Nah g
+  dialogueContinuations:
+  - monologues:
+    - {fileID: 11400000, guid: 0370a51b8088bb84f969152790e3e0a8, type: 2}
+    - {fileID: 11400000, guid: fa3fd4358ce9c5b4d8f99e8753ccec4c, type: 2}
+  - monologues:
+    - {fileID: 11400000, guid: e0f8ce8d9cb431e469885436756d33c8, type: 2}
