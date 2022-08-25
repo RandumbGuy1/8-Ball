@@ -122,10 +122,10 @@ Material:
     - Vector1_890A8918: 0.08
     - Vector1_9244969C: 1
     - Vector1_954FAAB5: 3
-    - Vector1_9A23FB87: 2
+    - Vector1_9A23FB87: 0.5
     - Vector1_9DB5D88C: 2
     - Vector1_CF15DBB8: 1.54
-    - Vector1_F48504BA: 17
+    - Vector1_F48504BA: 3
     - _AORemapMax: 1
     - _AORemapMin: 0
     - _ATDistance: 1
