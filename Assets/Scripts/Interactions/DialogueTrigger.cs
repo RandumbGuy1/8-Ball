@@ -26,7 +26,7 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
         if (player == null) return;
 
         player.DialogueHandler.StartConversation(this, dialogue);
-        notification.Stop();
+        if (notification != null) notification.Stop();
     }
 
     public void OnStartHover(PlayerRef player)
@@ -37,6 +37,6 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
     public void SetNewDialogue(Dialogue dialogue)
     {
         this.dialogue = dialogue;
-        notification.Play();
+        if (notification != null) notification.Play();
     }
 }
