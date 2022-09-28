@@ -21,8 +21,10 @@ public class CameraBody : MonoBehaviour
     public CameraHeadBob CamHeadBob => camHeadBob;
     public TPSCameraCollider CamCollider => camCollider;
     public CameraLook CamLookSettings => camLookSettings;
+    public CameraShaker CamShaker => camShaker;
 
     [Header("Refrences")]
+    [SerializeField] private CameraShaker camShaker;
     [SerializeField] private PlayerRef player;
 
     void Awake()
@@ -53,11 +55,13 @@ public class CameraBody : MonoBehaviour
 
     void LateUpdate()
     {
+        smoothDeltaRotation = Vector3.Lerp(smoothDeltaRotation, deltaRotation, Time.deltaTime * 25f);
+
         //Apply Rotations And Positions
         {
             Vector3 externalPlayerRotation = new Vector3(player.PlayerMovement.Rb.rotation.x, player.PlayerMovement.Rb.rotation.y, player.PlayerMovement.Rb.rotation.z);
-            Quaternion newCamRot = Quaternion.Euler((Vector3) camLookSettings.SmoothRotation + ToEuler(camHeadBob.ViewBobOffset) + Vector3.forward * camHeadBob.TiltSway + camIdleSway.HeadSwayOffset + externalPlayerRotation);
-            Quaternion newPlayerRot = Quaternion.Euler(0f, camLookSettings.SmoothRotation.y, 0f);
+            Quaternion newCamRot = Quaternion.Euler((Vector3) camLookSettings.SmoothRotation + ToEuler(camHeadBob.ViewBobOffset) + Vector3.forward * camHeadBob.TiltSway + camIdleSway.HeadSwayOffset + externalPlayerRotation + camShaker.Offset + smoothDeltaRotation);
+            Quaternion newPlayerRot = Quaternion.Euler(0f, camLookSettings.SmoothRotation.y + deltaRotation.y, 0f);
 
             player.Orientation.localRotation = newPlayerRot;
             transform.localRotation = newCamRot;
@@ -79,5 +83,13 @@ public class CameraBody : MonoBehaviour
     private Vector3 ToEuler(Vector3 a)
     {
         return new Vector3(a.y, a.x, a.z);
+    }
+
+    private Vector3 deltaRotation = Vector3.zero;
+    private Vector3 smoothDeltaRotation = Vector3.zero;
+
+    public void LookAt(Vector3 fromTo)
+    {
+        deltaRotation.y += Vector3.SignedAngle(player.Orientation.forward, fromTo, Vector3.up);
     }
 }
