@@ -36,11 +36,11 @@ public class PerlinShake : IShakeEvent
 
         noiseOffset += Vector3.one * offsetDelta;
 
-        noise.x = Mathf.PerlinNoise(noiseOffset.x, 1f);
-        noise.y = Mathf.PerlinNoise(noiseOffset.y, 2f);
-        noise.z = Mathf.PerlinNoise(noiseOffset.z, 3f);
+        noise.x = OctaveNoise(noiseOffset.x, 1f);
+        noise.y = OctaveNoise(noiseOffset.y, 2f);
+        noise.z = OctaveNoise(noiseOffset.z, 3f);
 
-        noise -= Vector3.one * 0.5f;
+        //noise = (noise - Vector3.one * 0.5f) * 2f;
         noise *= shakeData.Magnitude;
         noise *= trama;
 
@@ -57,5 +57,18 @@ public class PerlinShake : IShakeEvent
     {
         Receiever = shaker;
         index = i;
+    }
+
+    private float OctaveNoise(float x, float y)
+    {
+        float result = 0f;
+
+        float[] octaveFrequencies = { 1, 1.5f, 2f };
+        float[] octaveAmplitudes = { 0.6f, 0.25f, 0.15f };
+
+        for (int i = 0; i < octaveFrequencies.Length; i++)
+            result += octaveAmplitudes[i] * Mathf.PerlinNoise(octaveFrequencies[i] * x, octaveFrequencies[i] * y);
+
+        return (Mathf.Clamp01(result) - 0.5f) * 2f;
     }
 }
