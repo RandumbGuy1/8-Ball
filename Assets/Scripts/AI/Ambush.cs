@@ -20,11 +20,14 @@ public class Ambush : MonoBehaviour
 
     [Header("Movement Settings FX")]
     [SerializeField] private bool woke = false;
+    [SerializeField] private Transform[] ambushPoints;
     [SerializeField] private float travelTime;
     [SerializeField] private float timeBetweenPoints;
-    [SerializeField] private Transform[] ambushPoints;
+
+    [Header("Kill Settings")]
     [SerializeField] private float killRadius;
     [SerializeField] private LayerMask killable;
+    [SerializeField] private AmbushSafeZone[] safeZones;
 
     private Transform lastAmbushPoint = null;
     private bool backTracking = false;
@@ -90,15 +93,28 @@ public class Ambush : MonoBehaviour
 
     private void AmbushHit(Collider col)
     {
+        //No Hit effects if player in safe zone
+        foreach (AmbushSafeZone safeZone in safeZones) if (safeZone.SafeColliders.Contains(col)) return;
+
+        //Add prey to the list
         ambushPrey.Add(col);
 
+        //Register player hit
         PlayerRef player = col.GetComponent<PlayerRef>();
-        if (player == null) return;
+        if (player != null)
+        {
+            player.PlayerMovement.GoLimp(3f);
+            player.CameraBody.CamShaker.ShakeOnce(new PerlinShake(ShakeData.Create(45f, 8f, 3.5f, 12f)));
+            AudioManager.Instance.PlayOnce(ambushHitClip, player.transform.position, 0.5f);
+            StartCoroutine(flash.SequenceFlash(Color.black, 20f, 0.05f, 0.2f, 10));
+        }
 
-        AudioManager.Instance.PlayOnce(ambushHitClip, player.transform.position, 0.5f);
-        player.CameraBody.CamShaker.ShakeOnce(new PerlinShake(ShakeData.Create(30f, 8f, 3f, 8f)));
+        //Register physics object
+        Rigidbody hit = col.GetComponent<Rigidbody>();
+        if (hit == null) return;
 
-        StartCoroutine(flash.SequenceFlash(Color.black, 20f, 0.05f, 0.2f, 10));
+        hit.AddForce((transform.forward + Vector3.up + (col.transform.position - transform.position).normalized).normalized * 30f, ForceMode.VelocityChange);
+        hit.AddTorque(40f * Random.insideUnitSphere, ForceMode.VelocityChange);
     }
 
     public void AwakeAmbush(bool woke = true) => this.woke = woke;
