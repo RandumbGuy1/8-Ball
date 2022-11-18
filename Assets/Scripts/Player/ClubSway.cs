@@ -13,6 +13,9 @@ public class ClubSway : MonoBehaviour
 
     private Vector3 startPos, startRot;
 
+    private Vector3 pickupOffsetPos;
+    private Quaternion pickupOffsetRot; 
+
     void Awake()
     {
         startPos = weaponPos.localPosition;
@@ -24,11 +27,12 @@ public class ClubSway : MonoBehaviour
         IItem itemToSway = player.ClubHolder.EquippedItem;
         if (itemToSway == null) return;
 
-        CalculatePickupOffset(player.ClubHolder.ItemGameObject.transform, itemToSway);
+        CalculatePickupOffset(ref pickupOffsetPos, ref pickupOffsetRot, itemToSway);
         CalculateSwitchOffset(itemToSway);
 
-        Vector3 newPos = startPos + itemToSway.HoldSettings.DefaultPos + switchOffsetPos;
-        Quaternion newRot =  Quaternion.Euler(startRot + itemToSway.HoldSettings.DefaultRot + switchOffsetRot);
+        Vector3 newStartPos = startPos - (player.CameraBody.InThirdPerson ? player.PlayerCam.transform.localPosition : Vector3.zero);
+        Vector3 newPos = newStartPos + itemToSway.HoldSettings.DefaultPos + switchOffsetPos + pickupOffsetPos;
+        Quaternion newRot = pickupOffsetRot * Quaternion.Euler(startRot + itemToSway.HoldSettings.DefaultRot + switchOffsetRot);
 
         weaponPos.localPosition = newPos;
         weaponPos.localRotation = newRot;
@@ -63,17 +67,26 @@ public class ClubSway : MonoBehaviour
         }
     }
 
-    private void CalculatePickupOffset(Transform itemTransform, IItem itemToSway)
+    public void ReigsterNewPickup(Transform child)
     {
-        if (itemTransform.localPosition == Vector3.zero && itemTransform.localRotation == Quaternion.Euler(Vector3.zero)) return;
+        pickupOffsetPos = child.localPosition;
+        pickupOffsetRot = child.localRotation;
 
-        itemTransform.localPosition = Vector3.SmoothDamp(itemTransform.localPosition, Vector3.zero, ref pickUpPosVel, itemToSway.HoldSettings.PickupSmoothTime);
-        itemTransform.localRotation = Quaternion.Lerp(itemTransform.localRotation, Quaternion.Euler(Vector3.zero), 1 / itemToSway.HoldSettings.PickupSmoothTime * Time.deltaTime);
+        child.localPosition = Vector3.zero;
+        child.localRotation = Quaternion.identity;
+    }   
+
+    private void CalculatePickupOffset(ref Vector3 localPosition, ref Quaternion localRotation, IItem itemToSway)
+    {
+        if (localPosition == Vector3.zero && localRotation == Quaternion.Euler(Vector3.zero)) return;
+
+        localPosition = Vector3.SmoothDamp(localPosition, Vector3.zero, ref pickUpPosVel, itemToSway.HoldSettings.PickupSmoothTime);
+        localRotation = Quaternion.Lerp(localRotation, Quaternion.Euler(Vector3.zero), 1 / itemToSway.HoldSettings.PickupSmoothTime * Time.deltaTime);
     
-        if (itemTransform.localPosition.sqrMagnitude + transform.localEulerAngles.sqrMagnitude < 0.00002f)
+        if (localPosition.sqrMagnitude + transform.localEulerAngles.sqrMagnitude < 0.00002f)
         {
-            itemTransform.localPosition = Vector3.zero;
-            itemTransform.localRotation = Quaternion.Euler(Vector3.zero);
+            localPosition = Vector3.zero;
+            localRotation = Quaternion.Euler(Vector3.zero);
         }
     }
 }

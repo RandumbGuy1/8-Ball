@@ -56,6 +56,8 @@ public class ClubHolder : MonoBehaviour
 
         if (EquippedItem == null) return;
 
+        EquippedItem.ItemUpdate(player);
+
         //If not inputting a keybind or using an invalid keybind return
         if (newSelect == -1 || newSelect + 1 > clubs.Count) return;
 
@@ -81,8 +83,6 @@ public class ClubHolder : MonoBehaviour
         IItem newItem = newClub.GetComponent<IItem>();
         if (newItem == null) return;
 
-        clubSway.ResetMovementValues();
-
         if (clubs.Count >= maxClubs)
         {
             DropClub(true);
@@ -94,10 +94,14 @@ public class ClubHolder : MonoBehaviour
             selectedClub = clubs.Count - 1;
         }
 
-        SelectClub(false);
+        clubSway.ResetMovementValues();
 
+        SelectClub(false);
         newItem.OnPickup(player);
-        newClub.transform.SetParent(weaponPos);
+
+        Transform newChild = newClub.transform;
+        newChild.SetParent(weaponPos);
+        clubSway.ReigsterNewPickup(newChild);
     }
 
     //Setting active only our selected club
@@ -127,6 +131,7 @@ public class ClubHolder : MonoBehaviour
     {
         if (clubs.Count == 0) return;
 
+        clubSway.ResetMovementValues();
         ItemGameObject.transform.SetParent(null);
 
         EquippedItem.OnDrop(player, (rigidbody) => {

@@ -62,8 +62,8 @@ public class PlayerMovement : MonoBehaviour
         
         private set
         {
-            //Grounded for first frame
-            if (grounded != value && value) OnPlayerLand?.Invoke(Mathf.Abs(Velocity.y * 0.3f));
+            //Grounded for first frame so play land animations
+            if (grounded != value && value) OnPlayerLand?.Invoke(Mathf.Abs(Velocity.y * 0.4f));
 
             grounded = value;
         }   
@@ -103,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     public Rigidbody Rb => rb;
 
-    public bool Limp { get; private set; }
+    public bool Limp => limpElapsed < limpTime;
     private float limpElapsed = 0f;
     private float limpTime;
     private SpringJoint joint;
@@ -116,6 +116,11 @@ public class PlayerMovement : MonoBehaviour
         player.PlayerInput.OnJumpInput += ReceiveJumpInput;
         player.PlayerInput.OnSwimSinkInput += ReceiveSwimSinkInput;
         player.PlayerInput.OnCrouchInput += ReceiveCrouchInput;
+
+        OnPlayerLand += (float vel) =>
+        {
+            rb.AddForceAtPosition((player.Orientation.forward + (Random.insideUnitSphere * 0.2f)).normalized * vel, transform.position + transform.up, ForceMode.Impulse);
+        };
     }
 
     void FixedUpdate()
@@ -142,7 +147,8 @@ public class PlayerMovement : MonoBehaviour
         Magnitude = rb.velocity.magnitude;
         Velocity = rb.velocity;
 
-        moveDir = player.Orientation.forward * Input.y + player.Orientation.right * Input.x;
+        //Calculate move dir based on camera y rotation
+        moveDir = player.Orientation.TransformDirection(Input.x, 0, Input.y);
 
         if (Crouching) return;
 
@@ -185,7 +191,6 @@ public class PlayerMovement : MonoBehaviour
     public void UpdateUprightForce()
     {
         Quaternion fromTo = Quaternion.FromToRotation(transform.up, Vector3.up);
-
         rb.AddTorque((new Vector3(fromTo.x, fromTo.y, fromTo.z) * uprightSpringStrength) - (rb.angularVelocity * uprightSpringStrengthDamper), ForceMode.Impulse);
     }
 

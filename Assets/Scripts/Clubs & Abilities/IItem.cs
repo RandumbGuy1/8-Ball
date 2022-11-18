@@ -12,6 +12,7 @@ public interface IItem
 
     void OnPickup(PlayerRef player);
     void OnDrop(PlayerRef player, Action<Rigidbody> DropForce);
+    void ItemUpdate(PlayerRef player);
 }
 
 [System.Serializable]

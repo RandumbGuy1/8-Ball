@@ -23,7 +23,10 @@ public class CameraBody : MonoBehaviour
     public CameraLook CamLookSettings => camLookSettings;
     public CameraShaker CamShaker => camShaker;
 
+    public bool InThirdPerson => CamCollider.Enabled;
+
     [Header("Refrences")]
+    [SerializeField] private Transform targetHead;
     [SerializeField] private CameraShaker camShaker;
     [SerializeField] private PlayerRef player;
 
@@ -59,8 +62,7 @@ public class CameraBody : MonoBehaviour
 
         //Apply Rotations And Positions
         {
-            Vector3 externalPlayerRotation = new Vector3(player.PlayerMovement.Rb.rotation.x, player.PlayerMovement.Rb.rotation.y, player.PlayerMovement.Rb.rotation.z);
-            Quaternion newCamRot = Quaternion.Euler((Vector3) camLookSettings.SmoothRotation + ToEuler(camHeadBob.ViewBobOffset) + Vector3.forward * camHeadBob.TiltSway + camIdleSway.HeadSwayOffset + externalPlayerRotation + camShaker.Offset + smoothDeltaRotation);
+            Quaternion newCamRot = Quaternion.Euler((Vector3) camLookSettings.SmoothRotation + ToEuler(camHeadBob.ViewBobOffset) + Vector3.forward * camHeadBob.TiltSway + camIdleSway.HeadSwayOffset + camShaker.Offset + smoothDeltaRotation);
             Quaternion newPlayerRot = Quaternion.Euler(0f, camLookSettings.SmoothRotation.y + deltaRotation.y, 0f);
 
             player.Orientation.localRotation = newPlayerRot;
@@ -70,8 +72,13 @@ public class CameraBody : MonoBehaviour
             smoothPosOffset = Vector3.Lerp(smoothPosOffset, cameraTPSOffset, 6f * Time.deltaTime);
 
             player.PlayerCam.transform.localPosition = Vector3.back * camCollider.SmoothPull + camHeadBob.ViewBobOffset * 0.135f + smoothPosOffset;
-            transform.position = player.transform.position + Vector3.up * 0.5f + player.PlayerMovement.CrouchOffset;
+            transform.position = targetHead.position + player.PlayerMovement.CrouchOffset;
         }
+    }
+
+    public static Vector3 ToEuler(Vector3 a)
+    {
+        return new Vector3(a.y, a.x, a.z);
     }
 
     public void SetCursorState(bool locked)
@@ -80,9 +87,13 @@ public class CameraBody : MonoBehaviour
         Cursor.visible = !locked;
     }
 
-    private Vector3 ToEuler(Vector3 a)
+    private Vector3 Clamp180(Vector3 euler)
     {
-        return new Vector3(a.y, a.x, a.z);
+        if (euler.x > 180) euler.x -= 360;
+        if (euler.y > 180) euler.x -= 360;
+        if (euler.z > 180) euler.x -= 360;
+
+        return euler;
     }
 
     private Vector3 deltaRotation = Vector3.zero;

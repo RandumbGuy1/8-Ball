@@ -21,8 +21,10 @@ public class CameraHeadBob
     private float tiltVel = 0f;
 
     public bool Bobbing => viewBobTimer != 0f;
+
     public float TiltSway { get; private set; }
     public Vector3 ViewBobOffset { get; private set; }
+    public Vector3 ViewBobSnapOffset { get; private set; }
 
     public void BobUpdate(PlayerRef player)
     {
@@ -37,17 +39,17 @@ public class CameraHeadBob
         float scroller = viewBobTimer * viewBobSpeed;
         float swimMultiplier = player.PlayerMovement.InWater ? 0.2f : 1f;
 
-        Vector3 headBob = swimMultiplier * (viewBobMultiplier.x * Mathf.Cos(scroller) * player.Orientation.right + viewBobMultiplier.y * Mathf.Abs(Mathf.Sin(scroller)) * Vector3.up) 
+        ViewBobSnapOffset = swimMultiplier * (viewBobMultiplier.x * Mathf.Cos(scroller) * player.Orientation.right + viewBobMultiplier.y * Mathf.Abs(Mathf.Sin(scroller)) * Vector3.up) 
             + Vector3.down * landBobOffset;
         Vector3 smoothHeadBob = ViewBobOffset;
 
-        HarmonicMotion.Calculate(ref smoothHeadBob, ref bobVel, headBob, 
+        HarmonicMotion.Calculate(ref smoothHeadBob, ref bobVel, ViewBobSnapOffset, 
             HarmonicMotion.CalcDampedSpringMotionParams(viewBobDampingRatio, viewBobAngularFrequency));
         ViewBobOffset = smoothHeadBob;
 
         //Calculate Tilt
-        float tilt = Mathf.Clamp((player.PlayerMovement.Input.x + player.CameraBody.CamLookSettings.RotationDelta.y) * maxTilt, -maxTilt, maxTilt);    
-        TiltSway = Mathf.SmoothDamp(TiltSway, tilt, ref tiltVel, tiltSmoothTime);   
+        float tilt = Mathf.Clamp((player.PlayerMovement.Input.x * maxTilt * 0.75f + player.CameraBody.CamLookSettings.RotationDelta.y * maxTilt), -maxTilt, maxTilt);    
+        TiltSway = Mathf.SmoothDamp(TiltSway, -tilt, ref tiltVel, tiltSmoothTime);   
     }
 
     public void BobOnce(float magnitude)
@@ -58,9 +60,4 @@ public class CameraHeadBob
     }
 
     public void Enable(bool enabled) => this.enabled = enabled;
-
-    /* Old Spring Code
-    springMotion = Vector3.SmoothDamp(springMotion, (headBob - ViewBobOffset) * 0.5f - (bobVel * 0.01f), ref bobVel, viewBobSmoothTime);
-    ViewBobOffset += springMotion;
-    */
 }

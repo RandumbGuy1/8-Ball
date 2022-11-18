@@ -5,6 +5,7 @@ using UnityEngine;
 public class Ambush : MonoBehaviour
 {
     [Header("Light FX")]
+    [SerializeField] private SpriteRenderer render;
     [SerializeField] private PanelFlash flash;
     [SerializeField] private Color green;
     [SerializeField] private Color red;
@@ -19,20 +20,23 @@ public class Ambush : MonoBehaviour
     [SerializeField] float ambienceDistance;
 
     [Header("Movement Settings FX")]
-    [SerializeField] private bool woke = false;
     [SerializeField] private Transform[] ambushPoints;
+    [Space(10)]
+    [SerializeField] private bool woke = false;
+    [SerializeField] private int cycles = 2;
     [SerializeField] private float travelTime;
-    [SerializeField] private float timeBetweenPoints;
+    [SerializeField] private float timeBetweenCycles;
+    private Queue<Transform> destinationQueue = new Queue<Transform>();
 
     [Header("Kill Settings")]
+    [SerializeField] private float ambushForce;
     [SerializeField] private float killRadius;
     [SerializeField] private LayerMask killable;
     [SerializeField] private AmbushSafeZone[] safeZones;
 
     private Transform lastAmbushPoint = null;
-    private bool backTracking = false;
-    private float elapsed = 9999f;
-    private int currentPoint = 0;
+    private float moveElapsed = 0f;
+    private float cooldownElapsed = 0f;
 
     private List<Collider> ambushPrey = new List<Collider>();
     private AudioSource ambushSource = null;
@@ -40,59 +44,92 @@ public class Ambush : MonoBehaviour
     void Start()
     {
         ambushSource = AudioManager.Instance.PlayOnce(ambushClip, transform.position);
+
+        moveElapsed = travelTime;
+        cooldownElapsed = timeBetweenCycles;
     }
 
+    Transform currentDestination = null;
     void Update()
     {
         UpdateColorToggle();
-        UpdateAudio();
 
-        if (ambushPoints.Length <= 1) return;
+        //Return if no points to travel to
+        if (ambushPoints.Length < 2) return;
 
-        Transform destination = ambushPoints[currentPoint];
-
-        if (elapsed >= travelTime + timeBetweenPoints)
+        cooldownElapsed += Time.deltaTime;
+        if (cooldownElapsed < timeBetweenCycles)
         {
-            currentPoint = GetNextPoint(currentPoint);
-            transform.position = destination.position;
-            lastAmbushPoint = destination;
-
-            elapsed = 0f;
-            ambushPrey.Clear();
+            ambushSource.volume = 0f;
+            UpdateGFX(false);
             return;
+        }
+
+        UpdateAudio();
+        UpdateGFX(true);
+
+        //If elapsed path time exceeds the time it takes to go to each point, set new destination
+        if (moveElapsed >= travelTime)
+        {
+            if (destinationQueue.Count <= 1)
+            {
+                destinationQueue = GenerateCyclePaths(cycles);
+                currentDestination = destinationQueue.Dequeue();
+                transform.position = currentDestination.position;
+                cooldownElapsed = 0f;
+                return;
+            }
+
+            transform.position = currentDestination.position;
+            lastAmbushPoint = currentDestination;
+
+            currentDestination = destinationQueue.Dequeue();
+            ambushPrey.Clear();
+            moveElapsed = 0f;
         }
 
         if (!woke) return;
 
-        elapsed += Time.deltaTime;
+        //Move ambush to next destination using lerp
+        transform.LookAt(currentDestination.position);
+        transform.position = Vector3.Lerp(lastAmbushPoint.position, currentDestination.position, moveElapsed / travelTime);
 
-        if (elapsed >= travelTime) return;
+        moveElapsed += Time.deltaTime;
 
-        transform.LookAt(destination.position);
-        transform.position = Vector3.Lerp(lastAmbushPoint.position, destination.position, elapsed / travelTime);
-
+        //Track any victims to ambush
         Collider[] cols = Physics.OverlapSphere(transform.position, killRadius, killable);
-        foreach (Collider col in cols) if (!ambushPrey.Contains(col)) AmbushHit(col);
+        foreach (Collider col in cols) AmbushHit(col);
     }
 
+    //Update ambush epileptic effects
     private void UpdateColorToggle()
     {
-        greenRedElapsed += Time.deltaTime * 10f;
+        greenRedElapsed += Time.deltaTime * 14f;
         greenRedRatio = Mathf.PingPong(greenRedElapsed, 1f);
 
-        foreach (Light light in searchLights) light.color = Color.Lerp(green, red, greenRedRatio > 0.5f ? 1f : 0f);
+        foreach (Light light in searchLights)
+        {
+            light.color = greenRedRatio > 0.5f ? green : red;
+        }
     }
 
+    //Update ambush volume
     private void UpdateAudio()
     {
         if (ambushSource == null) return;
 
         float volumeRatio = Mathf.Clamp01((ambienceDistance - Vector3.Distance(transform.position, player.transform.position)) / ambienceDistance);
-        ambushSource.volume = volumeRatio;
+        if (volumeRatio > 0.8f) volumeRatio = 1f;
+        
+        ambushSource.volume =  volumeRatio;
     }
 
+    //Function for ambushes victims
     private void AmbushHit(Collider col)
     {
+        //Dont attack if already attacked this cycle
+        if (ambushPrey.Contains(col)) return;
+
         //No Hit effects if player in safe zone
         foreach (AmbushSafeZone safeZone in safeZones) if (safeZone.SafeColliders.Contains(col)) return;
 
@@ -103,22 +140,25 @@ public class Ambush : MonoBehaviour
         PlayerRef player = col.GetComponent<PlayerRef>();
         if (player != null)
         {
+            //return;
+
             player.PlayerMovement.GoLimp(3f);
             player.CameraBody.CamShaker.ShakeOnce(new PerlinShake(ShakeData.Create(45f, 8f, 3.5f, 12f)));
             AudioManager.Instance.PlayOnce(ambushHitClip, player.transform.position, 0.5f);
-            StartCoroutine(flash.SequenceFlash(Color.black, 20f, 0.05f, 0.2f, 10));
+            StartCoroutine(flash.SequenceFlash(Color.black, 20f, 0.05f, 0.15f, 15));
         }
 
         //Register physics object
         Rigidbody hit = col.GetComponent<Rigidbody>();
         if (hit == null) return;
 
-        hit.AddForce((transform.forward + Vector3.up + (col.transform.position - transform.position).normalized).normalized * 30f, ForceMode.VelocityChange);
-        hit.AddTorque(40f * Random.insideUnitSphere, ForceMode.VelocityChange);
+        hit.AddForce((transform.forward + Vector3.up + (col.transform.position - transform.position).normalized).normalized * ambushForce, ForceMode.VelocityChange);
+        hit.AddTorque(200f * Random.insideUnitSphere, ForceMode.VelocityChange);
     }
 
     public void AwakeAmbush(bool woke = true) => this.woke = woke;
 
+    private bool backTracking = false;
     private int GetNextPoint(int currentPoint)
     {
         if (backTracking)
@@ -139,5 +179,29 @@ public class Ambush : MonoBehaviour
         }
 
         return currentPoint + 1;
+    }
+
+    private Queue<Transform> GenerateCyclePaths(int cycle)
+    {
+        Queue<Transform> queuedDestinations = new Queue<Transform>();
+
+        //Generate paths based on given amount
+        int currentPoint = 0;
+        for (int i = 1; i <= cycle; i++)
+        {
+            for (int j = 0; j++ < ambushPoints.Length;)
+            {
+                currentPoint = GetNextPoint(currentPoint);
+                queuedDestinations.Enqueue(ambushPoints[currentPoint]);
+            }
+        }
+
+        return queuedDestinations;
+    }
+
+    private void UpdateGFX(bool active)
+    {
+        render.enabled = active;
+        foreach (Light light in searchLights) light.enabled = active;
     }
 }

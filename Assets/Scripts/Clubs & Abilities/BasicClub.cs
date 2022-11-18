@@ -51,6 +51,11 @@ public class BasicClub : MonoBehaviour, IClub, IItem
         itemRb = null;
     }
 
+    public void ItemUpdate(PlayerRef player)
+    {
+
+    }
+
     public void ThrustBalls(PlayerRef player)
     {
         print(player + ": Thrusted my balls :(");
