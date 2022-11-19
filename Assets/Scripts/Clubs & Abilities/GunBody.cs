@@ -5,6 +5,7 @@ using System;
 
 public class GunBody : MonoBehaviour, IItem
 {
+    [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private AudioClip shootSound;
     [SerializeField] private GunHeadBob gunBobSettings = new GunHeadBob();
     [SerializeField] private GunRecoil gunRecoilSettings = new GunRecoil();
@@ -52,6 +53,7 @@ public class GunBody : MonoBehaviour, IItem
 
         gunRecoilSettings.AddRecoil();
         AudioManager.Instance.PlayOnce(shootSound, transform.position);
+        muzzleFlash.Play();
     }
 
     public void ItemUpdate(PlayerRef player)
@@ -61,7 +63,7 @@ public class GunBody : MonoBehaviour, IItem
         gunBobSettings.Update(player.CameraBody.CamHeadBob.ViewBobSnapOffset);
 
         transform.localPosition = gunRecoilSettings.RecoilOffsetPos - player.CameraBody.CamHeadBob.ViewBobOffset * 0.03f;
-        transform.localRotation = Quaternion.Euler(gunSwaySettings.SwayOffsetRot + gunRecoilSettings.RecoilOffsetRot + CameraBody.ToEuler(player.CameraBody.CamHeadBob.ViewBobOffset * 2f));
+        transform.localRotation = Quaternion.Euler(gunSwaySettings.SwayOffsetRot + gunRecoilSettings.RecoilOffsetRot + CameraBody.ToEuler(player.CameraBody.CamHeadBob.ViewBobOffset * 2f) - player.CameraBody.CamIdleSway.HeadSwayOffset);
     }
 
     public void OnPickup(PlayerRef player)

@@ -30,7 +30,7 @@ public class ClubSway : MonoBehaviour
         CalculatePickupOffset(ref pickupOffsetPos, ref pickupOffsetRot, itemToSway);
         CalculateSwitchOffset(itemToSway);
 
-        Vector3 newStartPos = startPos - (player.CameraBody.InThirdPerson ? player.PlayerCam.transform.localPosition : Vector3.zero);
+        Vector3 newStartPos = startPos - player.CameraBody.TPSOffset;
         Vector3 newPos = newStartPos + itemToSway.HoldSettings.DefaultPos + switchOffsetPos + pickupOffsetPos;
         Quaternion newRot = pickupOffsetRot * Quaternion.Euler(startRot + itemToSway.HoldSettings.DefaultRot + switchOffsetRot);
 

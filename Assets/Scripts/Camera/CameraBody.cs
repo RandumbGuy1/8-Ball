@@ -23,6 +23,7 @@ public class CameraBody : MonoBehaviour
     public CameraLook CamLookSettings => camLookSettings;
     public CameraShaker CamShaker => camShaker;
 
+    public Vector3 TPSOffset => Vector3.back * camCollider.SmoothPull + smoothPosOffset;
     public bool InThirdPerson => CamCollider.Enabled;
 
     [Header("Refrences")]
