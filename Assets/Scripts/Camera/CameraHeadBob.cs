@@ -29,18 +29,16 @@ public class CameraHeadBob
     public void BobUpdate(PlayerRef player)
     {
         viewBobTimer = player.PlayerMovement.Grounded && (player.PlayerMovement.Magnitude > 0.5f && player.PlayerMovement.Moving)
-            ? viewBobTimer + Time.deltaTime : 0f;
+            ? viewBobTimer + Time.deltaTime * viewBobSpeed : 0f;
 
         if (!enabled) return;
 
         landBobOffset = Mathf.Min(0, landBobOffset + Time.deltaTime * 35f);
 
         //Calculate Headbob Spring Motion
-        float scroller = viewBobTimer * viewBobSpeed;
         float swimMultiplier = player.PlayerMovement.InWater ? 0.2f : 1f;
 
-        ViewBobSnapOffset = swimMultiplier * (viewBobMultiplier.x * Mathf.Cos(scroller) * player.Orientation.right + viewBobMultiplier.y * Mathf.Abs(Mathf.Sin(scroller)) * Vector3.up) 
-            + Vector3.down * landBobOffset;
+        ViewBobSnapOffset = swimMultiplier * HeadBobOffset(viewBobTimer) + Vector3.down * landBobOffset;
         Vector3 smoothHeadBob = ViewBobOffset;
 
         HarmonicMotion.Calculate(ref smoothHeadBob, ref bobVel, ViewBobSnapOffset, 
@@ -50,6 +48,12 @@ public class CameraHeadBob
         //Calculate Tilt
         float tilt = Mathf.Clamp((player.PlayerMovement.Input.x * maxTilt * 0.75f + player.CameraBody.CamLookSettings.RotationDelta.y * maxTilt), -maxTilt, maxTilt);    
         TiltSway = Mathf.SmoothDamp(TiltSway, -tilt, ref tiltVel, tiltSmoothTime);   
+    }
+
+    Vector3 HeadBobOffset(float timer)
+    {
+        if (timer <= 0) return Vector3.zero;
+        return new Vector3(viewBobMultiplier.x * Mathf.Cos(viewBobTimer), viewBobMultiplier.y * Mathf.Abs(Mathf.Sin(viewBobTimer)), 0f);
     }
 
     public void BobOnce(float magnitude)

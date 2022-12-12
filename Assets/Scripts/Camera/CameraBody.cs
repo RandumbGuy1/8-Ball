@@ -69,10 +69,10 @@ public class CameraBody : MonoBehaviour
             player.Orientation.localRotation = newPlayerRot;
             transform.localRotation = newCamRot;
 
-            Vector3 cameraTPSOffset = camCollider.Enabled ? posOffset : Vector3.zero;
+            Vector3 cameraTPSOffset = camCollider.Enabled ? posOffset + CamHeadBob.ViewBobOffset * 0.2f : Vector3.zero;
             smoothPosOffset = Vector3.Lerp(smoothPosOffset, cameraTPSOffset, 6f * Time.deltaTime);
 
-            player.PlayerCam.transform.localPosition = Vector3.back * camCollider.SmoothPull + camHeadBob.ViewBobOffset * 0.135f + smoothPosOffset;
+            player.PlayerCam.transform.localPosition = Vector3.back * camCollider.SmoothPull + smoothPosOffset;
             transform.position = targetHead.position + player.PlayerMovement.CrouchOffset;
         }
     }

@@ -7,7 +7,6 @@ public class GunBody : MonoBehaviour, IItem
 {
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private AudioClip shootSound;
-    [SerializeField] private GunHeadBob gunBobSettings = new GunHeadBob();
     [SerializeField] private GunRecoil gunRecoilSettings = new GunRecoil();
     [SerializeField] private GunSway gunSwaySettings = new GunSway();
     [SerializeField] private ItemRigidbodySettings rigidbodySettings = new ItemRigidbodySettings();
@@ -60,7 +59,6 @@ public class GunBody : MonoBehaviour, IItem
     {
         gunRecoilSettings.Update();
         gunSwaySettings.Update(player);
-        gunBobSettings.Update(player.CameraBody.CamHeadBob.ViewBobSnapOffset);
 
         transform.localPosition = gunRecoilSettings.RecoilOffsetPos - player.CameraBody.CamHeadBob.ViewBobOffset * 0.03f;
         transform.localRotation = Quaternion.Euler(gunSwaySettings.SwayOffsetRot + gunRecoilSettings.RecoilOffsetRot + CameraBody.ToEuler(player.CameraBody.CamHeadBob.ViewBobOffset * 2f) - player.CameraBody.CamIdleSway.HeadSwayOffset);
@@ -101,30 +99,6 @@ public class GunSway
         HarmonicMotion.Calculate(ref smoothSway, ref swayVel, swayDelta,
             HarmonicMotion.CalcDampedSpringMotionParams(dampingRatio, angularFrequency));
         SwayOffsetRot = smoothSway;
-    }
-}
-
-[System.Serializable]
-public class GunHeadBob
-{
-    [Header("Variables")]
-    [SerializeField] private float headBobPosMulti;
-    [SerializeField] private float headBobRotMulti;
-    [SerializeField] private float dampingRatio;
-    [SerializeField] private float angularFrequency;
-
-    private Vector3 bobOffset = Vector3.zero;
-    public Vector3 BobOffsetPos => bobOffset * headBobPosMulti;
-    public Vector3 BobOffsetRot => new Vector3(bobOffset.y, bobOffset.x, bobOffset.z) * headBobRotMulti;
-    private Vector3 bobVel = Vector3.zero;
-
-    public void Update(Vector3 headBobDelta)
-    {
-        Vector3 smoothHeadBob = bobOffset;
-
-        HarmonicMotion.Calculate(ref smoothHeadBob, ref bobVel, headBobDelta,
-            HarmonicMotion.CalcDampedSpringMotionParams(dampingRatio, angularFrequency));
-        bobOffset = smoothHeadBob;
     }
 }
 

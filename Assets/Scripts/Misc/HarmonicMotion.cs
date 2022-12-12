@@ -18,6 +18,32 @@ public static class HarmonicMotion
 	// Public Methods:
 	//-----------------------------------------------------------------------------------------
 
+	public static void Calculate(ref Quaternion state, ref Quaternion velocity, Quaternion targetState, DampenedSpringMotionParams springMotionParams)
+	{
+		float velocityX = velocity.x;
+		float stateX = state.x;
+		float targetX = targetState.x;
+		CalculateSpring(ref stateX, ref velocityX, targetX, springMotionParams);
+
+		float velocityY = velocity.y;
+		float stateY = state.y;
+		float targetY = targetState.y;
+		CalculateSpring(ref stateY, ref velocityY, targetY, springMotionParams);
+
+		float velocityZ = velocity.z;
+		float stateZ = state.z;
+		float targetZ = targetState.z;
+		CalculateSpring(ref stateZ, ref velocityZ, targetZ, springMotionParams);
+
+		float velocityW = velocity.w;
+		float stateW = state.w;
+		float targetW = targetState.w;
+		CalculateSpring(ref stateW, ref velocityW, targetW, springMotionParams);
+
+		velocity = new Quaternion(velocityX, velocityY, velocityZ, velocityW);
+		state = new Quaternion(stateX, stateY, stateZ, stateW);
+	}
+
 	public static void Calculate(ref Vector3 state, ref Vector3 velocity, Vector3 targetState, DampenedSpringMotionParams springMotionParams)
 	{
 		float velocityX = velocity.x;
