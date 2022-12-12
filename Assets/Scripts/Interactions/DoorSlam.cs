@@ -6,7 +6,7 @@ public class DoorSlam : MonoBehaviour, IInteractable
 {
     [SerializeField] private AudioClip bustDownClip;
     [SerializeField] private float snapTime;
-    [SerializeField] private Transform wantedPlayerPosition; 
+    [SerializeField] private Transform[] wantedPlayerPositions; 
     [SerializeField] private Rigidbody rb;
 
     public PlayerRef Player { get; set; }
@@ -30,16 +30,30 @@ public class DoorSlam : MonoBehaviour, IInteractable
 
     }
 
+    private Vector3 GetClosestPosition(Vector3 playerPos)
+    {
+        Vector3 closestPos = wantedPlayerPositions[0].position;
+        foreach (Transform t in wantedPlayerPositions)
+        {
+            if ((playerPos - t.position).sqrMagnitude < (playerPos - closestPos).sqrMagnitude) 
+                closestPos = t.position;
+        }
+
+        return closestPos;
+    }
+
     IEnumerator SnapPlayerToSlam(PlayerRef player)
     {
-        player.CameraBody.LookAt((transform.position - wantedPlayerPosition.position).normalized);
+        Vector3 wantedPlayerPosition = GetClosestPosition(player.transform.position);
+
+        player.CameraBody.LookAt((transform.position - wantedPlayerPosition).normalized);
         player.CameraBody.CamShaker.ShakeOnce(new PerlinShake(ShakeData.Create(5f, 7f, 0.8f, 10f)));
         player.PlayerMovement.Rb.isKinematic = true;
         float elapsed = 0;
 
         while (elapsed < snapTime)
         {
-            player.PlayerMovement.Rb.MovePosition(Vector3.Lerp(player.PlayerMovement.Rb.position, wantedPlayerPosition.position, elapsed/snapTime));
+            player.PlayerMovement.Rb.MovePosition(Vector3.Lerp(player.PlayerMovement.Rb.position, wantedPlayerPosition, elapsed/snapTime));
             elapsed += Time.deltaTime;
             yield return new WaitForFixedUpdate();
         }

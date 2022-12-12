@@ -5,6 +5,7 @@ using System;
 
 public class BasicClub : MonoBehaviour, IClub, IItem
 {
+    [SerializeField] private GunSway gunSwaySettings = new GunSway();
     [SerializeField] private ClubStats stats = new ClubStats();
     [SerializeField] private ItemRigidbodySettings rigidbodySettings = new ItemRigidbodySettings();
     [SerializeField] private ItemHoldSettings holdSettings = new ItemHoldSettings();
@@ -53,7 +54,10 @@ public class BasicClub : MonoBehaviour, IClub, IItem
 
     public void ItemUpdate(PlayerRef player)
     {
+        gunSwaySettings.Update(player);
 
+        transform.localPosition = -player.CameraBody.CamHeadBob.ViewBobOffset * 0.03f;
+        transform.localRotation = Quaternion.Euler(gunSwaySettings.SwayOffsetRot + CameraBody.ToEuler(player.CameraBody.CamHeadBob.ViewBobOffset * 2f) - player.CameraBody.CamIdleSway.HeadSwayOffset);
     }
 
     public void ThrustBalls(PlayerRef player)
