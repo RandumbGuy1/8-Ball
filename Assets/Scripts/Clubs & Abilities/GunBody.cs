@@ -98,7 +98,7 @@ public class GunSway
 
         HarmonicMotion.Calculate(ref smoothSway, ref swayVel, swayDelta,
             HarmonicMotion.CalcDampedSpringMotionParams(dampingRatio, angularFrequency));
-        SwayOffsetRot = smoothSway;
+        SwayOffsetRot = smoothSway - player.CameraBody.CamShaker.Offset;
     }
 }
 

@@ -55,6 +55,26 @@ public class AudioManager : MonoBehaviour
         return source;
     }
 
+    public void PlayOnce(AudioClip clip)
+    {
+        if (!SoundDictionary.ContainsKey(clip)) return;
+
+        //Spawn audio instance at the sounds source position
+        AudioSource source = SoundDictionary[clip].SourcesQueue.Dequeue();
+        if (source == null) return;
+
+        //Set source position
+        source.transform.position = Vector3.zero;
+
+        //Set the data of the audio source using the sound class preset
+        SoundDictionary[clip].SetParamaters(source);
+
+        source.Play();
+
+        //Send sound back to the sounds pool
+        SoundDictionary[clip].SourcesQueue.Enqueue(source);
+    }
+
     //Same as Play Once but takes an array of clips and chooses a random one
     private Dictionary<AudioClip[], int> lastIndexes = new Dictionary<AudioClip[], int>();
 
