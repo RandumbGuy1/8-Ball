@@ -35,4 +35,9 @@ public class PanelFlash : MonoBehaviour
             yield return new WaitForSeconds(timeBetweenFlashes);
         }
     }
+
+    public void QuickFlashEffect()
+    {
+        StartCoroutine(SequenceFlash(Color.black, 2.5f, 0f, 0.12f, 7));
+    }
 }

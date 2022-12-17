@@ -5,6 +5,8 @@ using UnityEngine.Audio;
 public class PlayerAudio : MonoBehaviour
 {
     [Header("Grounded Movement Audio")]
+    [SerializeField] private AudioClip footStepClip;
+    [SerializeField] private AudioClip footStepClip2;
     [SerializeField] private AudioClip playerLandClip;
     [SerializeField] private float footStepFrequency;
     [SerializeField] private float footStepVolumeMultiplier;
@@ -37,7 +39,7 @@ public class PlayerAudio : MonoBehaviour
         player.PlayerMovement.OnPlayerLand += (float magnitude) => { AudioManager.Instance.PlayOnce(playerLandClip, transform.position); };
         player.PlayerMovement.OnPlayerMove += (bool input) => {
             if (!player.PlayerMovement.Grounded || input) return;
-            AudioManager.Instance.PlayOnce(playerLandClip, transform.position, footStepVolumeMultiplier); 
+            AudioManager.Instance.PlayOnce(footStepClip2, transform.position, footStepVolumeMultiplier); 
         };
 
         player.PlayerMovement.OnPlayerCrouch += (bool input) => 
@@ -78,6 +80,7 @@ public class PlayerAudio : MonoBehaviour
         waterMovementSource = null;
     }
 
+    bool toggle = false;
     private void CalculateFootsteps(Vector2 input)
     {
         if (!player.CameraBody.CamHeadBob.Bobbing)
@@ -93,7 +96,8 @@ public class PlayerAudio : MonoBehaviour
 
         if (footstepDistance > 450f)
         {
-            AudioManager.Instance.PlayOnce(playerLandClip, transform.position, footStepVolumeMultiplier);
+            toggle = !toggle;
+            AudioManager.Instance.PlayOnce(toggle ? footStepClip : footStepClip2, transform.position, footStepVolumeMultiplier);
             footstepDistance = 0f;
         }
     }
