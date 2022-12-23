@@ -3,6 +3,7 @@
 [System.Serializable]
 public class CameraSprintEffect 
 {
+	[SerializeField] private float speedMultiplier;
 	[SerializeField] private ParticleSystem sprintEffect;
 	[SerializeField] private AudioClip sprintClip;
 	private AudioSource windSource = null;
@@ -24,7 +25,7 @@ public class CameraSprintEffect
 			em.rateOverTime = rateOverLifeTime * (player.PlayerMovement.Grounded ? 0.3f : 1.5f);
 
 			ParticleSystem.VelocityOverLifetimeModule velOverLife = sprintEffect.velocityOverLifetime;
-			velOverLife.speedModifier = player.PlayerMovement.Magnitude / 20f;
+			velOverLife.speedModifier = (player.PlayerMovement.Magnitude / 20f) * speedMultiplier;
 
 			if (windSource != null) windSource.volume = AudioManager.Instance.SoundDictionary[sprintClip].Volume * player.PlayerMovement.MagToMaxRatio;
 		}
