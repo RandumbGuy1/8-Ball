@@ -38,5 +38,6 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     Gameplay,
-    Paused
+    Paused,
+    Editor
 }

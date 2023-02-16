@@ -13,6 +13,7 @@ public class PlayerInput : MonoBehaviour
     public event ReceieveVector2Input OnMouseInput;
 
     public event ReceieveBoolInput OnJumpInput;
+    public event ReceieveBoolInput OnJumpHoldInput;
     public event ReceieveBoolInput OnSwimSinkInput;
     public event ReceieveBoolInput OnCrouchInput;
     public event ReceieveBoolInput OnInteractInput;
@@ -67,7 +68,16 @@ public class PlayerInput : MonoBehaviour
         OnMouseInput?.Invoke(new Vector2(Input.GetAxisRaw("Mouse Y"), Input.GetAxisRaw("Mouse X")));
 
         OnJumpInput?.Invoke(Input.GetKeyDown(jumpKey));
+        OnJumpHoldInput?.Invoke(Input.GetKey(jumpKey));
         OnCrouchInput?.Invoke(Input.GetKey(crouchKey));
+
+        OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
+
+        OnMouseButtonDownInput?.Invoke(MouseButtonDown());
+        OnMouseButtonInput?.Invoke(MouseButton());
+
+        if (GameManager.Instance.CurrentGameState == GameState.Editor) return;
+
         OnSwimSinkInput?.Invoke(Input.GetKey(sinkSwimKey));
         OnInteractInput?.Invoke(Input.GetKeyDown(interactKey));
         OnClubDropInput?.Invoke(Input.GetKeyDown(dropClubKey));
@@ -75,11 +85,6 @@ public class PlayerInput : MonoBehaviour
         OnAbilitySelectInput?.Invoke(IterateKeyBinds(clubAbilityKeys));
         OnDialogueInput?.Invoke(Input.GetKeyDown(dialogueKey));
         OnDialogueOptionsInput?.Invoke(IterateKeyBinds(dialogueOptionsKeys));
-
-        OnPerspectiveToggle?.Invoke(Input.GetKeyDown(togglePerspectKey));
-
-        OnMouseButtonDownInput?.Invoke(MouseButtonDown());
-        OnMouseButtonInput?.Invoke(MouseButton());
     }
 
     int IterateKeyBinds(List<KeyCode> keys)

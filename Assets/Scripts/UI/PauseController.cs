@@ -6,6 +6,7 @@ public class PauseController : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private PlayerRef player;
     private bool paused = false;
+    private bool inEditor = false;
 
     void Awake() => player.PlayerInput.OnPauseToggle += HandlePause;
     void OnDestroy() => player.PlayerInput.OnPauseToggle -= HandlePause;
@@ -16,8 +17,7 @@ public class PauseController : MonoBehaviour
 
         paused = !paused;
 
-        GameManager.Instance.SetState(paused ? GameState.Paused : GameState.Gameplay);
-        player.CameraBody.SetCursorState(!paused);
+        GameManager.Instance.SetState(paused ? GameState.Paused : inEditor ? GameState.Editor : GameState.Gameplay);
         pauseMenu.SetActive(paused);
     }
 
@@ -34,5 +34,14 @@ public class PauseController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void ToggleEditor()
+    {
+        inEditor = !inEditor;
+        HandlePause(true);
+
+        GameManager.Instance.SetState(inEditor ? GameState.Editor : GameState.Gameplay);
+        pauseMenu.SetActive(false);
     }
 }

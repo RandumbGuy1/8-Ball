@@ -335,5 +335,11 @@ public class PlayerMovement : MonoBehaviour
         joint.massScale = 5f;
     }
 
+    void OnDisable()
+    {
+        Magnitude = 0f;
+        RelativeVel = Vector3.zero;
+    }
+
     public void RemoveSpring() => Destroy(joint);
 }

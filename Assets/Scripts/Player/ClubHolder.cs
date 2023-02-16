@@ -40,6 +40,10 @@ public class ClubHolder : MonoBehaviour
 
         player.PlayerInput.OnClubDropInput += CheckForDrop;
         player.PlayerInput.OnClubSelectInput += CheckForSwitchClub;
+        GameManager.Instance.OnGameStateChanged += (GameState state) =>
+        {
+            if (state == GameState.Editor) DropClub(false, true);
+        };
 
         //If no clubs reset everything
         if (queueClubs.Count <= 0) ResetData();

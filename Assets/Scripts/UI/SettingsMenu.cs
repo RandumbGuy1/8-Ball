@@ -8,6 +8,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private GameObject videoMenu;
     [SerializeField] private GameObject audioMenu;
     [SerializeField] private GameObject controlsMenu;
+    [SerializeField] private GameObject editorMenu;
 
     [Header("Refrences")]
     [SerializeField] private PlayerRef player;
@@ -70,6 +71,12 @@ public class SettingsMenu : MonoBehaviour
     {
         controlsMenu.SetActive(!controlsMenu.activeInHierarchy);
         CloseMenus(controlsMenu);
+    }
+
+    public void SetEditorMenu()
+    {
+        editorMenu.SetActive(!editorMenu.activeInHierarchy);
+        CloseMenus(editorMenu);
     }
 
     public void CloseMenus(GameObject avoid = null)

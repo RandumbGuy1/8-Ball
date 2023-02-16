@@ -44,6 +44,17 @@ public class CameraBody : MonoBehaviour
         };
 
         player.PlayerMovement.OnPlayerLand += camHeadBob.BobOnce;
+        GameManager.Instance.OnGameStateChanged += ToggleCursor;
+    }
+
+    void OnDestroy()
+    {
+        GameManager.Instance.OnGameStateChanged -= ToggleCursor;
+    }
+
+    void ToggleCursor(GameState state)
+    {
+        SetCursorState(state == GameState.Gameplay);
     }
 
     void Update()
