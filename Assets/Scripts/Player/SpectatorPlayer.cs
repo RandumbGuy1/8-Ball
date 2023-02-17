@@ -1,14 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.InteropServices;
 
 public class SpectatorPlayer : MonoBehaviour
 {
+    [SerializeField] private GenerateUIItemColumns generateItems;
+    [SerializeField] private GameObject[] buildPrefabs;
     [SerializeField] private float spectateSpeed;
     [SerializeField] private PlayerRef player;
+    private bool lockedCursor = false;
 
     void Awake()
     {
+        player.PlayerInput.OnMouseButtonDownInput += PanCamera;
         player.PlayerInput.OnJumpHoldInput += UpdateMovement;
         GameManager.Instance.OnGameStateChanged += EnablePlayer;
     }
@@ -25,7 +30,21 @@ public class SpectatorPlayer : MonoBehaviour
         player.PlayerMovement.enabled = state == GameState.Gameplay;
         player.PlayerMovement.Rb.isKinematic = state == GameState.Editor;
         player.PlayerMovement.Rb.detectCollisions = state == GameState.Gameplay;
+
+        if (state == GameState.Editor) generateItems.Generate(buildPrefabs);
     }
+
+    void PanCamera(int mouseButton)
+    {
+        GameState state = GameManager.Instance.CurrentGameState;
+        if (state != GameState.Editor || mouseButton != 2) return;
+
+        lockedCursor = !lockedCursor;
+        player.CameraBody.SetCursorState(lockedCursor);
+    }
+
+    [DllImport("user32.dll")]
+    static extern bool SetCursorPos(int X, int Y);
 
     void UpdateMovement(bool jumping)
     {
