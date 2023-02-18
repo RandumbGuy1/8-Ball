@@ -31,6 +31,8 @@ public class CameraBody : MonoBehaviour
     [SerializeField] private CameraShaker camShaker;
     [SerializeField] private PlayerRef player;
 
+    public bool CanMoveCamera { get; private set; } = true;
+
     void Awake()
     {
         SetCursorState(true);
@@ -110,6 +112,17 @@ public class CameraBody : MonoBehaviour
 
     private Vector3 deltaRotation = Vector3.zero;
     private Vector3 smoothDeltaRotation = Vector3.zero;
+
+    public void SetMoveCamera(bool move)
+    {
+        if (CanMoveCamera == move) return;
+             
+        CanMoveCamera = move;
+
+        if (CanMoveCamera) player.PlayerInput.OnMouseInput += camLookSettings.LookUpdate;
+        else player.PlayerInput.OnMouseInput -= camLookSettings.LookUpdate;
+    }
+        
 
     public void LookAt(Vector3 fromTo)
     {

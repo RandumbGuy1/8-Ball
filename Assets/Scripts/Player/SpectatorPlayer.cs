@@ -31,7 +31,18 @@ public class SpectatorPlayer : MonoBehaviour
         player.PlayerMovement.Rb.isKinematic = state == GameState.Editor;
         player.PlayerMovement.Rb.detectCollisions = state == GameState.Gameplay;
 
-        if (state == GameState.Editor) generateItems.Generate(buildPrefabs);
+        if (state == GameState.Editor)
+        {
+            generateItems.Generate(buildPrefabs, this);
+            lockedCursor = true;
+            player.CameraBody.SetCursorState(lockedCursor);
+            player.CameraBody.SetMoveCamera(lockedCursor);
+        }
+        else
+        {
+            player.CameraBody.SetCursorState(true);
+            player.CameraBody.SetMoveCamera(true);
+        }
     }
 
     void PanCamera(int mouseButton)
@@ -41,10 +52,16 @@ public class SpectatorPlayer : MonoBehaviour
 
         lockedCursor = !lockedCursor;
         player.CameraBody.SetCursorState(lockedCursor);
+        player.CameraBody.SetMoveCamera(lockedCursor);
     }
 
     [DllImport("user32.dll")]
     static extern bool SetCursorPos(int X, int Y);
+
+    public void SelectItem(GameObject prefab)
+    {
+        Instantiate(prefab, transform.position + player.PlayerCam.transform.forward * 10f, transform.rotation);
+    }
 
     void UpdateMovement(bool jumping)
     {
